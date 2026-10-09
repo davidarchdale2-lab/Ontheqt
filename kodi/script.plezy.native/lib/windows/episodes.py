@@ -11,6 +11,7 @@ from plexnet import plexapp, playlist, plexplayer, plexlibrary, util as pnUtil, 
 from lib import backgroundthread
 from lib import metadata
 from lib import player
+from lib import plezy_season_episodes as plezy_se
 from lib import util
 from lib.util import T
 from lib.language_util import getNativeLanguages
@@ -247,7 +248,8 @@ class EpisodesWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMix
     RELATED_DIM = util.scaleResolution(268, 402)
     EXTRA_DIM = util.scaleResolution(329, 185)
     ROLES_DIM = util.scaleResolution(334, 334)
-    CLEAR_LOGO_DIM = util.scaleResolution(380, 60)
+    # the hero's logo slot (Plezy ClearLogoImage contained in 790x220)
+    CLEAR_LOGO_DIM = util.scaleResolution(790, 220)
 
     LIST_OPTIONS_BUTTON_ID = 111
 
@@ -273,6 +275,7 @@ class EpisodesWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMix
     INFO_BUTTON_ID = 304
     SETTINGS_BUTTON_ID = 305
     MEDIA_BUTTON_ID = 307
+    WATCHED_BUTTON_ID = 308
 
     SEASONS_CONTROL_ATTR = "seasonsListControl"
 
@@ -853,6 +856,8 @@ class EpisodesWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMix
             self.mediaButtonClicked()
         elif controlID in (self.INFO_BUTTON_ID, self.INFO_BUTTON_ID+1000):
             self.infoButtonClicked()
+        elif controlID in (self.WATCHED_BUTTON_ID, self.WATCHED_BUTTON_ID+1000):
+            self.watchedButtonClicked()
         elif controlID == self.SEARCH_BUTTON_ID:
             self.searchButtonClicked()
         elif controlID == self.SEASONS_LIST_ID:
@@ -1041,6 +1046,14 @@ class EpisodesWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMix
     def shuffleButtonClicked(self):
         self.playButtonClicked(shuffle=True)
 
+    def watchedButtonClicked(self):
+        # Plezy's watched toggle in the action row, for the selected episode (the one the hero describes): a toggle,
+        # so the selection stays put and the button flips between mark-played and mark-unplayed
+        mli = self.episodeListControl.getSelectedItem()
+        if not mli or mli.getProperty("is.boundary"):
+            return
+        self.toggleWatched(mli)
+
     def settingsButtonClicked(self):
         mli = self.episodeListControl.getSelectedItem()
         if not mli or mli.getProperty("is.boundary"):
@@ -1225,15 +1238,15 @@ class EpisodesWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMix
         if 'items' in util.getSetting('cache_requests'):
             options.append({'key': 'cache_reset', 'display': T(33728, "Clear cache for item")})
 
-        pos = (500, util.vscalei(620))
+        # the dropdown shifts itself back inside the screen when it would overflow the right or bottom edge
         bottom = False
         if from_item:
-            viewPos = self.episodeListControl.getViewPosition()
-            optsLen = len(list(filter(None, options)))
-            # dropDown handles any overlap with the right window boundary, so we don't need to care here
-            pos = (
-                (((viewPos + 1) * 359) - 100),
-                util.vscalei(649) if optsLen < 7 else 649 - util.vscalei(66) * (optsLen - 6))
+            # right of the episode card, level with its artwork
+            x, y = plezy_se.item_menu_pos(self.episodeListControl.getViewPosition())
+        else:
+            # under the action row's More button
+            x, y = plezy_se.more_menu_pos(multiple=bool(mli and mli.getProperty('media.multiple')))
+        pos = (x, util.vscalei(y))
 
         choice = dropdown.showDropdown(options, pos, pos_is_bottom=bottom, close_direction='left',
                                        set_dropdown_prop=False)
@@ -1391,18 +1404,20 @@ class EpisodesWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMix
         self.setProperty('clear.logo', util.clearLogoFrom(self.show_ or self.season, *self.CLEAR_LOGO_DIM))
         self.setProperty('season.title', (self.season or self.show_).title)
 
-        if self.season:
-            self.setProperty('episodes.header', u'{0} \u2022 {1}'.format(showTitle,
-                                                                         T(32303, 'Season').format(self.season.index)))
-            self.setProperty('extras.header', u'{0} \u2022 {1}'.format(T(32305, 'Extras'),
-                                                                       T(32303, 'Season').format(self.season.index)))
-        else:
-            self.setProperty('episodes.header', u'Episodes')
-            self.setProperty('extras.header', u'Extras')
+        # rail hub titles (Plezy: the season's episodes hub, Cast, Trailers & extras, the related hub)
+        self.setProperty('episodes.header', self.season and self.season.title or T(32458, 'Episodes'))
+        self.setProperty('extras.header', T(35140, 'Trailers & extras'))
+        self.setProperty('seasons.header', T(32942, 'Other seasons'))
+        self.setProperty('related.header', T(35141, 'More like this'))
 
-        self.setProperty('seasons.header',
-                         u'{0} \u2022 {1}'.format(showTitle, T(32942, 'Seasons')))
-        self.setProperty('related.header', T(32306, 'Related Shows'))
+        # the hero while the other rows have focus describes the season (Plezy clears the focused episode)
+        try:
+            hero = plezy_se.season_hero(self.season, self.show_, T(35142, '{} episode'), T(35143, '{} episodes'))
+        except Exception:
+            util.ERROR()
+            hero = {'meta': '', 'summary': ''}
+        self.setProperty('season.meta', hero['meta'])
+        self.setProperty('season.summary', hero['summary'].strip().replace('\t', ' '))
         self.genre = self.show_.genres() and self.show_.genres()[0].tag or ''
 
     @busy.dialog()
@@ -1492,6 +1507,12 @@ class EpisodesWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMix
         mli.setProperty('content.rating', video.contentRating.split('/', 1)[-1])
         mli.setProperty('genre', self.genre)
         self.populateRatings(video, mli, hide_ratings=self.hideSpoilers(video) and self.noRatings)
+        try:
+            line, ratings_fit = plezy_se.hero_meta(video, T(32310, 'S{}'), T(32311, 'E{}'))
+            mli.setProperty('meta.line', line)
+            mli.setBoolProperty('meta.ratings', ratings_fit)
+        except Exception:
+            util.ERROR()
 
     def setPostReloadItemInfo(self, video, mli):
         if not self.fromWatchlist:
@@ -1503,6 +1524,11 @@ class EpisodesWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMix
             mli.setProperty('video.codec', video.videoCodecString())
             mli.setProperty('audio.channels', video.audioChannelsString(metadata.apiTranslate))
             mli.setProperty('video.rendering', video.videoCodecRendering)
+            try:
+                mli.setProperty('tracks.video', plezy_se.tracks_video(video.resolutionString(), video.videoCodecString(),
+                                                                      video.videoCodecRendering))
+            except Exception:
+                util.ERROR()
             mli.setBoolProperty('unavailable', not video.available())
             mli.setBoolProperty('media.multiple', len(list(filter(lambda x: x.isAccessible(), video.media()))) > 1)
 
@@ -1520,6 +1546,7 @@ class EpisodesWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMix
             video.discoverExternalAudioStreams()
 
         sas = video.selectedAudioStream()
+        mli.setProperty('tracks.audio', sas and sas.getTitle(metadata.apiTranslate) or '')
 
         if sas:
             if len(video.audioStreams) > 1:
@@ -1534,6 +1561,7 @@ class EpisodesWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMix
         sss = video.selectedSubtitleStream(forced_subtitles_override=
                                            util.getSetting("forced_subtitles_override") and pnUtil.ACCOUNT.subtitlesForced == 0,
                                            deselect_subtitles=getNativeLanguages(util.getSetting("disable_subtitle_languages") or []))
+        mli.setProperty('tracks.subtitles', sss and sss.getTitle(metadata.apiTranslate) or T(32481, 'Off'))
         if sss:
             if len(video.subtitleStreams) > 1:
                 mli.setProperty(
@@ -1563,11 +1591,13 @@ class EpisodesWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMix
             mli.setProperty('remainingTime', '')
 
     def createListItem(self, episode):
-        if episode.index:
-            subtitle = u'{0} \u2022 {1}'.format(T(32310, 'S').format(episode.parentIndex),
-                                                T(32311, 'E').format(episode.index))
-        else:
-            subtitle = episode.originallyAvailableAt.asDatetime('%m/%d/%y')
+        # Plezy's episode card in a season hub: the title on top, 'S1E3 · 45m' under it (the air date for episodes
+        # without numbers)
+        try:
+            subtitle = plezy_se.card_subtitle(episode, T(32310, 'S{}'), T(32311, 'E{}'))
+        except Exception:
+            util.ERROR()
+            subtitle = ''
 
         mli = kodigui.ManagedListItem(
             '',
@@ -1682,6 +1712,15 @@ class EpisodesWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMix
             del task
         except:
             pass
+
+    def _createListItem(self, mediaItem, obj):
+        mli = SeasonsMixin._createListItem(self, mediaItem, obj)
+        try:
+            mli.setLabel2(plezy_se.count_label(obj.leafCount.asInt(), T(35142, '{} episode'),
+                                               T(35143, '{} episodes')))
+        except Exception:
+            util.ERROR()
+        return mli
 
     def fillExtras(self):
         items = []
