@@ -23,61 +23,91 @@
     </control>
     {% endblock %}
     <control type="grouplist">
-        <posx>60</posx>
-        <posy>{{ vscale(47.5) }}</posy>
+        <posx>56</posx>
+        <posy>{{ vscale(39.5) }}</posy>
         <width>1000</width>
-        <height>{{ vscale(40) }}</height>
+        <height>{{ vscale(56) }}</height>
         <align>left</align>
-        <itemgap>60</itemgap>
+        <itemgap>16</itemgap>
         <orientation>horizontal</orientation>
         <ondown condition="String.IsEmpty(Window.Property(no.content.filtered))">50</ondown>
         <ondown condition="!String.IsEmpty(Window.Property(no.content.filtered))">600</ondown>
-        <control type="group">
-            <width>40</width>
-            <height>{{ vscale(40) }}</height>
+        <control type="group">{# Plezy round chrome button (app_bar_back_button.dart): dark disc over the artwork, ring on focus #}
+            <width>56</width>
+            <height>{{ vscale(56) }}</height>
             <control type="button" id="201">
-                <animation effect="zoom" start="100" end="144" time="100" center="20,{{ vscale(20) }}" reversible="false">Focus</animation>
-                <animation effect="zoom" start="144" end="100" time="100" center="20,{{ vscale(20) }}" reversible="false">UnFocus</animation>
-                <width>40</width>
-                <height>{{ vscale(40) }}</height>
+                <posx>4</posx>
+                    <posy>{{ vscale(4) }}</posy>
+                    <width>48</width>
+                <height>{{ vscale(48) }}</height>
                 <onright>202</onright>
                 <ondown condition="String.IsEmpty(Window.Property(no.content.filtered))">50</ondown>
                 <ondown condition="!String.IsEmpty(Window.Property(no.content.filtered))">600</ondown>
                 <font>font12</font>
-                <focusedcolor>FF000000</focusedcolor>
-                <texturefocus colordiffuse="FFFFFFFF">script.plex/buttons/home-focus.png</texturefocus>
-                <texturenofocus colordiffuse="99FFFFFF">script.plex/buttons/home.png</texturenofocus>
+                <texturefocus colordiffuse="{{ core.plezy.chrome_focus }}">script.plex/plezy/circle.png</texturefocus>
+                <texturenofocus colordiffuse="{{ core.plezy.chrome_idle }}">script.plex/plezy/circle.png</texturenofocus>
                 <label> </label>
+            </control>
+            <control type="image">
+                <posx>16</posx>
+                <posy>{{ vscale(16) }}</posy>
+                <width>24</width>
+                <height>{{ vscale(24) }}</height>
+                <texture colordiffuse="{{ core.plezy.player_fg }}">script.plex/plezy/icons/home.png</texture>
+                <aspectratio>keep</aspectratio>
+            </control>
+            <control type="image">
+                <visible>Control.HasFocus(201)</visible>
+                <posx>0</posx>
+                <posy>0</posy>
+                <width>56</width>
+                <height>{{ vscale(56) }}</height>
+                <texture border="27" colordiffuse="{{ core.plezy.text }}">script.plex/plezy/ring-pill-48.png</texture>
             </control>
         </control>
         <control type="label">
-            <width max="300">auto</width>
-            <height>{{ vscale(40) }}</height>
-            <font>font12</font>
+            <width max="420">auto</width>
+            <height>{{ vscale(56) }}</height>
+            <font>font14</font>
             <align>left</align>
             <aligny>center</aligny>
-            <textcolor>FFFFFFFF</textcolor>
-            <label>[UPPERCASE]$INFO[Window.Property(screen.title)][/UPPERCASE][COLOR=gray]$INFO[Window.Property(items.count),  (,)][/COLOR]</label>
+            <textcolor>{{ core.plezy.text }}</textcolor>
+            <label>[B]$INFO[Window.Property(screen.title)][/B][COLOR {{ core.plezy.muted }}]$INFO[Window.Property(items.count),  ,][/COLOR]</label>
             <scroll>true</scroll>
         </control>
-        <control type="group">
-            <width>40</width>
-            <height>{{ vscale(40) }}</height>
+        <control type="group">{# Plezy round chrome button (app_bar_back_button.dart): dark disc over the artwork, ring on focus #}
+            <width>56</width>
+            <height>{{ vscale(56) }}</height>
             <control type="button" id="202">
-                <animation effect="zoom" start="100" end="144" time="100" center="20,{{ vscale(20) }}" reversible="false">Focus</animation>
-                <animation effect="zoom" start="144" end="100" time="100" center="20,{{ vscale(20) }}" reversible="false">UnFocus</animation>
-                <width>40</width>
-                <height>{{ vscale(40) }}</height>
+                <posx>4</posx>
+                    <posy>{{ vscale(4) }}</posy>
+                    <width>48</width>
+                <height>{{ vscale(48) }}</height>
                 <onright condition="String.IsEmpty(Window.Property(no.content.filtered))">204</onright>
                 <onright condition="!String.IsEmpty(Window.Property(no.content.filtered))">600</onright>
                 <onleft>201</onleft>
                 <ondown condition="String.IsEmpty(Window.Property(no.content.filtered))">50</ondown>
                 <ondown condition="!String.IsEmpty(Window.Property(no.content.filtered))">600</ondown>
                 <font>font12</font>
-                <focusedcolor>FF000000</focusedcolor>
-                <texturefocus colordiffuse="FFFFFFFF">script.plex/buttons/search-focus.png</texturefocus>
-                <texturenofocus colordiffuse="99FFFFFF">script.plex/buttons/search.png</texturenofocus>
+                <texturefocus colordiffuse="{{ core.plezy.chrome_focus }}">script.plex/plezy/circle.png</texturefocus>
+                <texturenofocus colordiffuse="{{ core.plezy.chrome_idle }}">script.plex/plezy/circle.png</texturenofocus>
                 <label> </label>
+            </control>
+            <control type="image">
+                <posx>16</posx>
+                <posy>{{ vscale(16) }}</posy>
+                <width>24</width>
+                <height>{{ vscale(24) }}</height>
+                <texture colordiffuse="{{ core.plezy.player_fg }}">script.plex/plezy/icons/search.png</texture>
+                <aspectratio>keep</aspectratio>
+            </control>
+            <control type="image">
+                <visible>Control.HasFocus(202)</visible>
+                <posx>0</posx>
+                <posy>0</posy>
+                <width>56</width>
+                <height>{{ vscale(56) }}</height>
+                <texture border="27" colordiffuse="{{ core.plezy.text }}">script.plex/plezy/ring-pill-48.png</texture>
             </control>
         </control>
     </control>

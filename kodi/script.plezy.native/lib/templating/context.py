@@ -21,6 +21,30 @@ TEMPLATE_CONTEXTS = {
             "track": "33EDEDED",         # inactive progress track
             "scrim": "66000000",         # modal rail scrim over content
             "on_primary": "FF0E0F12",    # text on white pill buttons
+            "faint": "66EDEDED",         # empty-state icons, placeholders @ 40%
+            "disabled": "61EDEDED",      # disabled text @ 38%
+            "tonal": "6115171C",         # idle filled-tonal action / chip (surface @ 38%)
+            "tile": "6B15171C",          # idle rail action card (surface @ 42%)
+            "focus_bg": "33FFFFFF",      # FocusTheme.focusBackgroundDecoration (white @ 20%)
+            "menu_surface": "FF26282D",  # menus and popups (surfaceContainer)
+            "input_fill": "14EDEDED",    # text field fill
+            "input_focus_fill": "2EEDEDED",
+            "chip_selected_focus": "FFB7B8B9",
+            "chrome_idle": "4D000000",   # round chrome buttons over artwork (back/home/search)
+            "chrome_focus": "80000000",
+            "shadow": "CC0E0F12",        # text shadow over artwork
+            "dialog_scrim": "8A000000",  # behind dialogs (black54)
+            "sheet_scrim": "80000000",   # behind bottom sheets / player barrier
+            "error": "FFB00020",
+            # player chrome (always white on video, independent of the theme)
+            "player_fg": "FFFFFFFF",
+            "player_fg_muted": "B3FFFFFF",
+            "player_fg_subtle": "99FFFFFF",
+            "player_track": "4DFFFFFF",
+            "player_buffer": "80FFFFFF",
+            "player_card": "CC000000",
+            "player_tooltip": "99000000",
+            "active": "FFFFC107",        # active player toggles (Plezy's amber)
             # TV layout (1080p)
             "rail_collapsed": 72,
             "rail_expanded": 300,

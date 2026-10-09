@@ -1,10 +1,16 @@
-{# Plezy media card for the home hub rows (edde746/plezy lib/widgets/media_card.dart + tv_browse_rail.dart).
+{# Plezy media card for hub rows and detail rails (edde746/plezy lib/widgets/media_card.dart + tv_browse_rail.dart).
    params: kind (poster|square|ar16x9), focused (bool), cw/ch (artwork size), mask (rounded diffuse mask). Uses hub_id from the caller.
+   optional: cond   - layout condition; default is home's hub.display.<hub_id> == kind, "none" drops the condition
+             focus_id - control id whose focus drives glow/ring/scroll (default hub_id)
+             sub_always - show Label2 without the hub.text2lines.<hub_id> window property
+             item_h - layout height (needed in panels)
+   Paginator boundary items (ListItem.Property(is.boundary) + left./right.boundary, is.updating) draw as a
+   chevron tile, like the add-on's RelatedPaginator rows expect.
    Artwork is clipped to radiusSm (8px) with a diffuse mask; focus is the 2.5px primary-colour outside
    stroke plus a soft glow and a 1.03 scale (FocusTheme.fullCardFocusScale), titles sit left-aligned under
    the artwork in semi-bold text with a muted subtitle. #}
-{% with item_w = cw + 24 %}
-<{% if focused %}focusedlayout{% else %}itemlayout{% endif %} width="{{ item_w }}" condition="String.IsEqual(Window.Property(hub.display.{{ hub_id }}),{{ kind }})">
+{% with item_w = cw + 24 & fid = focus_id|default(hub_id) %}
+<{% if focused %}focusedlayout{% else %}itemlayout{% endif %} width="{{ item_w }}"{% if item_h %} height="{{ item_h|vscale }}"{% endif %}{% if cond %}{% if cond != "none" %} condition="{{ cond }}"{% endif %}{% else %} condition="String.IsEqual(Window.Property(hub.display.{{ hub_id }}),{{ kind }})"{% endif %}>
     <control type="group">
         <posx>16</posx>
         <posy>{{ vscale(14) }}</posy>
@@ -13,7 +19,7 @@
             <animation effect="zoom" start="100" end="103" time="120" tween="cubic" easing="out" center="{{ cw / 2 }},{{ (ch / 2)|vscale }}" reversible="false">Focus</animation>
             <animation effect="zoom" start="103" end="100" time="120" tween="cubic" easing="out" center="{{ cw / 2 }},{{ (ch / 2)|vscale }}" reversible="false">UnFocus</animation>
             <control type="image">
-                <visible>Control.HasFocus({{ hub_id }})</visible>
+                <visible>Control.HasFocus({{ fid }})</visible>
                 <posx>-40</posx>
                 <posy>{{ vscale(-40) }}</posy>
                 <width>{{ cw + 80 }}</width>
@@ -30,14 +36,22 @@
                 <texture border="8" colordiffuse="{{ core.plezy.surface }}">script.plex/plezy/r8.png</texture>
             </control>
             <control type="group">
-                <visible>!String.IsEmpty(ListItem.Property(is.end))</visible>
+                <visible>!String.IsEmpty(ListItem.Property(is.end)) | !String.IsEmpty(ListItem.Property(is.boundary))</visible>
                 <control type="image">
-                    <visible>String.IsEmpty(ListItem.Property(is.updating))</visible>
+                    <visible>String.IsEmpty(ListItem.Property(is.updating)) + String.IsEmpty(ListItem.Property(left.boundary))</visible>
                     <posx>{{ cw / 2 - 28 }}</posx>
                     <posy>{{ (ch / 2 - 28)|vscale }}</posy>
                     <width>56</width>
                     <height>{{ vscale(56) }}</height>
                     <texture colordiffuse="{{ core.plezy.muted }}">script.plex/plezy/icons/chevron_right.png</texture>
+                </control>
+                <control type="image">
+                    <visible>String.IsEmpty(ListItem.Property(is.updating)) + !String.IsEmpty(ListItem.Property(left.boundary))</visible>
+                    <posx>{{ cw / 2 - 28 }}</posx>
+                    <posy>{{ (ch / 2 - 28)|vscale }}</posy>
+                    <width>56</width>
+                    <height>{{ vscale(56) }}</height>
+                    <texture colordiffuse="{{ core.plezy.muted }}">script.plex/plezy/icons/chevron_left.png</texture>
                 </control>
                 <control type="image">
                     <visible>!String.IsEmpty(ListItem.Property(is.updating))</visible>
@@ -87,7 +101,7 @@
             {% include "includes/watched_indicator.xml.tpl" with xoff=cw & uw_size=40 & with_count=True & scale="medium" %}
             {% if focused %}
             <control type="image">
-                <visible>Control.HasFocus({{ hub_id }})</visible>
+                <visible>Control.HasFocus({{ fid }})</visible>
                 <posx>-3</posx>
                 <posy>{{ vscale(-3) }}</posy>
                 <width>{{ cw + 6 }}</width>
@@ -97,7 +111,7 @@
             {% endif %}
         </control>
         <control type="label">
-            <scroll>{% if focused %}Control.HasFocus({{ hub_id }}){% else %}false{% endif %}</scroll>
+            <scroll>{% if focused %}Control.HasFocus({{ fid }}){% else %}false{% endif %}</scroll>
             <posx>2</posx>
             <posy>{{ (ch + 12)|vscale }}</posy>
             <width>{{ cw - 4 }}</width>
@@ -109,8 +123,8 @@
             <label>[B]$INFO[ListItem.Label][/B]</label>
         </control>
         <control type="label">
-            <scroll>{% if focused %}Control.HasFocus({{ hub_id }}){% else %}false{% endif %}</scroll>
-            <visible>!String.IsEmpty(Window.Property(hub.text2lines.{{ hub_id }}))</visible>
+            <scroll>{% if focused %}Control.HasFocus({{ fid }}){% else %}false{% endif %}</scroll>
+            {% if not sub_always %}<visible>!String.IsEmpty(Window.Property(hub.text2lines.{{ hub_id }}))</visible>{% endif %}
             <posx>2</posx>
             <posy>{{ (ch + 44)|vscale }}</posy>
             <width>{{ cw - 4 }}</width>

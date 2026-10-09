@@ -102,3 +102,28 @@ def test_meta_line_drops_like_plezy():
     assert plezy_ui.fit_meta(parts, budget=len(full) - 1) == plezy_ui.SEPARATOR.join(
         [parts[0][1], 'TV-MA', '52m', 'February 7, 2025'])
     assert plezy_ui.fit_meta(parts, budget=10) == plezy_ui.SEPARATOR.join([parts[0][1], 'February 7, 2025'])
+
+
+def test_detail_meta_order_matches_plezy_tv_detail():
+    movie = Item(type='movie', year='2016', contentRating='gb/12A', duration=str(116 * 60000),
+                 audienceRating='7.9', audienceRatingImage='imdb://image.rating')
+    assert plezy_ui.detail_meta(movie) == u'2016 • 12A • 1h 56m • IMDb 7.9'
+    ep = Item(type='episode', parentIndex='1', index='3', originallyAvailableAt='2024-03-03', contentRating='TV-14',
+              duration=str(45 * 60000))
+    assert plezy_ui.detail_meta(ep) == u'S1 E3 • Mar 3, 2024 • TV-14 • 45m'
+    # ratings go first when it is too long, then the content rating, then the runtime
+    assert plezy_ui.detail_meta(movie, budget=20) == u'2016 • 12A • 1h 56m'
+    assert plezy_ui.detail_meta(movie, budget=4) == u'2016'
+    show = Item(type='show', year='2022', contentRating='TV-MA', duration=str(55 * 60000))
+    assert plezy_ui.detail_meta(show) == u'2022 • TV-MA'
+
+
+def test_season_meta_play_label_and_dates():
+    season = Item(type='season', parentYear='2022', leafCount='9')
+    assert plezy_ui.season_meta(season, 'Episodes') == u'2022 • 9 Episodes'
+    assert plezy_ui.season_meta(Item(type='season')) == u''
+    assert plezy_ui.play_label('2', '10') == 'S2 E10'
+    assert plezy_ui.play_label('', '3') == ''
+    assert plezy_ui.episode_label('1', '3', u'St.{}', u'F{}') == u'St.1 F3'
+    assert plezy_ui.abbreviated_date('2025-02-07') == 'Feb 7, 2025'
+    assert plezy_ui.abbreviated_date('') == ''

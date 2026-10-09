@@ -177,3 +177,60 @@ def spotlight_fields(obj, season_fmt=u'S{}', episode_fmt=u'E{}', hide_summary=Fa
         'meta': fit_meta(parts, meta_budget),
         'summary': u'' if hide_summary else _text(obj, 'summary'),
     }
+
+
+# ---- detail screens (lib/screens/media_detail_screen.dart, TV) ----
+
+def episode_label(parent_index, index, season_fmt=u'S{}', episode_fmt=u'E{}'):
+    """Plezy formatSeasonEpisodeLabel: 'S1 E3', or '' when either number is missing."""
+    season, episode = u'{0}'.format(parent_index or u'').strip(), u'{0}'.format(index or u'').strip()
+    if not season or not episode:
+        return u''
+    return u'{0} {1}'.format(season_fmt.format(season), episode_fmt.format(episode))
+
+
+def abbreviated_date(value):
+    """Plezy formatAbbreviatedDate (DateFormat.yMMMd): '2024-03-03' -> 'Mar 3, 2024'."""
+    try:
+        d = datetime.datetime.strptime(u'{0}'.format(value)[:10], '%Y-%m-%d')
+    except (TypeError, ValueError):
+        return u''
+    return u'{0} {1}, {2}'.format(d.strftime('%b'), d.day, d.year)
+
+
+def detail_meta(obj, season_fmt=u'S{}', episode_fmt=u'E{}', hide_ratings=False, budget=META_BUDGET):
+    """
+    The TV detail hero's metadata line, in Plezy's _tvDetailMetadataParts order:
+    S1 E3 (episodes)  •  air date (episodes) / year  •  content rating  •  duration  •  ratings
+    Shed to fit: ratings first, then the content rating, then the runtime; label and date always stay.
+    """
+    kind = _text(obj, 'type')
+    parts = []
+    if kind == 'episode':
+        parts.append(('label', episode_label(_text(obj, 'parentIndex'), _text(obj, 'index'), season_fmt, episode_fmt)))
+    if kind == 'episode' and _text(obj, 'originallyAvailableAt'):
+        parts.append(('date', abbreviated_date(_text(obj, 'originallyAvailableAt'))))
+    elif _text(obj, 'year'):
+        parts.append(('date', _text(obj, 'year')))
+    content_rating = _text(obj, 'contentRating')
+    if content_rating:
+        parts.append(('content_rating', content_rating.split('/', 1)[-1]))
+    if kind not in ('show', 'season', 'artist', 'album'):
+        parts.append(('duration', duration_text(_number(obj, 'duration'))))
+    if not hide_ratings:
+        parts.append(('ratings', ratings_text(obj)))
+    return fit_meta(parts, budget)
+
+
+def season_meta(season, episodes_label=u'Episodes'):
+    """A season in the show hero: year  •  N episodes (leafCount)."""
+    parts = [_text(season, 'year') or _text(season, 'parentYear')]
+    count = int(_number(season, 'leafCount'))
+    if count:
+        parts.append(u'{0} {1}'.format(count, episodes_label))
+    return SEPARATOR.join(p for p in parts if p)
+
+
+def play_label(parent_index, index, season_fmt=u'S{}', episode_fmt=u'E{}'):
+    """Plezy _getPlayButtonLabel for shows: the on-deck episode as 'S1 E3' (movies and episodes get no label)."""
+    return episode_label(parent_index, index, season_fmt, episode_fmt)
