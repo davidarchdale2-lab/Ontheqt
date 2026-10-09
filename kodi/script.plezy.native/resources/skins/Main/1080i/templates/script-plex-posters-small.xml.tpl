@@ -81,14 +81,14 @@
                             <posy>0</posy>
                             <width>144</width>
                             <height>{{ vscale(213) }}</height>
-                            <texture>$INFO[ListItem.Property(thumb.fallback)]</texture>
+                            <texture diffuse="script.plex/plezy/mask-grid-poster.png">$INFO[ListItem.Property(thumb.fallback)]</texture>
                         </control>
                         <control type="image">
                             <posx>0</posx>
                             <posy>0</posy>
                             <width>144</width>
                             <height>{{ vscale(213) }}</height>
-                            <texture background="true">$INFO[ListItem.Thumb]</texture>
+                            <texture background="true" diffuse="script.plex/plezy/mask-grid-poster.png">$INFO[ListItem.Thumb]</texture>
                             <aspectratio>scale</aspectratio>
                         </control>
                         <control type="group">
@@ -109,7 +109,7 @@
                                 <width>144</width>
                                 <height>{{ vscale(8) }}</height>
                                 <texture>$INFO[ListItem.Property(progress)]</texture>
-                                <colordiffuse>FFB7C1D6</colordiffuse>
+                                <colordiffuse>{{ core.plezy.text }}</colordiffuse>
                             </control>
                         </control>
                         {% include "includes/watched_indicator.xml.tpl" with xoff=144 & uw_size=29 & with_count=True & scale="small" %}
@@ -133,9 +133,9 @@
                             <width>144</width>
                             <height>{{ vscale(72) }}</height>
                             <font>font10</font>
-                            <align>center</align>
-                            <textcolor>FFFFFFFF</textcolor>
-                            <label>$INFO[ListItem.Label]</label>
+                            <align>left</align>
+                            <textcolor>{{ core.plezy.text }}</textcolor>
+                            <label>[B]$INFO[ListItem.Label][/B]</label>
                         </control>
                         <control type="label">
                             <visible>!String.IsEmpty(ListItem.Property(subtitle))</visible>
@@ -145,8 +145,8 @@
                             <width>144</width>
                             <height>{{ vscale(72) }}</height>
                             <font>font10</font>
-                            <align>center</align>
-                            <textcolor>FFFFFFFF</textcolor>
+                            <align>left</align>
+                            <textcolor>{{ core.plezy.muted }}</textcolor>
                             <label>$INFO[ListItem.Property(subtitle)]</label>
                         </control>
                     </control>
@@ -169,7 +169,7 @@
                             <posy>{{ vscale(-40) }}</posy>
                             <width>234</width>
                             <height>{{ vscale(316) }}</height>
-                            <texture border="42">script.plex/drop-shadow.png</texture>
+                            <texture border="48">script.plex/plezy/glow.png</texture>
                         </control>
                         <control type="group">
                             <posx>5</posx>
@@ -179,14 +179,14 @@
                                 <posy>0</posy>
                                 <width>144</width>
                                 <height>{{ vscale(213) }}</height>
-                                <texture>$INFO[ListItem.Property(thumb.fallback)]</texture>
+                                <texture diffuse="script.plex/plezy/mask-grid-poster.png">$INFO[ListItem.Property(thumb.fallback)]</texture>
                             </control>
                             <control type="image">
                                 <posx>0</posx>
                                 <posy>0</posy>
                                 <width>144</width>
                                 <height>{{ vscale(213) }}</height>
-                                <texture background="true">$INFO[ListItem.Thumb]</texture>
+                                <texture background="true" diffuse="script.plex/plezy/mask-grid-poster.png">$INFO[ListItem.Thumb]</texture>
                                 <aspectratio>scale</aspectratio>
                             </control>
                             <control type="group">
@@ -207,7 +207,7 @@
                                     <width>144</width>
                                     <height>{{ vscale(8) }}</height>
                                     <texture>$INFO[ListItem.Property(progress)]</texture>
-                                    <colordiffuse>FFB7C1D6</colordiffuse>
+                                    <colordiffuse>{{ core.plezy.text }}</colordiffuse>
                                 </control>
                             </control>
                             {% include "includes/watched_indicator.xml.tpl" with xoff=144 & uw_size=29 & with_count=True & scale="small" %}
@@ -233,9 +233,9 @@
                                 <width>144</width>
                                 <height>{{ vscale(72) }}</height>
                                 <font>font10</font>
-                                <align>center</align>
-                                <textcolor>FFFFFFFF</textcolor>
-                                <label>$INFO[ListItem.Label]</label>
+                                <align>left</align>
+                                <textcolor>{{ core.plezy.text }}</textcolor>
+                                <label>[B]$INFO[ListItem.Label][/B]</label>
                             </control>
                             <control type="label">
                                 <visible>!String.IsEmpty(ListItem.Property(subtitle))</visible>
@@ -253,11 +253,11 @@
                         </control>
                         <control type="image">
                             <visible>Control.HasFocus(101)</visible>
-                            <posx>0</posx>
-                            <posy>0</posy>
-                            <width>154</width>
-                            <height>{{ vscale(225) }}</height>
-                            <texture border="10">script.plex/white-outline-rounded.png</texture>
+                            <posx>2</posx>
+                            <posy>{{ vscale(2) }}</posy>
+                            <width>150</width>
+                            <height>{{ vscale(221) }}</height>
+                            <texture border="11" colordiffuse="{{ core.plezy.text }}">script.plex/plezy/ring-8.png</texture>
                         </control>
                     </control>
                 </control>
@@ -299,10 +299,10 @@
                         <width>34</width>
                         <height>{{ vscale(32) }}</height>
                         <font>font10</font>
-                        <align>center</align>
+                        <align>left</align>
                         <aligny>center</aligny>
                         <textcolor>99FFFFFF</textcolor>
-                        <label>$INFO[ListItem.Label]</label>
+                        <label>[B]$INFO[ListItem.Label][/B]</label>
                     </control>
                     <control type="label">
                         <visible>String.IsEqual(Window(10000).Property(script.plezy.native.key), ListItem.Property(key))</visible>
@@ -311,10 +311,10 @@
                         <width>34</width>
                         <height>{{ vscale(32) }}</height>
                         <font>font10</font>
-                        <align>center</align>
+                        <align>left</align>
                         <aligny>center</aligny>
-                        <textcolor>FFFFFFFF</textcolor>
-                        <label>$INFO[ListItem.Label]</label>
+                        <textcolor>{{ core.plezy.text }}</textcolor>
+                        <label>[B]$INFO[ListItem.Label][/B]</label>
                     </control>
                 </control>
             </control>
@@ -335,10 +335,10 @@
                         <width>34</width>
                         <height>{{ vscale(32) }}</height>
                         <font>font10</font>
-                        <align>center</align>
+                        <align>left</align>
                         <aligny>center</aligny>
                         <textcolor>99FFFFFF</textcolor>
-                        <label>$INFO[ListItem.Label]</label>
+                        <label>[B]$INFO[ListItem.Label][/B]</label>
                     </control>
                     <control type="label">
                         <visible>String.IsEqual(Window(10000).Property(script.plezy.native.key), ListItem.Property(key))</visible>
@@ -347,10 +347,10 @@
                         <width>34</width>
                         <height>{{ vscale(32) }}</height>
                         <font>font10</font>
-                        <align>center</align>
+                        <align>left</align>
                         <aligny>center</aligny>
-                        <textcolor>FFFFFFFF</textcolor>
-                        <label>$INFO[ListItem.Label]</label>
+                        <textcolor>{{ core.plezy.text }}</textcolor>
+                        <label>[B]$INFO[ListItem.Label][/B]</label>
                     </control>
                 </control>
 

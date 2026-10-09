@@ -183,7 +183,7 @@
         <height>{{ vscale(3) }}</height>
         <texturebg colordiffuse="9AFFFFFF">script.plex/white-square-1px.png</texturebg>
         <lefttexture>-</lefttexture>
-        <midtexture colordiffuse="FFB7C1D6">script.plex/white-square-1px.png</midtexture>
+        <midtexture colordiffuse="{{ core.plezy.text }}">script.plex/white-square-1px.png</midtexture>
         <righttexture>-</righttexture>
         <overlaytexture>-</overlaytexture>
         <info>Player.Progress</info>
@@ -348,7 +348,7 @@
                     <posy>{{ vscale(-40) }}</posy>
                     <width>380</width>
                     <height>{{ vscale(455) }}</height>
-                    <texture border="42">script.plex/drop-shadow.png</texture>
+                    <texture border="48">script.plex/plezy/glow.png</texture>
                 </control>
                 <control type="image">
                     <visible>Control.HasFocus(101) | ControlGroup(400).HasFocus(0)</visible>
@@ -405,7 +405,7 @@
                     <width>210</width>
                     <height>{{ vscale(210) }}</height>
                     <texture>script.plex/user_select/avatar-background.png</texture>
-                    <colordiffuse>FFB7C1D6</colordiffuse>
+                    <colordiffuse>{{ core.plezy.text }}</colordiffuse>
                 </control>
                 <control type="image">
                     <visible>Control.HasFocus(101)</visible>
@@ -488,7 +488,7 @@
                     <font>font13</font>
                     <align>center</align>
                     <aligny>center</aligny>
-                    <textcolor>FFB7C1D6</textcolor>
+                    <textcolor>{{ core.plezy.text }}</textcolor>
                     <label>$INFO[ListItem.Label]</label>
                 </control>
             </control>
@@ -539,7 +539,7 @@
             <font>font13</font>
             <align>center</align>
             <aligny>center</aligny>
-            <textcolor>FFB7C1D6</textcolor>
+            <textcolor>{{ core.plezy.text }}</textcolor>
             <label>$INFO[Container(101).ListItem.Label]</label>
         </control>
         <control type="label">
@@ -551,7 +551,7 @@
             <font>font13</font>
             <align>center</align>
             <aligny>center</aligny>
-            <textcolor>FFB7C1D6</textcolor>
+            <textcolor>{{ core.plezy.text }}</textcolor>
             <label>[B]$INFO[Container(101).ListItem.Property(pin)][/B]</label>
         </control>
         <control type="image">
@@ -579,7 +579,7 @@
                     <focusedcolor>FF000000</focusedcolor>
                     <align>center</align>
                     <aligny>center</aligny>
-                    <texturefocus colordiffuse="FFB7C1D6">script.plex/white-square.png</texturefocus>
+                    <texturefocus colordiffuse="{{ core.plezy.text }}">script.plex/white-square.png</texturefocus>
                     <texturenofocus colordiffuse="FF333333">script.plex/white-square.png</texturenofocus>
                     <textoffsetx>0</textoffsetx>
                     <textoffsety>0</textoffsety>
@@ -599,7 +599,7 @@
                     <focusedcolor>FF000000</focusedcolor>
                     <align>center</align>
                     <aligny>center</aligny>
-                    <texturefocus colordiffuse="FFB7C1D6">script.plex/white-square.png</texturefocus>
+                    <texturefocus colordiffuse="{{ core.plezy.text }}">script.plex/white-square.png</texturefocus>
                     <texturenofocus colordiffuse="FF333333">script.plex/white-square.png</texturenofocus>
                     <textoffsetx>0</textoffsetx>
                     <textoffsety>0</textoffsety>
@@ -619,7 +619,7 @@
                     <focusedcolor>FF000000</focusedcolor>
                     <align>center</align>
                     <aligny>center</aligny>
-                    <texturefocus colordiffuse="FFB7C1D6">script.plex/white-square.png</texturefocus>
+                    <texturefocus colordiffuse="{{ core.plezy.text }}">script.plex/white-square.png</texturefocus>
                     <texturenofocus colordiffuse="FF333333">script.plex/white-square.png</texturenofocus>
                     <textoffsetx>0</textoffsetx>
                     <textoffsety>0</textoffsety>
@@ -638,7 +638,7 @@
                     <focusedcolor>FF000000</focusedcolor>
                     <align>center</align>
                     <aligny>center</aligny>
-                    <texturefocus colordiffuse="FFB7C1D6">script.plex/white-square.png</texturefocus>
+                    <texturefocus colordiffuse="{{ core.plezy.text }}">script.plex/white-square.png</texturefocus>
                     <texturenofocus colordiffuse="FF333333">script.plex/white-square.png</texturenofocus>
                     <textoffsetx>0</textoffsetx>
                     <textoffsety>0</textoffsety>
@@ -658,7 +658,7 @@
                     <focusedcolor>FF000000</focusedcolor>
                     <align>center</align>
                     <aligny>center</aligny>
-                    <texturefocus colordiffuse="FFB7C1D6">script.plex/white-square.png</texturefocus>
+                    <texturefocus colordiffuse="{{ core.plezy.text }}">script.plex/white-square.png</texturefocus>
                     <texturenofocus colordiffuse="FF333333">script.plex/white-square.png</texturenofocus>
                     <textoffsetx>0</textoffsetx>
                     <textoffsety>0</textoffsety>
@@ -678,7 +678,7 @@
                     <focusedcolor>FF000000</focusedcolor>
                     <align>center</align>
                     <aligny>center</aligny>
-                    <texturefocus colordiffuse="FFB7C1D6">script.plex/white-square.png</texturefocus>
+                    <texturefocus colordiffuse="{{ core.plezy.text }}">script.plex/white-square.png</texturefocus>
                     <texturenofocus colordiffuse="FF333333">script.plex/white-square.png</texturenofocus>
                     <textoffsetx>0</textoffsetx>
                     <textoffsety>0</textoffsety>
@@ -697,7 +697,7 @@
                     <focusedcolor>FF000000</focusedcolor>
                     <align>center</align>
                     <aligny>center</aligny>
-                    <texturefocus colordiffuse="FFB7C1D6">script.plex/white-square.png</texturefocus>
+                    <texturefocus colordiffuse="{{ core.plezy.text }}">script.plex/white-square.png</texturefocus>
                     <texturenofocus colordiffuse="FF333333">script.plex/white-square.png</texturenofocus>
                     <textoffsetx>0</textoffsetx>
                     <textoffsety>0</textoffsety>
@@ -717,7 +717,7 @@
                     <focusedcolor>FF000000</focusedcolor>
                     <align>center</align>
                     <aligny>center</aligny>
-                    <texturefocus colordiffuse="FFB7C1D6">script.plex/white-square.png</texturefocus>
+                    <texturefocus colordiffuse="{{ core.plezy.text }}">script.plex/white-square.png</texturefocus>
                     <texturenofocus colordiffuse="FF333333">script.plex/white-square.png</texturenofocus>
                     <textoffsetx>0</textoffsetx>
                     <textoffsety>0</textoffsety>
@@ -737,7 +737,7 @@
                     <focusedcolor>FF000000</focusedcolor>
                     <align>center</align>
                     <aligny>center</aligny>
-                    <texturefocus colordiffuse="FFB7C1D6">script.plex/white-square.png</texturefocus>
+                    <texturefocus colordiffuse="{{ core.plezy.text }}">script.plex/white-square.png</texturefocus>
                     <texturenofocus colordiffuse="FF333333">script.plex/white-square.png</texturenofocus>
                     <textoffsetx>0</textoffsetx>
                     <textoffsety>0</textoffsety>
@@ -756,7 +756,7 @@
                 <focusedcolor>FF000000</focusedcolor>
                 <align>center</align>
                 <aligny>center</aligny>
-                <texturefocus colordiffuse="FFB7C1D6">script.plex/white-square.png</texturefocus>
+                <texturefocus colordiffuse="{{ core.plezy.text }}">script.plex/white-square.png</texturefocus>
                 <texturenofocus colordiffuse="FF333333">script.plex/white-square.png</texturenofocus>
                 <textoffsetx>0</textoffsetx>
                 <textoffsety>0</textoffsety>
@@ -834,7 +834,7 @@
                 <posy>0</posy>
                 <width>124</width>
                 <height>{{ vscale(66) }}</height>
-                <texture colordiffuse="FFB7C1D6" border="10">script.plex/white-square-rounded.png</texture>
+                <texture colordiffuse="{{ core.plezy.text }}" border="10">script.plex/white-square-rounded.png</texture>
             </control>
             <control type="group">
                 <posx>27</posx>
@@ -893,22 +893,15 @@
     </control>
 
     <control type="label">
-        <right>213</right>
+        <right>60</right>
         <posy>{{ vscale(35) }}</posy>
         <width>200</width>
         <height>{{ vscale(65) }}</height>
         <font>font12</font>
         <align>right</align>
         <aligny>center</aligny>
-        <textcolor>FFFFFFFF</textcolor>
+        <textcolor>{{ core.plezy.muted }}</textcolor>
         <label>$INFO[System.Time]</label>
-    </control>
-    <control type="image">
-        <posx>153r</posx>
-        <posy>{{ vscale(47.5) }}</posy>
-        <width>93</width>
-        <height>{{ vscale(43) }}</height>
-        <texture>script.plex/home/plex.png</texture>
     </control>
 </control>
 

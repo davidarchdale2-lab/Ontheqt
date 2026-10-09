@@ -53,7 +53,7 @@
                 <posy>0</posy>
                 <width>519</width>
                 <height>{{ vscale(769) }}</height>
-                <texture>$INFO[Window.Property(thumb.fallback)]</texture>
+                <texture diffuse="script.plex/plezy/mask-grid-poster.png">$INFO[Window.Property(thumb.fallback)]</texture>
                 <aspectratio aligny="top">scale</aspectratio>
             </control>
             <control type="image">
@@ -61,7 +61,7 @@
                 <posy>0</posy>
                 <width>519</width>
                 <height>{{ vscale(769) }}</height>
-                <texture>$INFO[Window.Property(thumb)]</texture>
+                <texture diffuse="script.plex/plezy/mask-grid-poster.png">$INFO[Window.Property(thumb)]</texture>
                 <aspectratio aligny="top">scale</aspectratio>
             </control>
         </control>
@@ -72,7 +72,7 @@
                 <posy>0</posy>
                 <width>519</width>
                 <height>{{ vscale(519) }}</height>
-                <texture>$INFO[Window.Property(thumb.fallback)]</texture>
+                <texture diffuse="script.plex/plezy/mask-grid-square.png">$INFO[Window.Property(thumb.fallback)]</texture>
                 <aspectratio aligny="top">keep</aspectratio>
             </control>
             <control type="image">
@@ -80,7 +80,7 @@
                 <posy>0</posy>
                 <width>519</width>
                 <height>{{ vscale(519) }}</height>
-                <texture>$INFO[Window.Property(thumb)]</texture>
+                <texture diffuse="script.plex/plezy/mask-grid-square.png">$INFO[Window.Property(thumb)]</texture>
                 <aspectratio aligny="top">scale</aspectratio>
             </control>
         </control>
@@ -91,7 +91,7 @@
                 <posy>0</posy>
                 <width>519</width>
                 <height>{{ vscale(292) }}</height>
-                <texture>$INFO[Window.Property(thumb.fallback)]</texture>
+                <texture diffuse="script.plex/plezy/mask-grid-wide.png">$INFO[Window.Property(thumb.fallback)]</texture>
                 <aspectratio>scale</aspectratio>
             </control>
             <control type="image">
@@ -99,7 +99,7 @@
                 <posy>0</posy>
                 <width>519</width>
                 <height>{{ vscale(292) }}</height>
-                <texture>$INFO[Window.Property(thumb)]</texture>
+                <texture diffuse="script.plex/plezy/mask-grid-wide.png">$INFO[Window.Property(thumb)]</texture>
                 <aspectratio aligny="top">scale</aspectratio>
             </control>
         </control>

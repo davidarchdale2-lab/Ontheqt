@@ -1,3 +1,11 @@
+[-1.14.1+native.2-]
+- Home: Plezy TV layout - 72px icon rail that opens into a floating panel on focus, Search moved into the rail
+- Home: spotlight for the focused item (clear logo or title, metadata line, summary) over the full-strength backdrop
+- Home: hub rows anchored at the bottom; the active row leads, rows above it fade out, the rest dim; row icons
+- Cards: rounded artwork, primary-colour focus ring and glow, left-aligned titles with muted subtitles
+- Theme: Plezy palette and tokens, Material Symbols icons, new default "Plezy" button theme (others selectable)
+- Background art opacity now defaults to 100%; the home screen uses gradient scrims instead of a flat dim
+
 [-1.0.5d-]
 - Core/Plex.direct: Only check native resolving of hostnames containing plex.direct
 - Core/Plex.direct: Reset mapped hosts if the user skips the confirmation dialog

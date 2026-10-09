@@ -1,4 +1,4 @@
-Plezy Native preview, revision 1
+Plezy Native preview, revision 2
 
 This is a Plezy-style native Kodi interface derived from PM4K. It uses Kodi's
 existing GPU interface and video/audio player. The Flutter app and its
@@ -9,7 +9,7 @@ preserved. Install it on your already working ROM; no reflashing is needed.
 INSTALL
 1. In the old Plezy device menu, select Open Kodi. A keyboard's F12 can open
    that menu if needed. This also leaves Kodi selected on subsequent boots.
-2. Copy Plezy-Native-preview-r1.zip to a USB stick or an accessible share.
+2. Copy Plezy-Native-preview-r2.zip to a USB stick or an accessible share.
 3. In Kodi, Settings > Add-ons > Install from zip file. Enable Unknown sources
    if prompted, then select the ZIP. Kodi can obtain the required Python
    modules from its existing CoreELEC repository; wait for installation.
@@ -21,9 +21,20 @@ If dependency installation fails, use the provided dependencies folder.
 Install these module ZIPs first, in this order: certifi, chardet, idna,
 urllib3, six, kodi-six, requests. Then install the preview ZIP again.
 
+UPDATING FROM REVISION 1
+Install the r2 ZIP over r1 the same way; login and preferences are kept. The
+templates re-render once on the first start. If you never changed the theme,
+r2's "Plezy" theme is used; otherwise pick it under Settings > User Interface
+> Theme. Background art opacity now defaults to 100%; if you had changed that
+slider, set it back to 100 for the Plezy look.
+
 USE
-Up/Down changes library in the left sidebar. Right enters the poster rows;
-Left at the first poster returns to the sidebar. During playback, press OK
+The home screen follows Plezy's TV layout. The left rail shows icons only;
+Left from the first poster (or Back) opens it as a panel with labels, and
+Up/Down there changes library. Search is the first entry in the rail. Right
+returns to the rows. The focused item's logo or title, details and summary sit
+above the rows; Up from the first row reaches the server and user buttons.
+During playback, press OK
 to show the controls, select the Settings gear, then Subtitles > Off.
 The Off choice uses Plex's normal stream-selection API, so the server
 remembers it; selecting another subtitle remains available. Plex-selected
@@ -40,10 +51,14 @@ the Open Kodi action above. To return to it, close this add-on and use Kodi
 Favourites > Launch Plezy. You can also uninstall this preview normally.
 
 VALIDATION
-Native R10 Python dependency imports passed under QEMU. The new sidebar,
-subtitle picker and stop behavior passed tests. All 705 rendered Kodi XML
-layouts passed control-ID, font and asset checks. No physical AM6B interface
-frame-rate or playback test has been performed for this preview.
+Revision 2: all 940 template layouts (47 templates x 5 themes x 4 watched-
+indicator styles) render outside Kodi and pass XML, control-ID, font and
+texture checks against revision 1, also at a 4:3 resolution. The spotlight and
+row-icon logic has unit tests. Layout previews were drawn from the rendered
+XML with mock data; Kodi itself was not run. Revision 1 notes: native R10
+Python dependency imports passed under QEMU; sidebar, subtitle picker and stop
+behaviour passed tests. No physical AM6B interface frame-rate or playback test
+has been performed for either preview.
 
 The preview uses PM4K's features, with a Plezy-inspired native layout; it is
 not the official Plezy application. Future preview updates are installed by
@@ -57,4 +72,4 @@ https://github.com/pannal/plex-for-kodi
 Branch: develop_kodi21
 Commit: 2707bbe72a7ea829b69bdd7ebb753c700552b4d0
 Upstream version: 1.14.1-beta1
-Local identity: script.plezy.native, version 1.14.1+native.1
+Local identity: script.plezy.native, version 1.14.1+native.2

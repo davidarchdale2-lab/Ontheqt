@@ -31,7 +31,7 @@
                         <posy>0</posy>
                         <width>125</width>
                         <height>{{ vscale(101) }}</height>
-                        <texture colordiffuse="FFB7C1D6">{{ theme.assets.buttons.base }}repeat.png</texture>
+                        <texture colordiffuse="{{ core.plezy.text }}">{{ theme.assets.buttons.base }}repeat.png</texture>
                     </control>
                     <control type="image">
                         <visible>Playlist.IsRepeatOne</visible>
@@ -39,7 +39,7 @@
                         <posy>0</posy>
                         <width>125</width>
                         <height>{{ vscale(101) }}</height>
-                        <texture colordiffuse="FFB7C1D6">{{ theme.assets.buttons.base }}repeat-one.png</texture>
+                        <texture colordiffuse="{{ core.plezy.text }}">{{ theme.assets.buttons.base }}repeat-one.png</texture>
                     </control>
                 </control>
                 <control type="group">
@@ -81,7 +81,7 @@
                 <texturenofocus{% if theme.buttons.useNoFocusColor %} colordiffuse="{{ theme.buttons.noFocusColor|default('99FFFFFF') }}"{% endif %}>{{ theme.assets.buttons.base }}shuffle.png</texturenofocus>
                 <usealttexture>Playlist.IsRandom</usealttexture>
                 <alttexturefocus{% if theme.buttons.useFocusColor %} colordiffuse="{{ "FFFFFFFF" }}"{% endif %}>{{ theme.assets.buttons.base }}shuffle{{ theme.assets.buttons.focusSuffix }}.png</alttexturefocus>
-                <alttexturenofocus colordiffuse="FFB7C1D6">{{ theme.assets.buttons.base }}shuffle.png</alttexturenofocus>
+                <alttexturenofocus colordiffuse="{{ core.plezy.text }}">{{ theme.assets.buttons.base }}shuffle.png</alttexturenofocus>
                 <onclick>PlayerControl(RandomOn)</onclick>
                 <altclick>PlayerControl(RandomOff)</altclick>
                 <label> </label>
@@ -132,7 +132,7 @@
                         <posy>0</posy>
                         <width>125</width>
                         <height>{{ vscale(101) }}</height>
-                        <texture colordiffuse="FFB7C1D6">{{ theme.assets.buttons.base }}shuffle.png</texture>
+                        <texture colordiffuse="{{ core.plezy.text }}">{{ theme.assets.buttons.base }}shuffle.png</texture>
                     </control>
                     <control type="image">
                         <visible>Control.HasFocus(422)</visible>

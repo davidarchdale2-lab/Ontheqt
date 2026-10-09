@@ -2,7 +2,7 @@
     
     <posx>0</posx><posy>{{ vscale(0) }}</posy>
     <width>1920</width><height>{{ vscale(1080) }}</height>
-    <texture border="10">script.plex/white-square.png</texture><colordiffuse>FF0C0E13</colordiffuse>
+    <texture border="10">script.plex/white-square.png</texture><colordiffuse>{{ core.plezy.bg }}</colordiffuse>
 </control>
 <control type="group">
     <visible>String.IsEmpty(Window.Property(use_solid_background))</visible>
@@ -43,9 +43,10 @@
         {% include "includes/scale_background.xml.tpl" %}
     </control>
 </control>
+{% if not spotlight %}{# screens with a Plezy spotlight draw their own gradient scrims instead of a flat dim #}
 <control type="image">
-    
     <posx>0</posx><posy>{{ vscale(0) }}</posy>
     <width>1920</width><height>{{ vscale(1080) }}</height>
-    <texture border="10">script.plex/white-square.png</texture><colordiffuse>A60C0E13</colordiffuse>
+    <texture border="10">script.plex/white-square.png</texture><colordiffuse>A60E0F12</colordiffuse>
 </control>
+{% endif %}

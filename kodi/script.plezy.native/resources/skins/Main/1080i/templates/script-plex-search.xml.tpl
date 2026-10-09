@@ -56,7 +56,7 @@
     <font>font12</font>
     <focusedcolor>FF000000</focusedcolor>
     <texturefocus colordiffuse="FFFFFFFF">script.plex/buttons/search-focus.png</texturefocus>
-    <texturenofocus colordiffuse="FFB7C1D6">script.plex/buttons/search.png</texturenofocus>
+    <texturenofocus colordiffuse="{{ core.plezy.text }}">script.plex/buttons/search.png</texturenofocus>
     <onclick>Close</onclick>
     <label> </label>
 </control>
@@ -89,7 +89,7 @@
                 <posy>0</posy>
                 <width>151</width>
                 <height>{{ vscale(60) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
             <control type="group">
                 <visible>String.IsEqual(Window.Property(search.section),all)</visible>
@@ -98,7 +98,7 @@
                     <posy>0</posy>
                     <width>151</width>
                     <height>{{ vscale(60) }}</height>
-                    <texture colordiffuse="FFB7C1D6">script.plex/white-square.png</texture>
+                    <texture colordiffuse="{{ core.plezy.text }}">script.plex/white-square.png</texture>
                 </control>
                 <control type="label">
                     <scroll>false</scroll>
@@ -135,7 +135,7 @@
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(60) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
             <control type="image">
                 <visible>String.IsEqual(Window.Property(search.section),movie)</visible>
@@ -143,7 +143,7 @@
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(60) }}</height>
-                <texture colordiffuse="FFB7C1D6">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.text }}">script.plex/white-square.png</texture>
             </control>
         </control>
         <control type="group">
@@ -154,7 +154,7 @@
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(60) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
             <control type="image">
                 <visible>String.IsEqual(Window.Property(search.section),show)</visible>
@@ -162,7 +162,7 @@
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(60) }}</height>
-                <texture colordiffuse="FFB7C1D6">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.text }}">script.plex/white-square.png</texture>
             </control>
         </control>
         <control type="group">
@@ -173,7 +173,7 @@
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(60) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
             <control type="image">
                 <visible>String.IsEqual(Window.Property(search.section),artist)</visible>
@@ -181,7 +181,7 @@
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(60) }}</height>
-                <texture colordiffuse="FFB7C1D6">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.text }}">script.plex/white-square.png</texture>
             </control>
         </control>
         <control type="group">
@@ -192,7 +192,7 @@
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(60) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
             <control type="image">
                 <visible>String.IsEqual(Window.Property(search.section),photo)</visible>
@@ -200,7 +200,7 @@
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(60) }}</height>
-                <texture colordiffuse="FFB7C1D6">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.text }}">script.plex/white-square.png</texture>
             </control>
         </control>
 
@@ -457,42 +457,42 @@
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(74) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
             <control type="image">
                 <posx>77</posx>
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(74) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
             <control type="image">
                 <posx>154</posx>
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(74) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
             <control type="image">
                 <posx>231</posx>
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(74) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
             <control type="image">
                 <posx>308</posx>
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(74) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
             <control type="image">
                 <posx>385</posx>
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(74) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
         </control>
         <!-- IMAGES ROW 2 -->
@@ -504,42 +504,42 @@
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(74) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
             <control type="image">
                 <posx>77</posx>
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(74) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
             <control type="image">
                 <posx>154</posx>
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(74) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
             <control type="image">
                 <posx>231</posx>
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(74) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
             <control type="image">
                 <posx>308</posx>
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(74) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
             <control type="image">
                 <posx>385</posx>
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(74) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
         </control>
         <!-- IMAGES ROW 3 -->
@@ -551,42 +551,42 @@
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(74) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
             <control type="image">
                 <posx>77</posx>
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(74) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
             <control type="image">
                 <posx>154</posx>
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(74) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
             <control type="image">
                 <posx>231</posx>
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(74) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
             <control type="image">
                 <posx>308</posx>
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(74) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
             <control type="image">
                 <posx>385</posx>
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(74) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
         </control>
         <!-- IMAGES ROW 4 -->
@@ -598,42 +598,42 @@
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(74) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
             <control type="image">
                 <posx>77</posx>
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(74) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
             <control type="image">
                 <posx>154</posx>
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(74) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
             <control type="image">
                 <posx>231</posx>
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(74) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
             <control type="image">
                 <posx>308</posx>
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(74) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
             <control type="image">
                 <posx>385</posx>
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(74) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
         </control>
         <!-- IMAGES ROW 5 -->
@@ -645,14 +645,14 @@
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(74) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
             <control type="image">
                 <posx>77</posx>
                 <posy>0</posy>
                 <width>74</width>
                 <height>{{ vscale(74) }}</height>
-                <texture colordiffuse="FF1F1F1F">script.plex/white-square.png</texture>
+                <texture colordiffuse="{{ core.plezy.surface }}">script.plex/white-square.png</texture>
             </control>
             <control type="image">
                 <posx>154</posx>

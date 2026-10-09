@@ -13,6 +13,7 @@ from six.moves import range
 
 from lib import backgroundthread
 from lib import player
+from lib import plezy_ui
 from lib import util
 from lib.path_mapping import pmm
 from lib.plex_hosts import pdm
@@ -667,6 +668,7 @@ class HomeWindow(kodigui.BaseWindow, util.CronReceiver, CommonMixin, SpoilersMix
     THUMB_POSTER_DIM = util.scaleResolution(244, 361)
     THUMB_AR16X9_DIM = util.scaleResolution(532, 299)
     THUMB_SQUARE_DIM = util.scaleResolution(244, 244)
+    SPOTLIGHT_LOGO_DIM = util.scaleResolution(480, 128)
 
     def __init__(self, *args, **kwargs):
         kodigui.BaseWindow.__init__(self, *args, **kwargs)
@@ -677,6 +679,7 @@ class HomeWindow(kodigui.BaseWindow, util.CronReceiver, CommonMixin, SpoilersMix
         self.closeOption = None
         self.hubControls = None
         self.backgroundSet = False
+        self.spotlightSet = False
         self.sectionChangeThread = None
         self.sectionChangeTimeout = 0
         self.lastFocusID = None
@@ -801,7 +804,7 @@ class HomeWindow(kodigui.BaseWindow, util.CronReceiver, CommonMixin, SpoilersMix
             return
 
         if self.go_root:
-            self.setProperty('hub.focus', '')
+            self.setHubFocus('')
             # cancel any pending async section change so the focus call below doesn't trigger a redundant reload
             self.sectionChangeTimeout = None
             # decide whether we need to switch the displayed hubs before overwriting state
@@ -2636,7 +2639,7 @@ class HomeWindow(kodigui.BaseWindow, util.CronReceiver, CommonMixin, SpoilersMix
                     if util.addonSettings.fastBack and not optionsFocused and offSections \
                             and self.lastFocusID not in (self.USER_BUTTON_ID, self.SERVER_BUTTON_ID,
                                                          self.SEARCH_BUTTON_ID, self.SECTION_LIST_ID):
-                        self.setProperty('hub.focus', '0')
+                        self.setHubFocus('0')
                         self.setFocusId(self.SECTION_LIST_ID)
                         return
 
@@ -2734,7 +2737,7 @@ class HomeWindow(kodigui.BaseWindow, util.CronReceiver, CommonMixin, SpoilersMix
             self.lastFocusID = controlID
 
         if 399 < controlID < 500:
-            self.setProperty('hub.focus', str(self.hubFocusIndexes[controlID - 400]))
+            self.setHubFocus(str(self.hubFocusIndexes[controlID - 400]), str(controlID))
 
         if self.movingSection:
             return
@@ -2748,8 +2751,38 @@ class HomeWindow(kodigui.BaseWindow, util.CronReceiver, CommonMixin, SpoilersMix
         elif controlID != 250 and xbmc.getCondVisibility('ControlGroup(50).HasFocus(0) + !ControlGroup(100).HasFocus(0)'):
             util.setGlobalBoolProperty('off.sections', '1')
 
+    def setHubFocus(self, index, control_id=''):
+        # hub.focus drives the rows' slide; hub.focus.id (the focused hub's control id) lets the template fade out
+        # the rows that slid above the active one, which would otherwise sit over the spotlight
+        self.setProperty('hub.focus', index)
+        self.setProperty('hub.focus.id', control_id)
+
+    def updateSpotlight(self, ds):
+        """
+        Plezy's TV spotlight: the focused item's clear logo (or title), a metadata line and its summary, drawn
+        over the backdrop dynamic backgrounds already put behind it. Everything comes from the hub listing, so
+        this never touches the network.
+        """
+        fields = {'logo': '', 'title': '', 'meta': '', 'summary': ''}
+        if ds:
+            try:
+                hide = False
+                if ds.type == 'episode' and self.spoilerSetting != 'off':
+                    hide = ds.__dict__.get('_noSpoilers')
+                    if hide is None:
+                        hide = self.hideSpoilers(ds)
+                fields.update(plezy_ui.spotlight_fields(
+                    ds, season_fmt=T(32310, 'S{}'), episode_fmt=T(32311, 'E{}'),
+                    hide_summary=bool(hide and self.noSummaries), hide_title=bool(hide and self.noTitles),
+                    hide_ratings=bool(hide and self.noRatings)))
+                fields['logo'] = util.clearLogoFrom(ds, *self.SPOTLIGHT_LOGO_DIM)
+            except Exception:
+                util.ERROR("Home: couldn't build the spotlight for {0}".format(ds))
+        for key, value in fields.items():
+            self.setProperty('spotlight.' + key, value)
+
     def goHome(self, **kwargs):
-        self.setProperty('hub.focus', '')
+        self.setHubFocus('')
         self.setFocusId(self.SECTION_LIST_ID)
         self.sectionList.setSelectedItemByPos(0)
         # set lastSection here already, otherwise tick() might interfere
@@ -2905,6 +2938,7 @@ class HomeWindow(kodigui.BaseWindow, util.CronReceiver, CommonMixin, SpoilersMix
         section = kwargs.pop("section", None)
         self.showSections(focus_section=section or home_section)
         self.backgroundSet = False
+        self.spotlightSet = False
         # Don't call showHubs() here — showSections() just cleared sectionHubs,
         # so there's nothing to draw. Let background tasks call showHubs() via
         # sectionHubsCallback when data actually arrives.
@@ -2967,7 +3001,7 @@ class HomeWindow(kodigui.BaseWindow, util.CronReceiver, CommonMixin, SpoilersMix
                 task.cancel()
 
         with self.lock:
-            self.setProperty('hub.focus', '')
+            self.setHubFocus('')
             self.displayServerAndUser()
             if plexapp.SERVERMANAGER.selectedServer:
                 self.loadLibrarySettings()
@@ -3065,7 +3099,7 @@ class HomeWindow(kodigui.BaseWindow, util.CronReceiver, CommonMixin, SpoilersMix
                 if mli.dataSource and mli.dataSource.key == sectionID:
                     self.sectionList.selectItem(mli.pos())
                     self.lastSection = mli.dataSource
-                    self.setProperty('hub.focus', '')
+                    self.setHubFocus('')
                     self.setFocusId(self.SECTION_LIST_ID)
                     self._sectionReallyChanged(self.lastSection)
 
@@ -3605,11 +3639,15 @@ class HomeWindow(kodigui.BaseWindow, util.CronReceiver, CommonMixin, SpoilersMix
             if pos is not None and pos > 0:
                 control.selectItem(0)
                 self.updateBackgroundFrom(control[0].dataSource)
+                self.updateSpotlight(control[0].dataSource)
                 return
             return True
 
         if util.addonSettings.dynamicBackgrounds and is_valid_mli:
             self.updateBackgroundFrom(mli.dataSource)
+
+        if is_valid_mli:
+            self.updateSpotlight(mli.dataSource)
 
         if not mli or not mli.getProperty('is.end') or mli.getProperty('is.updating') == '1':
             # round robining
@@ -3624,6 +3662,7 @@ class HomeWindow(kodigui.BaseWindow, util.CronReceiver, CommonMixin, SpoilersMix
                         control.selectItem(0)
                         self._lastSelectedItem = (controlID, 0)
                         self.updateBackgroundFrom(control[0].dataSource)
+                        self.updateSpotlight(control[0].dataSource)
                         return
                 elif (action == xbmcgui.ACTION_MOVE_LEFT and mlipos == 0
                       and ((controlID, mlipos) == self._lastSelectedItem)):
@@ -3639,6 +3678,7 @@ class HomeWindow(kodigui.BaseWindow, util.CronReceiver, CommonMixin, SpoilersMix
                             
                         self._lastSelectedItem = (controlID, last_item_index)
                         self.updateBackgroundFrom(control[last_item_index].dataSource)
+                        self.updateSpotlight(control[last_item_index].dataSource)
                     else:
                         task = ExtendHubTask().setup(control.dataSource, self.extendHubCallback,
                                                      canceledCallback=lambda hub: mli.setBoolProperty('is.updating',
@@ -3732,9 +3772,11 @@ class HomeWindow(kodigui.BaseWindow, util.CronReceiver, CommonMixin, SpoilersMix
             while self.block_section_change:
                 util.MONITOR.waitFor()
 
-            self.setProperty('hub.focus', '')
+            self.setHubFocus('')
             if util.addonSettings.dynamicBackgrounds:
                 self.backgroundSet = False
+            self.spotlightSet = False
+            self.updateSpotlight(None)
 
             util.DEBUG_LOG('Section changed ({0}): {1}', section.key, repr(section.title))
             self.lastSection = section
@@ -4475,6 +4517,7 @@ class HomeWindow(kodigui.BaseWindow, util.CronReceiver, CommonMixin, SpoilersMix
 
         display_title = hub.__dict__.get('_displayTitle') or hub.title or kwargs.get('title')
         self.setProperty('hub.4{0:02d}'.format(index), display_title)
+        self.setProperty('hub.icon.4{0:02d}'.format(index), plezy_ui.hub_icon(identifier, display_title))
         self.setProperty('hub.text2lines.4{0:02d}'.format(index), text2lines and '1' or '')
 
         use_reselect_pos = False
@@ -4507,6 +4550,9 @@ class HomeWindow(kodigui.BaseWindow, util.CronReceiver, CommonMixin, SpoilersMix
             if not self.backgroundSet and not use_reselect_pos:
                 if self.updateBackgroundFrom(obj):
                     self.backgroundSet = True
+            if not self.spotlightSet and not use_reselect_pos:
+                self.updateSpotlight(obj)
+                self.spotlightSet = True
 
             wide = with_art
             no_spoilers = False

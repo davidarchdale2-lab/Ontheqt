@@ -32,7 +32,7 @@
         <width>1000</width>
         <height>{{ vscale(80) }}</height>
         <texture border="10">script.plex/white-square-top-rounded.png</texture>
-        <colordiffuse>F21F1F1F</colordiffuse>
+        <colordiffuse>F215171C</colordiffuse>
     </control>
     <control type="image">
         <posx>0</posx>

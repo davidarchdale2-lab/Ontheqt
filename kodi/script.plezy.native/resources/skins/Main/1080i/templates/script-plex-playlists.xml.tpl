@@ -96,7 +96,7 @@
                             <posy>0</posy>
                             <width>238</width>
                             <height>{{ vscale(238) }}</height>
-                            <texture>$INFO[ListItem.Property(thumb.fallback)]</texture>
+                            <texture diffuse="script.plex/plezy/mask-grid-square.png">$INFO[ListItem.Property(thumb.fallback)]</texture>
                             <aspectratio>scale</aspectratio>
                         </control>
                         <control type="image">
@@ -104,7 +104,7 @@
                             <posy>0</posy>
                             <width>238</width>
                             <height>{{ vscale(238) }}</height>
-                            <texture background="true">$INFO[ListItem.Thumb]</texture>
+                            <texture background="true" diffuse="script.plex/plezy/mask-grid-square.png">$INFO[ListItem.Thumb]</texture>
                             <aspectratio>scale</aspectratio>
                         </control>
                         <control type="label">
@@ -147,7 +147,7 @@
                             <posy>{{ vscale(-19) }}</posy>
                             <width>318</width>
                             <height>{{ vscale(318) }}</height>
-                            <texture border="42">script.plex/drop-shadow.png</texture>
+                            <texture border="48">script.plex/plezy/glow.png</texture>
                         </control>
                         <control type="group">
                             <posx>21</posx>
@@ -157,7 +157,7 @@
                                 <posy>0</posy>
                                 <width>238</width>
                                 <height>{{ vscale(238) }}</height>
-                                <texture>$INFO[ListItem.Property(thumb.fallback)]</texture>
+                                <texture diffuse="script.plex/plezy/mask-grid-square.png">$INFO[ListItem.Property(thumb.fallback)]</texture>
                                 <aspectratio>scale</aspectratio>
                             </control>
                             <control type="image">
@@ -165,7 +165,7 @@
                                 <posy>0</posy>
                                 <width>238</width>
                                 <height>{{ vscale(238) }}</height>
-                                <texture background="true">$INFO[ListItem.Thumb]</texture>
+                                <texture background="true" diffuse="script.plex/plezy/mask-grid-square.png">$INFO[ListItem.Thumb]</texture>
                                 <aspectratio>scale</aspectratio>
                             </control>
                             <control type="label">
@@ -191,11 +191,11 @@
                         </control>
                         <control type="image">
                             <visible>Control.HasFocus(101)</visible>
-                            <posx>16</posx>
-                            <posy>{{ vscale(16) }}</posy>
-                            <width>248</width>
-                            <height>{{ vscale(248) }}</height>
-                            <texture border="10">script.plex/white-outline-rounded.png</texture>
+                            <posx>18</posx>
+                            <posy>{{ vscale(18) }}</posy>
+                            <width>244</width>
+                            <height>{{ vscale(244) }}</height>
+                            <texture border="11" colordiffuse="{{ core.plezy.text }}">script.plex/plezy/ring-8.png</texture>
                         </control>
                     </control>
                 </control>
@@ -218,7 +218,7 @@
             <width>1800</width>
             <height>{{ vscale(2) }}</height>
             <texture>script.plex/white-square.png</texture>
-            <colordiffuse>661F1F1F</colordiffuse>
+            <colordiffuse>6615171C</colordiffuse>
         </control>
         <control type="label">
             <posx>60</posx>
@@ -253,7 +253,7 @@
                             <posy>0</posy>
                             <width>537</width>
                             <height>{{ vscale(303) }}</height>
-                            <texture>$INFO[ListItem.Property(thumb.fallback)]</texture>
+                            <texture diffuse="script.plex/plezy/mask-grid-wide.png">$INFO[ListItem.Property(thumb.fallback)]</texture>
                             <aspectratio>scale</aspectratio>
                         </control>
                         <control type="image">
@@ -261,7 +261,7 @@
                             <posy>0</posy>
                             <width>537</width>
                             <height>{{ vscale(303) }}</height>
-                            <texture background="true">$INFO[ListItem.Thumb]</texture>
+                            <texture background="true" diffuse="script.plex/plezy/mask-grid-wide.png">$INFO[ListItem.Thumb]</texture>
                             <aspectratio>scale</aspectratio>
                         </control>
                         <control type="label">
@@ -304,7 +304,7 @@
                             <posy>{{ vscale(-15.5) }}</posy>
                             <width>617</width>
                             <height>{{ vscale(383) }}</height>
-                            <texture border="42">script.plex/drop-shadow.png</texture>
+                            <texture border="48">script.plex/plezy/glow.png</texture>
                         </control>
                         <control type="group">
                             <posx>41.5</posx>
@@ -314,7 +314,7 @@
                                 <posy>0</posy>
                                 <width>537</width>
                                 <height>{{ vscale(303) }}</height>
-                                <texture>$INFO[ListItem.Property(thumb.fallback)]</texture>
+                                <texture diffuse="script.plex/plezy/mask-grid-wide.png">$INFO[ListItem.Property(thumb.fallback)]</texture>
                                 <aspectratio>scale</aspectratio>
                             </control>
                             <control type="image">
@@ -322,7 +322,7 @@
                                 <posy>0</posy>
                                 <width>537</width>
                                 <height>{{ vscale(303) }}</height>
-                                <texture background="true">$INFO[ListItem.Thumb]</texture>
+                                <texture background="true" diffuse="script.plex/plezy/mask-grid-wide.png">$INFO[ListItem.Thumb]</texture>
                                 <aspectratio>scale</aspectratio>
                             </control>
                             <control type="label">
@@ -348,11 +348,11 @@
                         </control>
                         <control type="image">
                             <visible>Control.HasFocus(301)</visible>
-                            <posx>36.5</posx>
-                            <posy>{{ vscale(20.5) }}</posy>
-                            <width>547</width>
-                            <height>{{ vscale(313) }}</height>
-                            <texture border="10">script.plex/white-outline-rounded.png</texture>
+                            <posx>38.5</posx>
+                            <posy>{{ vscale(22.5) }}</posy>
+                            <width>543</width>
+                            <height>{{ vscale(309) }}</height>
+                            <texture border="11" colordiffuse="{{ core.plezy.text }}">script.plex/plezy/ring-8.png</texture>
                         </control>
                     </control>
                 </control>

@@ -171,7 +171,7 @@
             <height>{{ vscale(1) }}</height>
             <texturebg colordiffuse="9AFFFFFF">script.plex/white-square-1px.png</texturebg>
             <lefttexture>-</lefttexture>
-            <midtexture colordiffuse="FFB7C1D6">script.plex/white-square-1px.png</midtexture>
+            <midtexture colordiffuse="{{ core.plezy.text }}">script.plex/white-square-1px.png</midtexture>
             <righttexture>-</righttexture>
             <overlaytexture>-</overlaytexture>
             <info>Player.Progress</info>
@@ -277,22 +277,15 @@
     </control>
     {% endblock filteropts_grouplist %}
     <control type="label">
-        <right>213</right>
+        <right>60</right>
         <posy>{{ vscale(35) }}</posy>
         <width>200</width>
         <height>{{ vscale(65) }}</height>
         <font>font12</font>
         <align>right</align>
         <aligny>center</aligny>
-        <textcolor>FFFFFFFF</textcolor>
+        <textcolor>{{ core.plezy.muted }}</textcolor>
         <label>$INFO[System.Time]</label>
-    </control>
-    <control type="image">
-        <posx>153r</posx>
-        <posy>{{ vscale(47.5) }}</posy>
-        <width>93</width>
-        <height>{{ vscale(43) }}</height>
-        <texture>script.plex/home/plex.png</texture>
     </control>
 </control>
 

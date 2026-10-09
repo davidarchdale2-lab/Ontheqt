@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="script.plezy.native"
        name="Plezy Native (preview)"
-       version="1.14.1+native.1"
+       version="1.14.1+native.2"
        provider-name="Local AM6B build; pannal and contributors">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
@@ -34,10 +34,9 @@
         <source>https://github.com/pannal/plex-for-kodi</source>
         <platform>all</platform>
         <news>
-- Detail screens: show the server's clear logo instead of the written title
-- Local mode: allow insecure connections, and say so
-- Detail screens: size the clear logo properly, and show it on episodes too
-- Theme music: stop superseded fades from fighting over the volume
+- Plezy-style home: collapsed icon rail that opens over the content, spotlight with logo, metadata and summary
+- Hub rows: Plezy cards with rounded artwork, white focus ring, row icons; the active row leads, others dim
+- Plezy palette everywhere, Material Symbols icons and a new default "Plezy" button theme
         </news>
         <assets>
             <icon>icon2.png</icon>

@@ -6,6 +6,26 @@ TEMPLATE_CONTEXTS = {
         "needs_scaling": False,
         "hub_count": 8,  # Default number of hub rows on home screen
         "search_hub_count": 12,  # Fixed search result rows; must match SearchDialog.SEARCH_HUB_COUNT
+        # Plezy design tokens (edde746/plezy lib/theme/mono_theme.dart, dark), as Kodi AARRGGBB
+        "plezy": {
+            "bg": "FF0E0F12",
+            "surface": "FF15171C",
+            "text": "FFEDEDED",
+            "muted": "99EDEDED",         # textMuted: text @ 60%
+            "subtle": "8AEDEDED",        # inactive hub title @ 54%
+            "summary": "C7EDEDED",       # spotlight summary @ 78%
+            "outline": "1FFFFFFF",
+            "focus_fill": "1FEDEDED",    # focused tile/rail item @ 12%
+            "selected_fill": "1AEDEDED", # selected rail item @ 10%
+            "selected_focus_fill": "26EDEDED",  # focused + selected @ 15%
+            "track": "33EDEDED",         # inactive progress track
+            "scrim": "66000000",         # modal rail scrim over content
+            "on_primary": "FF0E0F12",    # text on white pill buttons
+            # TV layout (1080p)
+            "rail_collapsed": 72,
+            "rail_expanded": 300,
+            "content_left": 120,
+        },
     },
     "indicators": {
         "base": {
@@ -196,6 +216,21 @@ TEMPLATE_CONTEXTS = {
                     "height": 121,
                 }
             }
+        },
+        # Plezy's round controls: muted glyphs that turn into a white disc with the glyph cut out on focus
+        "plezy": {
+            "INHERIT": "modern",
+            "assets": {
+                "buttons": {
+                    "base": "script.plex/buttons/player/plezy/",
+                    "focusSuffix": "-focus",
+                }
+            },
+            "buttons": {
+                "useFocusColor": False,
+                "zoomPlayButton": False,
+                "noFocusColor": "B3EDEDED"
+            },
         },
         "modern-colored": {
             "INHERIT": "modern",

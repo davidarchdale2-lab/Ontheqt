@@ -674,6 +674,7 @@ class Settings(object):
                     T(32983, 'Theme'),
                     util.DEF_THEME,
                     (
+                        ('plezy', T(35050, 'Plezy')),
                         ('modern', T(32985, 'Modern')),
                         ('modern-dotted', T(32986, 'Modern (dotted)')),
                         ('modern-colored', T(32989, 'Modern (colored)')),

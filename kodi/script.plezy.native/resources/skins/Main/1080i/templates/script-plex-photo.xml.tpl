@@ -107,7 +107,7 @@
                 <texturenofocus{% if theme.buttons.useNoFocusColor %} colordiffuse="{{ theme.buttons.noFocusColor|default('99FFFFFF') }}"{% endif %}>{{ theme.assets.buttons.base }}repeat.png</texturenofocus>
                 <usealttexture>!String.IsEmpty(Window.Property(pq.repeat))</usealttexture>
                 <alttexturefocus{% if theme.buttons.useFocusColor %} colordiffuse="{{ "FFFFFFFF" }}"{% endif %}>{{ theme.assets.buttons.base }}repeat{{ theme.assets.buttons.focusSuffix }}.png</alttexturefocus>
-                <alttexturenofocus colordiffuse="FFB7C1D6">{{ theme.assets.buttons.base }}repeat.png</alttexturenofocus>
+                <alttexturenofocus colordiffuse="{{ core.plezy.text }}">{{ theme.assets.buttons.base }}repeat.png</alttexturenofocus>
                 <label> </label>
             </control>
             <control type="button" id="421">
@@ -135,7 +135,7 @@
                 <texturenofocus{% if theme.buttons.useNoFocusColor %} colordiffuse="{{ theme.buttons.noFocusColor|default('99FFFFFF') }}"{% endif %}>{{ theme.assets.buttons.base }}shuffle.png</texturenofocus>
                 <usealttexture>!String.IsEmpty(Window.Property(pq.shuffled))</usealttexture>
                 <alttexturefocus{% if theme.buttons.useFocusColor %} colordiffuse="{{ "FFFFFFFF" }}"{% endif %}>{{ theme.assets.buttons.base }}shuffle{{ theme.assets.buttons.focusSuffix }}.png</alttexturefocus>
-                <alttexturenofocus colordiffuse="FFB7C1D6">{{ theme.assets.buttons.base }}shuffle.png</alttexturenofocus>
+                <alttexturenofocus colordiffuse="{{ core.plezy.text }}">{{ theme.assets.buttons.base }}shuffle.png</alttexturenofocus>
                 <label> </label>
             </control>
             <control type="button" id="422">
@@ -253,7 +253,7 @@
                 <texturenofocus{% if theme.buttons.useNoFocusColor %} colordiffuse="{{ theme.buttons.noFocusColor|default('99FFFFFF') }}"{% endif %}>{{ theme.assets.buttons.base }}square2x2.png</texturenofocus>
                 <usealttexture>!String.IsEmpty(Window.Property(show.pqueue))</usealttexture>
                 <alttexturefocus{% if theme.buttons.useFocusColor %} colordiffuse="{{ "FFFFFFFF" }}"{% endif %}>{{ theme.assets.buttons.base }}square2x2{{ theme.assets.buttons.focusSuffix }}.png</alttexturefocus>
-                <alttexturenofocus colordiffuse="FFB7C1D6">{{ theme.assets.buttons.base }}square2x2{{ theme.assets.buttons.focusSuffix }}.png</alttexturenofocus>
+                <alttexturenofocus colordiffuse="{{ core.plezy.text }}">{{ theme.assets.buttons.base }}square2x2{{ theme.assets.buttons.focusSuffix }}.png</alttexturenofocus>
                 <onclick>SetProperty(show.pqueue,1)</onclick>
                 <altclick>SetProperty(show.pqueue,)</altclick>
                 <label> </label>
@@ -269,7 +269,7 @@
                 <texturenofocus{% if theme.buttons.useNoFocusColor %} colordiffuse="{{ theme.buttons.noFocusColor|default('99FFFFFF') }}"{% endif %}>{{ theme.assets.buttons.base }}info.png</texturenofocus>
                 <usealttexture>!String.IsEmpty(Window.Property(show.info))</usealttexture>
                 <alttexturefocus{% if theme.buttons.useFocusColor %} colordiffuse="{{ "FFFFFFFF" }}"{% endif %}>{{ theme.assets.buttons.base }}info{{ theme.assets.buttons.focusSuffix }}.png</alttexturefocus>
-                <alttexturenofocus colordiffuse="FFB7C1D6">{{ theme.assets.buttons.base }}info{{ theme.assets.buttons.focusSuffix }}.png</alttexturenofocus>
+                <alttexturenofocus colordiffuse="{{ core.plezy.text }}">{{ theme.assets.buttons.base }}info{{ theme.assets.buttons.focusSuffix }}.png</alttexturenofocus>
                 <onclick>SetProperty(show.info,1)</onclick>
                 <altclick>SetProperty(show.info,)</altclick>
                 <label> </label>
@@ -355,7 +355,7 @@
                         <posy>0</posy>
                         <width>123</width>
                         <height>{{ vscale(123) }}</height>
-                        <texture fallback="script.plex/thumb_fallbacks/broken-photo-thumb.png" background="true">$INFO[ListItem.Thumb]</texture>
+                        <texture fallback="script.plex/thumb_fallbacks/broken-photo-thumb.png" background="true" diffuse="script.plex/plezy/mask-grid-square.png">$INFO[ListItem.Thumb]</texture>
                         <aspectratio>scale</aspectratio>
                     </control>
                 </control>
@@ -382,7 +382,7 @@
                         <posy>0</posy>
                         <width>123</width>
                         <height>{{ vscale(123) }}</height>
-                        <texture fallback="script.plex/thumb_fallbacks/broken-photo-thumb.png" background="true">$INFO[ListItem.Thumb]</texture>
+                        <texture fallback="script.plex/thumb_fallbacks/broken-photo-thumb.png" background="true" diffuse="script.plex/plezy/mask-grid-square.png">$INFO[ListItem.Thumb]</texture>
                         <aspectratio>scale</aspectratio>
                     </control>
                 </control>
@@ -635,7 +635,7 @@
                 <width>450</width>
                 <height>{{ vscale(152) }}</height>
                 <texture>script.plex/white-square.png</texture>
-                <colordiffuse>661F1F1F</colordiffuse>
+                <colordiffuse>6615171C</colordiffuse>
             </control>
             <control type="textbox">
                 <posx>28</posx>
@@ -662,7 +662,7 @@
             <height>{{ vscale(150) }}</height>
             <texturefocus>script.plex/white-square.png</texturefocus>
             <texturenofocus>script.plex/white-square.png</texturenofocus>
-            <colordiffuse>661F1F1F</colordiffuse>
+            <colordiffuse>6615171C</colordiffuse>
             <font>font12</font>
         </control> -->
     </control>

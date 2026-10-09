@@ -47,8 +47,8 @@ SKIN_PLEXTUARY = "skin.plextuary" in xbmc.getSkinDir()
 PROFILE = translatePath(ADDON.getAddonInfo('profile'))
 
 
-DEF_THEME = "modern-colored"
-THEME_VERSION = 98
+DEF_THEME = "plezy"
+THEME_VERSION = 99
 
 UI_INTERVAL = 1 / float(addonSettings.uiWaitRate)
 

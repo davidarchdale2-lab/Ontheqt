@@ -120,7 +120,7 @@
                                 <width>132</width>
                                 <height>{{ vscale(4) }}</height>
                                 <texture>$INFO[ListItem.Property(progress)]</texture>
-                                <colordiffuse>FFB7C1D6</colordiffuse>
+                                <colordiffuse>{{ core.plezy.text }}</colordiffuse>
                             </control>
                         </control>
                         {% include "includes/watched_indicator.xml.tpl" with xoff=132+63 & yoff=11 & uw_posy=11 & uw_size=24 & scale="tiny" %}
@@ -370,7 +370,7 @@
                                 <posy>0</posy>
                                 <width>100</width>
                                 <height>{{ vscale(100) }}</height>
-                                <texture>$INFO[ListItem.Thumb]</texture>
+                                <texture diffuse="script.plex/plezy/mask-grid-square.png">$INFO[ListItem.Thumb]</texture>
                                 <aspectratio>scale</aspectratio>
                             </control>
                             <control type="group">
@@ -409,7 +409,7 @@
                                 <posy>0</posy>
                                 <width>178</width>
                                 <height>{{ vscale(100) }}</height>
-                                <texture>$INFO[ListItem.Thumb]</texture>
+                                <texture diffuse="script.plex/plezy/mask-grid-wide.png">$INFO[ListItem.Thumb]</texture>
                                 <aspectratio>scale</aspectratio>
                             </control>
                             <control type="group">
@@ -430,7 +430,7 @@
                                     <width>178</width>
                                     <height>{{ vscale(4) }}</height>
                                     <texture>$INFO[ListItem.Property(progress)]</texture>
-                                    <colordiffuse>FFB7C1D6</colordiffuse>
+                                    <colordiffuse>{{ core.plezy.text }}</colordiffuse>
                                 </control>
                             </control>
                             {% include "includes/watched_indicator.xml.tpl" with xoff=178+103 %}

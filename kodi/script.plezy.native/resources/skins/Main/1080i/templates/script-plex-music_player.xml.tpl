@@ -208,7 +208,7 @@
         <height>{{ vscale(6) }}</height>
         <texturebg>script.plex/transparent-6px.png</texturebg>
         <lefttexture>-</lefttexture>
-        <midtexture colordiffuse="FFB7C1D6">script.plex/white-square-6px.png</midtexture>
+        <midtexture colordiffuse="{{ core.plezy.text }}">script.plex/white-square-6px.png</midtexture>
         <righttexture>-</righttexture>
         <overlaytexture>-</overlaytexture>
         <info>Player.Progress</info>
@@ -249,7 +249,7 @@
     <width>1</width>
     <height>{{ vscale(6) }}</height>
     <texture>script.plex/white-square.png</texture>
-    <colordiffuse>FFB7C1D6</colordiffuse>
+    <colordiffuse>{{ core.plezy.text }}</colordiffuse>
 </control> -->
 
 <control type="group" id="202">

@@ -104,7 +104,7 @@
                         <width>414</width>
                         <height>{{ vscale(2) }}</height>
                         <texture>script.plex/white-square.png</texture>
-                        <colordiffuse>661F1F1F</colordiffuse>
+                        <colordiffuse>6615171C</colordiffuse>
                     </control>
                 </control>
             </itemlayout>
@@ -132,7 +132,7 @@
                         <posy>{{ vscale(40) }}</posy>
                         <width>510</width>
                         <height>{{ vscale(75) }}</height>
-                        <texture colordiffuse="FFB7C1D6" border="10">script.plex/white-square-rounded.png</texture>
+                        <texture colordiffuse="{{ core.plezy.text }}" border="10">script.plex/white-square-rounded.png</texture>
                     </control>
                     <control type="image">
                         <visible>!Control.HasFocus(75)</visible>
@@ -218,7 +218,7 @@
                         <width>600</width>
                         <height>{{ vscale(2) }}</height>
                         <texture>script.plex/white-square.png</texture>
-                        <colordiffuse>661F1F1F</colordiffuse>
+                        <colordiffuse>6615171C</colordiffuse>
                     </control>
                 </control>
                 <control type="group">
@@ -266,7 +266,7 @@
                         <posy>{{ vscale(40) }}</posy>
                         <width>696</width>
                         <height>{{ vscale(75) }}</height>
-                        <texture colordiffuse="FFB7C1D6" border="10">script.plex/white-square-rounded.png</texture>
+                        <texture colordiffuse="{{ core.plezy.text }}" border="10">script.plex/white-square-rounded.png</texture>
                     </control>
                     <control type="image">
                         <visible>Control.HasFocus(125)</visible>
@@ -340,7 +340,7 @@
                         <width>600</width>
                         <height>{{ vscale(2) }}</height>
                         <texture>script.plex/white-square.png</texture>
-                        <colordiffuse>661F1F1F</colordiffuse>
+                        <colordiffuse>6615171C</colordiffuse>
                     </control>
                 </control>
                 <control type="group">
@@ -418,7 +418,7 @@
                         <width>594</width>
                         <height>{{ vscale(2) }}</height>
                         <texture>script.plex/white-square.png</texture>
-                        <colordiffuse>661F1F1F</colordiffuse>
+                        <colordiffuse>6615171C</colordiffuse>
                     </control>
                 </control>
                 <control type="group">
@@ -641,29 +641,22 @@
             <height>{{ vscale(1) }}</height>
             <texturebg colordiffuse="9AFFFFFF">script.plex/white-square-1px.png</texturebg>
             <lefttexture>-</lefttexture>
-            <midtexture colordiffuse="FFB7C1D6">script.plex/white-square-1px.png</midtexture>
+            <midtexture colordiffuse="{{ core.plezy.text }}">script.plex/white-square-1px.png</midtexture>
             <righttexture>-</righttexture>
             <overlaytexture>-</overlaytexture>
             <info>Player.Progress</info>
         </control>
     </control>
     <control type="label">
-        <right>213</right>
+        <right>60</right>
         <posy>{{ vscale(35) }}</posy>
         <width>200</width>
         <height>{{ vscale(65) }}</height>
         <font>font12</font>
         <align>right</align>
         <aligny>center</aligny>
-        <textcolor>FFFFFFFF</textcolor>
+        <textcolor>{{ core.plezy.muted }}</textcolor>
         <label>$INFO[System.Time]</label>
-    </control>
-    <control type="image">
-        <posx>153r</posx>
-        <posy>{{ vscale(47.5) }}</posy>
-        <width>93</width>
-        <height>{{ vscale(43) }}</height>
-        <texture>script.plex/home/plex.png</texture>
     </control>
 </control>
 {% endblock controls %}

@@ -30,7 +30,7 @@
                     <posy>0</posy>
                     <width>450</width>
                     <height>{{ vscale(253) }}</height>
-                    <texture background="true">$INFO[ListItem.Thumb]</texture>
+                    <texture background="true" diffuse="script.plex/plezy/mask-grid-wide.png">$INFO[ListItem.Thumb]</texture>
                     <aspectratio>scale</aspectratio>
                 </control>
                 <!-- Dark overlay to make label readable -->
@@ -72,7 +72,7 @@
                         <posy>0</posy>
                         <width>450</width>
                         <height>{{ vscale(253) }}</height>
-                        <texture background="true">$INFO[ListItem.Thumb]</texture>
+                        <texture background="true" diffuse="script.plex/plezy/mask-grid-wide.png">$INFO[ListItem.Thumb]</texture>
                         <aspectratio>scale</aspectratio>
                     </control>
                     <!-- Dark overlay -->
@@ -102,11 +102,11 @@
                     <control type="group">
                         <visible>Control.HasFocus(101)</visible>
                         <control type="image">
-                            <posx>0</posx>
-                            <posy>0</posy>
-                            <width>460</width>
-                            <height>{{ vscale(263) }}</height>
-                            <texture border="10">script.plex/white-outline-rounded.png</texture>
+                            <posx>2</posx>
+                            <posy>{{ vscale(2) }}</posy>
+                            <width>456</width>
+                            <height>{{ vscale(259) }}</height>
+                            <texture border="11" colordiffuse="{{ core.plezy.text }}">script.plex/plezy/ring-8.png</texture>
                         </control>
                     </control>
                 </control>

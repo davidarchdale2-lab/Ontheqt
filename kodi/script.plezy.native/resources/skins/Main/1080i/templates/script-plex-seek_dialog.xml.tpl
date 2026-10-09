@@ -215,7 +215,7 @@
             <font>font13</font>
             <align>center</align>
             <aligny>center</aligny>
-            <textcolor>FFB7C1D6</textcolor>
+            <textcolor>{{ core.plezy.text }}</textcolor>
             <label>[UPPERCASE]$ADDON[script.plezy.native 32436][/UPPERCASE]</label>
         </control>-->
     </control>
@@ -521,7 +521,7 @@
                     <posy>0</posy>
                     <width>125</width>
                     <height>{{ vscale(101) }}</height>
-                    <texture colordiffuse="FFB7C1D6">{{ theme.assets.buttons.base }}repeat.png</texture>
+                    <texture colordiffuse="{{ core.plezy.text }}">{{ theme.assets.buttons.base }}repeat.png</texture>
                 </control>
                 <control type="image">
                     <visible>Playlist.IsRepeatOne | !String.IsEmpty(Window.Property(pq.repeat.one))</visible>
@@ -529,7 +529,7 @@
                     <posy>0</posy>
                     <width>125</width>
                     <height>{{ vscale(101) }}</height>
-                    <texture colordiffuse="FFB7C1D6">{{ theme.assets.buttons.base }}repeat-one.png</texture>
+                    <texture colordiffuse="{{ core.plezy.text }}">{{ theme.assets.buttons.base }}repeat-one.png</texture>
                 </control>
             </control>
             <control type="group">
@@ -575,7 +575,7 @@
             <texturenofocus{% if theme.buttons.useNoFocusColor %} colordiffuse="{{ theme.buttons.noFocusColor|default('99FFFFFF') }}"{% endif %}>{{ theme.assets.buttons.base }}shuffle.png</texturenofocus>
             <usealttexture>!String.IsEmpty(Window.Property(pq.shuffled))</usealttexture>
             <alttexturefocus{% if theme.buttons.useFocusColor %} colordiffuse="{{ "FFFFFFFF" }}"{% endif %}>{{ theme.assets.buttons.base }}shuffle{{ theme.assets.buttons.focusSuffix }}.png</alttexturefocus>
-            <alttexturenofocus colordiffuse="FFB7C1D6">{{ theme.assets.buttons.base }}shuffle.png</alttexturenofocus>
+            <alttexturenofocus colordiffuse="{{ core.plezy.text }}">{{ theme.assets.buttons.base }}shuffle.png</alttexturenofocus>
             <label> </label>
         </control>
         <control type="button" id="422">
@@ -955,7 +955,7 @@
                         <posy>0</posy>
                         <width>178</width>
                         <height>{{ vscale(100) }}</height>
-                        <texture>$INFO[ListItem.Thumb]</texture>
+                        <texture diffuse="script.plex/plezy/mask-grid-wide.png">$INFO[ListItem.Thumb]</texture>
                         <aspectratio>scale</aspectratio>
                         <colordiffuse>DDAAAAAA</colordiffuse>
                         <visible>!Control.HasFocus(501)</visible>
@@ -975,7 +975,7 @@
                         <posy>0</posy>
                         <width>178</width>
                         <height>{{ vscale(100) }}</height>
-                        <texture>$INFO[ListItem.Thumb]</texture>
+                        <texture diffuse="script.plex/plezy/mask-grid-wide.png">$INFO[ListItem.Thumb]</texture>
                         <aspectratio>scale</aspectratio>
                         <colordiffuse>FFAAAAAA</colordiffuse>
                         <visible>Control.HasFocus(501)</visible>
@@ -1026,7 +1026,7 @@
                         <posy>0</posy>
                         <width>178</width>
                         <height>{{ vscale(100) }}</height>
-                        <texture>$INFO[ListItem.Thumb]</texture>
+                        <texture diffuse="script.plex/plezy/mask-grid-wide.png">$INFO[ListItem.Thumb]</texture>
                         <aspectratio>scale</aspectratio>
                         <colordiffuse>FF666666</colordiffuse>
                         <visible>!Control.HasFocus(501)</visible>
@@ -1046,7 +1046,7 @@
                         <posy>0</posy>
                         <width>178</width>
                         <height>{{ vscale(100) }}</height>
-                        <texture>$INFO[ListItem.Thumb]</texture>
+                        <texture diffuse="script.plex/plezy/mask-grid-wide.png">$INFO[ListItem.Thumb]</texture>
                         <aspectratio>scale</aspectratio>
 <!--                                <colordiffuse>FFFFFFFF</colordiffuse>-->
                         <visible>Control.HasFocus(501)</visible>

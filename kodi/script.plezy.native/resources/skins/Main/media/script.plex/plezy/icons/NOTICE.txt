@@ -1,0 +1,2 @@
+Material Symbols Rounded (https://github.com/google/material-design-icons), Copyright Google LLC,
+licensed under the Apache License 2.0 (LICENSE.txt). Rendered to PNG by kodi/tools/make_plezy_textures.py.

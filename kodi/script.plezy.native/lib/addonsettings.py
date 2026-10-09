@@ -17,7 +17,7 @@ class AddonSettings(object):
         ("fast_back", True),
         ("dynamic_backgrounds", True),
         ("background_art_blur_amount2", 0),
-        ("background_art_opacity_amount2", 20),
+        ("background_art_opacity_amount2", 100),  # Plezy shows the artwork itself; scrims keep text legible
         ("screensaver_quiz", False),
         ("postplay_always", False),
         ("postplay_timeout", 16),

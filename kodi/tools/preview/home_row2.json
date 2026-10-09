@@ -1,0 +1,400 @@
+{
+ "focus": 401,
+ "time": "20:41",
+ "window_bg": "FF0E0F12",
+ "addon_strings": {
+  "32431": "Search",
+  "32430": "Discovery"
+ },
+ "props": {
+  "dynamic_backgrounds": "1",
+  "background": "mock:dune",
+  "background_static": "mock:dune",
+  "server.name": "Living Room",
+  "server.icon": "script.plex/home/device/plex.png",
+  "user.name": "Alex",
+  "user.avatar.letter": "A",
+  "hub.focus": "1",
+  "hub.focus.id": "401",
+  "hub.400": "Continue Watching",
+  "hub.icon.400": "script.plex/plezy/icons/hub_continue.png",
+  "hub.display.400": "ar16x9",
+  "hub.text2lines.400": "1",
+  "hub.401": "Recently Added Movies",
+  "hub.icon.401": "script.plex/plezy/icons/hub_recent.png",
+  "hub.display.401": "poster",
+  "hub.text2lines.401": "1",
+  "hub.402": "Top Rated Shows",
+  "hub.icon.402": "script.plex/plezy/icons/hub_star.png",
+  "hub.display.402": "poster",
+  "spotlight.title": "Dune: Part Two",
+  "spotlight.logo": "",
+  "spotlight.meta": "RT 92% \u2022 Audience 95% \u2022 PG-13 \u2022 2h 46m \u2022 2024",
+  "spotlight.summary": "Paul Atreides unites with Chani and the Fremen while seeking revenge against the conspirators who destroyed his family."
+ },
+ "lists": {
+  "101": {
+   "selected": 0,
+   "items": [
+    {
+     "label": "Home",
+     "thumb": "script.plex/home/type/home.png",
+     "props": {
+      "item": "1",
+      "is.home": "1"
+     }
+    },
+    {
+     "label": "Movies",
+     "thumb": "script.plex/home/type/movie.png",
+     "props": {
+      "item": "1"
+     }
+    },
+    {
+     "label": "TV Shows",
+     "thumb": "script.plex/home/type/show.png",
+     "props": {
+      "item": "1"
+     }
+    },
+    {
+     "label": "Music",
+     "thumb": "script.plex/home/type/artist.png",
+     "props": {
+      "item": "1"
+     }
+    },
+    {
+     "label": "Photos",
+     "thumb": "script.plex/home/type/photo.png",
+     "props": {
+      "item": "1"
+     }
+    },
+    {
+     "label": "Playlists",
+     "thumb": "script.plex/home/type/playlists.png",
+     "props": {
+      "item": "1"
+     }
+    }
+   ]
+  },
+  "400": {
+   "selected": 0,
+   "items": [
+    {
+     "label": "Severance",
+     "label2": "Woe's Hollow - S2 \u2022 E4",
+     "thumb": "mock:ep1",
+     "props": {
+      "progress": "script.plex/progress/40.png"
+     }
+    },
+    {
+     "label": "The Bear",
+     "label2": "Forks - S2 \u2022 E7",
+     "thumb": "mock:ep2",
+     "props": {
+      "progress": "script.plex/progress/70.png"
+     }
+    },
+    {
+     "label": "Andor",
+     "label2": "One Way Out - S1 \u2022 E10",
+     "thumb": "mock:ep3",
+     "props": {
+      "progress": "script.plex/progress/20.png"
+     }
+    },
+    {
+     "label": "Arrival",
+     "label2": "2016",
+     "thumb": "mock:ep4",
+     "props": {
+      "progress": "script.plex/progress/86.png"
+     }
+    },
+    {
+     "label": "Shogun",
+     "label2": "Anjin - S1 \u2022 E1",
+     "thumb": "mock:ep5",
+     "props": {
+      "progress": "script.plex/progress/10.png"
+     }
+    }
+   ]
+  },
+  "401": {
+   "selected": 1,
+   "items": [
+    {
+     "label": "Arrival",
+     "label2": "2016",
+     "thumb": "mock:p1",
+     "props": {
+      "watched": "1"
+     }
+    },
+    {
+     "label": "Dune: Part Two",
+     "label2": "2024",
+     "thumb": "mock:p2",
+     "props": {}
+    },
+    {
+     "label": "Past Lives",
+     "label2": "2023",
+     "thumb": "mock:p3",
+     "props": {}
+    },
+    {
+     "label": "Oppenheimer",
+     "label2": "2023",
+     "thumb": "mock:p4",
+     "props": {}
+    },
+    {
+     "label": "Aftersun",
+     "label2": "2022",
+     "thumb": "mock:p5",
+     "props": {}
+    },
+    {
+     "label": "Perfect Days",
+     "label2": "2023",
+     "thumb": "mock:p6",
+     "props": {}
+    },
+    {
+     "label": "The Zone of Interest",
+     "label2": "2023",
+     "thumb": "mock:p7",
+     "props": {}
+    },
+    {
+     "label": "Anatomy of a Fall",
+     "label2": "2023",
+     "thumb": "mock:p8",
+     "props": {}
+    },
+    {
+     "label": "Poor Things",
+     "label2": "2023",
+     "thumb": "mock:p1",
+     "props": {}
+    }
+   ]
+  },
+  "402": {
+   "selected": 0,
+   "items": [
+    {
+     "label": "Andor",
+     "thumb": "mock:p3",
+     "props": {}
+    },
+    {
+     "label": "Shogun",
+     "thumb": "mock:p5",
+     "props": {}
+    },
+    {
+     "label": "The Bear",
+     "thumb": "mock:p2",
+     "props": {}
+    }
+   ]
+  }
+ },
+ "images": {
+  "backdrop": {
+   "size": [
+    1920,
+    1080
+   ],
+   "colors": [
+    "#6f86a8",
+    "#1d2a3d"
+   ],
+   "text": "",
+   "text_y": 0.3
+  },
+  "logo": {
+   "logo": true,
+   "size": [
+    480,
+    128
+   ],
+   "text": "SEVERANCE",
+   "text_size": 74
+  },
+  "ep1": {
+   "size": [
+    532,
+    299
+   ],
+   "colors": [
+    "#8fa6c4",
+    "#2b3a52"
+   ],
+   "text": "SEVERANCE",
+   "text_size": 34
+  },
+  "ep2": {
+   "size": [
+    532,
+    299
+   ],
+   "colors": [
+    "#c48b5a",
+    "#3b2414"
+   ],
+   "text": "THE BEAR",
+   "text_size": 34
+  },
+  "ep3": {
+   "size": [
+    532,
+    299
+   ],
+   "colors": [
+    "#7c8c6a",
+    "#20281a"
+   ],
+   "text": "ANDOR",
+   "text_size": 34
+  },
+  "ep4": {
+   "size": [
+    532,
+    299
+   ],
+   "colors": [
+    "#9a9a9a",
+    "#2a2a30"
+   ],
+   "text": "ARRIVAL",
+   "text_size": 34
+  },
+  "ep5": {
+   "size": [
+    532,
+    299
+   ],
+   "colors": [
+    "#b25b4a",
+    "#2a1210"
+   ],
+   "text": "SHOGUN",
+   "text_size": 34
+  },
+  "p1": {
+   "size": [
+    244,
+    361
+   ],
+   "colors": [
+    "#9aa3ad",
+    "#2b3138"
+   ],
+   "text": "ARRIVAL",
+   "text_size": 26
+  },
+  "p2": {
+   "size": [
+    244,
+    361
+   ],
+   "colors": [
+    "#d9a35f",
+    "#4a2a10"
+   ],
+   "text": "DUNE",
+   "text_size": 30
+  },
+  "p3": {
+   "size": [
+    244,
+    361
+   ],
+   "colors": [
+    "#7a96b8",
+    "#1a2433"
+   ],
+   "text": "PAST LIVES",
+   "text_size": 24
+  },
+  "p4": {
+   "size": [
+    244,
+    361
+   ],
+   "colors": [
+    "#c9733a",
+    "#1a0e08"
+   ],
+   "text": "OPPENHEIMER",
+   "text_size": 20
+  },
+  "p5": {
+   "size": [
+    244,
+    361
+   ],
+   "colors": [
+    "#e3b9a0",
+    "#5a3a2a"
+   ],
+   "text": "AFTERSUN",
+   "text_size": 24
+  },
+  "p6": {
+   "size": [
+    244,
+    361
+   ],
+   "colors": [
+    "#86a88a",
+    "#1e2e20"
+   ],
+   "text": "PERFECT DAYS",
+   "text_size": 20
+  },
+  "p7": {
+   "size": [
+    244,
+    361
+   ],
+   "colors": [
+    "#a9b59a",
+    "#2a3022"
+   ],
+   "text": "THE ZONE",
+   "text_size": 24
+  },
+  "p8": {
+   "size": [
+    244,
+    361
+   ],
+   "colors": [
+    "#6a6f7a",
+    "#15171c"
+   ],
+   "text": "ANATOMY",
+   "text_size": 24
+  },
+  "dune": {
+   "size": [
+    1920,
+    1080
+   ],
+   "colors": [
+    "#d9a35f",
+    "#3a200c"
+   ]
+  }
+ }
+}
