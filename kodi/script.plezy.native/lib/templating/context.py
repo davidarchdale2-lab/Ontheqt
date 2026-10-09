@@ -138,7 +138,7 @@ TEMPLATE_CONTEXTS = {
                     "posy": 369
                 },
                 "buttongroup_1300": {
-                    "posy": "388.5"
+                    "posy": 388.5  # a number: vscale multiplies it on non-16:9 displays
                 },
                 "buttons": {
                     "width": 176,
