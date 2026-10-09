@@ -1,0 +1,60 @@
+Plezy Native preview, revision 1
+
+This is a Plezy-style native Kodi interface derived from PM4K. It uses Kodi's
+existing GPU interface and video/audio player. The Flutter app and its
+software-rendered X11 interface are not used while this add-on is open.
+The existing CoreELEC kernel, Dolby stack, resolution and audio settings are
+preserved. Install it on your already working ROM; no reflashing is needed.
+
+INSTALL
+1. In the old Plezy device menu, select Open Kodi. A keyboard's F12 can open
+   that menu if needed. This also leaves Kodi selected on subsequent boots.
+2. Copy Plezy-Native-preview-r1.zip to a USB stick or an accessible share.
+3. In Kodi, Settings > Add-ons > Install from zip file. Enable Unknown sources
+   if prompted, then select the ZIP. Kodi can obtain the required Python
+   modules from its existing CoreELEC repository; wait for installation.
+4. Open Add-ons > Video add-ons > Plezy Native (preview) and sign into Plex.
+   This separate add-on keeps its own login/preferences; the old Plezy data
+   is retained. Do not open original PM4K and this preview simultaneously.
+
+If dependency installation fails, use the provided dependencies folder.
+Install these module ZIPs first, in this order: certifi, chardet, idna,
+urllib3, six, kodi-six, requests. Then install the preview ZIP again.
+
+USE
+Up/Down changes library in the left sidebar. Right enters the poster rows;
+Left at the first poster returns to the sidebar. During playback, press OK
+to show the controls, select the Settings gear, then Subtitles > Off.
+The Off choice uses Plex's normal stream-selection API, so the server
+remembers it; selecting another subtitle remains available. Plex-selected
+account tracks are otherwise respected.
+
+Stop returns to the catalogue while keeping Kodi running. The old frontend
+stopped Kodi to regain the display, which could trigger its CEC TV-standby
+setting. This add-on has no service-switching bridge. Exit returns to Kodi;
+Quit Kodi remains an explicit separate choice.
+
+For automatic startup after testing, the add-on's Main settings include
+Start Plex On Kodi Startup. Leave the old Flutter Plezy frontend disabled by
+the Open Kodi action above. To return to it, close this add-on and use Kodi
+Favourites > Launch Plezy. You can also uninstall this preview normally.
+
+VALIDATION
+Native R10 Python dependency imports passed under QEMU. The new sidebar,
+subtitle picker and stop behavior passed tests. All 705 rendered Kodi XML
+layouts passed control-ID, font and asset checks. No physical AM6B interface
+frame-rate or playback test has been performed for this preview.
+
+The preview uses PM4K's features, with a Plezy-inspired native layout; it is
+not the official Plezy application. Future preview updates are installed by
+ZIP. Upstream self-update is disabled so it cannot overwrite this local fork.
+Source code, build scripts, patches and original licences are included in
+the accompanying source ZIP. No device or stored user settings were changed
+while creating this package.
+
+UPSTREAM
+https://github.com/pannal/plex-for-kodi
+Branch: develop_kodi21
+Commit: 2707bbe72a7ea829b69bdd7ebb753c700552b4d0
+Upstream version: 1.14.1-beta1
+Local identity: script.plezy.native, version 1.14.1+native.1
