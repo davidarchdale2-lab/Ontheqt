@@ -44,6 +44,7 @@ TEMPLATE_CONTEXTS = {
             "player_buffer": "80FFFFFF",
             "player_card": "CC000000",
             "player_tooltip": "99000000",
+            "player_skip": "E6FFFFFF",   # skip-marker button fill (white 90%)
             "active": "FFFFC107",        # active player toggles (Plezy's amber)
             # TV layout (1080p)
             "rail_collapsed": 72,

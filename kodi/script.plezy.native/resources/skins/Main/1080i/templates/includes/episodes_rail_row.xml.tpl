@@ -1,7 +1,8 @@
 {# One hub of the season screen's rail (Plezy TvBrowseRail, cards at tallPosterScale / widePosterScale .72):
    plezy_row_header over a plezy_hub_card row. Used by script-plex-episodes.xml.tpl inside grouplist 60.
    params: n (row 0-4: group 500+n, list 400+n), title, icon, kind, cw, ch, mask, boundary (paginated rows swallow
-   left/right at the ends so the paginator can load the next page).
+   left/right at the ends so the paginator can load the next page), placeholder_icon, selected_ring (see
+   plezy_hub_card).
    Row height = 44 header + card band (ch + 88) + 4 = ch + 136; the rail's slide for this row uses the same value.
    Rows above the active one leave the band, rows that aren't focused dim (Plezy tints inactive hubs), and the
    whole rail dims while focus is above it (the wrapper group in the template). #}
@@ -39,8 +40,8 @@
         <scrolltime tween="cubic" easing="out">160</scrolltime>
         <orientation>horizontal</orientation>
         <preloaditems>4</preloaditems>
-        {% include "includes/plezy_hub_card.xml.tpl" with kind=kind & focused=False & cw=cw & ch=ch & mask=mask & cond="none" & focus_id=list_id & hub_id=list_id & sub_always=True %}
-        {% include "includes/plezy_hub_card.xml.tpl" with kind=kind & focused=True & cw=cw & ch=ch & mask=mask & cond="none" & focus_id=list_id & hub_id=list_id & sub_always=True %}
+        {% include "includes/plezy_hub_card.xml.tpl" with kind=kind & focused=False & cw=cw & ch=ch & mask=mask & cond="none" & focus_id=list_id & hub_id=list_id & sub_always=True & placeholder_icon=placeholder_icon & selected_ring=selected_ring %}
+        {% include "includes/plezy_hub_card.xml.tpl" with kind=kind & focused=True & cw=cw & ch=ch & mask=mask & cond="none" & focus_id=list_id & hub_id=list_id & sub_always=True & placeholder_icon=placeholder_icon & selected_ring=selected_ring %}
     </control>
 </control>
 {% endwith %}

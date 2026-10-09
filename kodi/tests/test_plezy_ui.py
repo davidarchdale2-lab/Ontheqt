@@ -71,7 +71,8 @@ def test_episode_spotlight_and_spoilers():
 
 def test_show_season_and_music():
     show = Item(type='show', title='Severance', year='2022', duration=str(55 * 60000), contentRating='TV-MA')
-    assert plezy_ui.spotlight_fields(show)['meta'] == u'TV-MA • 2022'   # no per-episode runtime for a show
+    assert plezy_ui.spotlight_fields(show)['meta'] == u'TV-MA • 55m • 2022'   # Plezy adds any runtime the item has
+    assert plezy_ui.spotlight_fields(Item(type='show', title='x', year='2022'))['meta'] == u'2022'
     season = Item(type='season', title='Season 2', parentTitle='Severance')
     f = plezy_ui.spotlight_fields(season)
     assert (f['title'], f['meta']) == ('Severance', 'Season 2')
@@ -115,15 +116,17 @@ def test_detail_meta_order_matches_plezy_tv_detail():
     assert plezy_ui.detail_meta(movie, budget=20) == u'2016 • 12A • 1h 56m'
     assert plezy_ui.detail_meta(movie, budget=4) == u'2016'
     show = Item(type='show', year='2022', contentRating='TV-MA', duration=str(55 * 60000))
-    assert plezy_ui.detail_meta(show) == u'2022 • TV-MA'
+    assert plezy_ui.detail_meta(show) == u'2022 • TV-MA • 55m'
+    assert plezy_ui.detail_meta(Item(type='show', year='2022')) == u'2022'
 
 
 def test_season_meta_play_label_and_dates():
     season = Item(type='season', parentYear='2022', leafCount='9')
     assert plezy_ui.season_meta(season, 'Episodes') == u'2022 • 9 Episodes'
     assert plezy_ui.season_meta(Item(type='season')) == u''
-    assert plezy_ui.play_label('2', '10') == 'S2 E10'
+    assert plezy_ui.play_label('2', '10') == 'S2E10'   # t.discover.playEpisode: no space
     assert plezy_ui.play_label('', '3') == ''
+    assert plezy_ui.play_label('1', '3', u'St.{}', u'F{}') == u'St.1F3'
     assert plezy_ui.episode_label('1', '3', u'St.{}', u'F{}') == u'St.1 F3'
     assert plezy_ui.abbreviated_date('2025-02-07') == 'Feb 7, 2025'
     assert plezy_ui.abbreviated_date('') == ''

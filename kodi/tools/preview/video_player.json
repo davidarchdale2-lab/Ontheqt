@@ -1,0 +1,466 @@
+{
+ "focus": 102,
+ "props": {
+  "post.play": "1",
+  "has.next": "1",
+  "post.play.background": "mock:bg",
+  "thumb.fallback": "",
+  "next.thumb": "mock:next",
+  "prev.thumb": "mock:prev",
+  "prev.title": "Andor",
+  "prev.subtitle": "Season 1 • Episode 5",
+  "next.title": "Andor",
+  "next.subtitle": "Season 1 • Episode 6",
+  "info.title": "The Eye",
+  "info.date": "October 5, 2022",
+  "info.duration": "53 mins",
+  "info.summary": "Cassian joins a band of rebels planning a daring heist on an Imperial garrison, while Mon Mothma risks her position in the Senate to keep her secret network funded.",
+  "related.header": "Related shows",
+  "countdown.seconds": "12",
+  "hub.focus": "",
+  "on.extras": ""
+ },
+ "images": {
+  "bg": {
+   "size": [
+    1920,
+    1080
+   ],
+   "colors": [
+    "#3b4a5e",
+    "#10141a"
+   ]
+  },
+  "next": {
+   "size": [
+    532,
+    299
+   ],
+   "colors": [
+    "#7a5a3a",
+    "#2a1d12"
+   ],
+   "text": "S1 E6"
+  },
+  "prev": {
+   "size": [
+    400,
+    225
+   ],
+   "colors": [
+    "#3a5a7a",
+    "#121d2a"
+   ],
+   "text": "S1 E5"
+  },
+  "w0": {
+   "size": [
+    400,
+    225
+   ],
+   "colors": [
+    "#3c6a88",
+    "#1b2633"
+   ],
+   "text": "Show 1"
+  },
+  "p0": {
+   "size": [
+    200,
+    300
+   ],
+   "colors": [
+    "#883c4b",
+    "#33261b"
+   ],
+   "text": "M1"
+  },
+  "c0": {
+   "size": [
+    200,
+    200
+   ],
+   "colors": [
+    "#5b5b5b",
+    "#222222"
+   ],
+   "text": "C1"
+  },
+  "w1": {
+   "size": [
+    400,
+    225
+   ],
+   "colors": [
+    "#506a88",
+    "#1b2633"
+   ],
+   "text": "Show 2"
+  },
+  "p1": {
+   "size": [
+    200,
+    300
+   ],
+   "colors": [
+    "#88504b",
+    "#33261b"
+   ],
+   "text": "M2"
+  },
+  "c1": {
+   "size": [
+    200,
+    200
+   ],
+   "colors": [
+    "#5b5b5b",
+    "#222222"
+   ],
+   "text": "C2"
+  },
+  "w2": {
+   "size": [
+    400,
+    225
+   ],
+   "colors": [
+    "#646a88",
+    "#1b2633"
+   ],
+   "text": "Show 3"
+  },
+  "p2": {
+   "size": [
+    200,
+    300
+   ],
+   "colors": [
+    "#88644b",
+    "#33261b"
+   ],
+   "text": "M3"
+  },
+  "c2": {
+   "size": [
+    200,
+    200
+   ],
+   "colors": [
+    "#5b5b5b",
+    "#222222"
+   ],
+   "text": "C3"
+  },
+  "w3": {
+   "size": [
+    400,
+    225
+   ],
+   "colors": [
+    "#786a88",
+    "#1b2633"
+   ],
+   "text": "Show 4"
+  },
+  "p3": {
+   "size": [
+    200,
+    300
+   ],
+   "colors": [
+    "#88784b",
+    "#33261b"
+   ],
+   "text": "M4"
+  },
+  "c3": {
+   "size": [
+    200,
+    200
+   ],
+   "colors": [
+    "#5b5b5b",
+    "#222222"
+   ],
+   "text": "C4"
+  },
+  "w4": {
+   "size": [
+    400,
+    225
+   ],
+   "colors": [
+    "#8c6a88",
+    "#1b2633"
+   ],
+   "text": "Show 5"
+  },
+  "p4": {
+   "size": [
+    200,
+    300
+   ],
+   "colors": [
+    "#888c4b",
+    "#33261b"
+   ],
+   "text": "M5"
+  },
+  "c4": {
+   "size": [
+    200,
+    200
+   ],
+   "colors": [
+    "#5b5b5b",
+    "#222222"
+   ],
+   "text": "C5"
+  },
+  "w5": {
+   "size": [
+    400,
+    225
+   ],
+   "colors": [
+    "#a06a88",
+    "#1b2633"
+   ],
+   "text": "Show 6"
+  },
+  "p5": {
+   "size": [
+    200,
+    300
+   ],
+   "colors": [
+    "#88a04b",
+    "#33261b"
+   ],
+   "text": "M6"
+  },
+  "c5": {
+   "size": [
+    200,
+    200
+   ],
+   "colors": [
+    "#5b5b5b",
+    "#222222"
+   ],
+   "text": "C6"
+  },
+  "w6": {
+   "size": [
+    400,
+    225
+   ],
+   "colors": [
+    "#b46a88",
+    "#1b2633"
+   ],
+   "text": "Show 7"
+  },
+  "p6": {
+   "size": [
+    200,
+    300
+   ],
+   "colors": [
+    "#88b44b",
+    "#33261b"
+   ],
+   "text": "M7"
+  },
+  "c6": {
+   "size": [
+    200,
+    200
+   ],
+   "colors": [
+    "#5b5b5b",
+    "#222222"
+   ],
+   "text": "C7"
+  },
+  "w7": {
+   "size": [
+    400,
+    225
+   ],
+   "colors": [
+    "#c86a88",
+    "#1b2633"
+   ],
+   "text": "Show 8"
+  },
+  "p7": {
+   "size": [
+    200,
+    300
+   ],
+   "colors": [
+    "#88c84b",
+    "#33261b"
+   ],
+   "text": "M8"
+  },
+  "c7": {
+   "size": [
+    200,
+    200
+   ],
+   "colors": [
+    "#5b5b5b",
+    "#222222"
+   ],
+   "text": "C8"
+  }
+ },
+ "window_bg": "FF0E0F12",
+ "addon_strings": {
+  "32438": "Previous",
+  "35161": "Playing next",
+  "35162": "On deck",
+  "32419": "Cast"
+ },
+ "lists": {
+  "400": {
+   "selected": 0,
+   "items": [
+    {
+     "label": "Severance",
+     "label2": "S2 · E3",
+     "thumb": "mock:w0",
+     "props": {
+      "progress": ""
+     }
+    },
+    {
+     "label": "Severance",
+     "label2": "S2 · E3",
+     "thumb": "mock:w1",
+     "props": {
+      "progress": ""
+     }
+    },
+    {
+     "label": "Severance",
+     "label2": "S2 · E3",
+     "thumb": "mock:w2",
+     "props": {
+      "progress": ""
+     }
+    },
+    {
+     "label": "Severance",
+     "label2": "S2 · E3",
+     "thumb": "mock:w3",
+     "props": {
+      "progress": ""
+     }
+    },
+    {
+     "label": "Severance",
+     "label2": "S2 · E3",
+     "thumb": "mock:w4",
+     "props": {
+      "progress": ""
+     }
+    }
+   ]
+  },
+  "401": {
+   "selected": 0,
+   "items": [
+    {
+     "label": "Show 1",
+     "label2": "2022",
+     "thumb": "mock:p0"
+    },
+    {
+     "label": "Show 2",
+     "label2": "2022",
+     "thumb": "mock:p1"
+    },
+    {
+     "label": "Show 3",
+     "label2": "2022",
+     "thumb": "mock:p2"
+    },
+    {
+     "label": "Show 4",
+     "label2": "2022",
+     "thumb": "mock:p3"
+    },
+    {
+     "label": "Show 5",
+     "label2": "2022",
+     "thumb": "mock:p4"
+    },
+    {
+     "label": "Show 6",
+     "label2": "2022",
+     "thumb": "mock:p5"
+    },
+    {
+     "label": "Show 7",
+     "label2": "2022",
+     "thumb": "mock:p6"
+    },
+    {
+     "label": "Show 8",
+     "label2": "2022",
+     "thumb": "mock:p7"
+    }
+   ]
+  },
+  "403": {
+   "selected": 0,
+   "items": [
+    {
+     "label": "Diego Luna",
+     "label2": "Cassian Andor",
+     "thumb": "mock:c0"
+    },
+    {
+     "label": "Diego Luna",
+     "label2": "Cassian Andor",
+     "thumb": "mock:c1"
+    },
+    {
+     "label": "Diego Luna",
+     "label2": "Cassian Andor",
+     "thumb": "mock:c2"
+    },
+    {
+     "label": "Diego Luna",
+     "label2": "Cassian Andor",
+     "thumb": "mock:c3"
+    },
+    {
+     "label": "Diego Luna",
+     "label2": "Cassian Andor",
+     "thumb": "mock:c4"
+    },
+    {
+     "label": "Diego Luna",
+     "label2": "Cassian Andor",
+     "thumb": "mock:c5"
+    },
+    {
+     "label": "Diego Luna",
+     "label2": "Cassian Andor",
+     "thumb": "mock:c6"
+    },
+    {
+     "label": "Diego Luna",
+     "label2": "Cassian Andor",
+     "thumb": "mock:c7"
+    }
+   ]
+  }
+ },
+ "_note": "Player OSD scenario (player-osd group). \"overrides\" (positions/widths Python sets at runtime), \"infolabels\", \"bools\" and \"backdrop\" need the extended previewer; the shared one ignores them."
+}

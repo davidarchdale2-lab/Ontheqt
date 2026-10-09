@@ -9,18 +9,7 @@
    1080p, TV-scaled values 1:1 (PLEZY_DESIGN.md): hero x 60, column 1092; action row y 590, 56 tall; rail y 652. #}
 {% block background %}
     {% include "includes/default_background.xml.tpl" with spotlight=True %}
-    {% include "includes/plezy_scrims.xml.tpl" %}
-    {% if core.needs_scaling %}
-    <!-- non-16:9: the backdrop fills the whole window but the scrims end at vscale(1080); carry scrim-v's bg foot on
-         down so the rail rows that show below it stay on the background -->
-    <control type="image">
-        <posx>0</posx>
-        <posy>{{ vscale(1080) }}</posy>
-        <width>1920</width>
-        <height>1080</height>
-        <texture colordiffuse="{{ core.plezy.bg }}">script.plex/white-square.png</texture>
-    </control>
-    {% endif %}
+    {% include "includes/plezy_scrims.xml.tpl" with foot=True %}
 {% endblock %}
 {# Plezy's back button never leaves: the header stays put instead of sliding away over the rail #}
 {% block header_anim %}{% endblock %}
@@ -537,7 +526,7 @@
             {% endfor %}
 
             <!-- CAST: person cards, 174 rounded squares, name + role -->
-            {% include "includes/pre_play_rail_row.xml.tpl" with n=0 & title="$ADDON[script.plezy.native 32419]" & icon="script.plex/plezy/icons/hub_cast.png" & kind="square" & cw=174 & ch=174 & mask="script.plex/plezy/mask-rail-square.png" %}
+            {% include "includes/pre_play_rail_row.xml.tpl" with n=0 & title="$ADDON[script.plezy.native 32419]" & icon="script.plex/plezy/icons/hub_cast.png" & kind="square" & cw=174 & ch=174 & mask="script.plex/plezy/mask-rail-square.png" & placeholder_icon="script.plex/plezy/icons/person.png" %}
 
             <!-- REVIEWS (add-on only): text cards -->
             <control type="group" id="501">

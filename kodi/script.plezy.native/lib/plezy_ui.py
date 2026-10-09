@@ -165,8 +165,7 @@ def spotlight_fields(obj, season_fmt=u'S{}', episode_fmt=u'E{}', hide_summary=Fa
     content_rating = _text(obj, 'contentRating')
     if content_rating:
         parts.append(('content_rating', content_rating.split('/', 1)[-1]))
-    if kind not in ('show', 'season', 'artist', 'album'):
-        parts.append(('duration', duration_text(_number(obj, 'duration'))))
+    parts.append(('duration', duration_text(_number(obj, 'duration'))))  # empty when the item has none
     if kind == 'episode' and _text(obj, 'originallyAvailableAt'):
         parts.append(('date', full_date(_text(obj, 'originallyAvailableAt'))))
     elif _text(obj, 'year'):
@@ -215,8 +214,7 @@ def detail_meta(obj, season_fmt=u'S{}', episode_fmt=u'E{}', hide_ratings=False, 
     content_rating = _text(obj, 'contentRating')
     if content_rating:
         parts.append(('content_rating', content_rating.split('/', 1)[-1]))
-    if kind not in ('show', 'season', 'artist', 'album'):
-        parts.append(('duration', duration_text(_number(obj, 'duration'))))
+    parts.append(('duration', duration_text(_number(obj, 'duration'))))  # empty when the item has none
     if not hide_ratings:
         parts.append(('ratings', ratings_text(obj)))
     return fit_meta(parts, budget)
@@ -232,5 +230,9 @@ def season_meta(season, episodes_label=u'Episodes'):
 
 
 def play_label(parent_index, index, season_fmt=u'S{}', episode_fmt=u'E{}'):
-    """Plezy _getPlayButtonLabel for shows: the on-deck episode as 'S1 E3' (movies and episodes get no label)."""
-    return episode_label(parent_index, index, season_fmt, episode_fmt)
+    """Plezy _getPlayButtonLabel for shows: t.discover.playEpisode, 'S1E3' with no space (the metadata line uses
+    'S1 E3'). Movies and episodes get no label."""
+    season, episode = u'{0}'.format(parent_index or u'').strip(), u'{0}'.format(index or u'').strip()
+    if not season or not episode:
+        return u''
+    return season_fmt.format(season) + episode_fmt.format(episode)

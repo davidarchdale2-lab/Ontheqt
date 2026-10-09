@@ -15,7 +15,7 @@
    (audio / subtitle settings), 308 / 1308 (watched), 1307 (version), 400-404 (rows), 500-504 (row groups). #}
 {% block background %}
     {% include "includes/default_background.xml.tpl" with spotlight=True %}
-    {% include "includes/plezy_scrims.xml.tpl" %}
+    {% include "includes/plezy_scrims.xml.tpl" with foot=True %}
 {% endblock %}
 {# Plezy's back button never leaves: the header stays put instead of sliding away over the rail #}
 {% block header_anim %}{% endblock %}
@@ -66,13 +66,13 @@
 
             <!-- EPISODES: the season's hub (Plezy: tv icon, 16:9 thumbnails at .72, 'S1E3 · 45m'); EpisodesPaginator
                  boundary tiles page in place, so left/right stay inside the list -->
-            {% include "includes/episodes_rail_row.xml.tpl" with n=0 & title="$INFO[Window.Property(episodes.header)]" & icon="script.plex/plezy/icons/tv.png" & kind="ar16x9" & cw=296 & ch=167 & mask="script.plex/plezy/mask-rail-wide.png" & boundary=True %}
+            {% include "includes/episodes_rail_row.xml.tpl" with n=0 & title="$INFO[Window.Property(episodes.header)]" & icon="script.plex/plezy/icons/tv.png" & kind="ar16x9" & cw=296 & ch=167 & mask="script.plex/plezy/mask-rail-wide.png" & boundary=True & selected_ring=True %}
 
             <!-- OTHER SEASONS: posters, Select opens that season -->
             {% include "includes/episodes_rail_row.xml.tpl" with n=1 & title="$INFO[Window.Property(seasons.header)]" & icon="script.plex/plezy/icons/hub_seasons.png" & kind="poster" & cw=174 & ch=261 & mask="script.plex/plezy/mask-rail-poster.png" %}
 
             <!-- CAST (of the selected episode): person cards, name + role -->
-            {% include "includes/episodes_rail_row.xml.tpl" with n=2 & title="$ADDON[script.plezy.native 32419]" & icon="script.plex/plezy/icons/hub_cast.png" & kind="square" & cw=174 & ch=174 & mask="script.plex/plezy/mask-rail-square.png" %}
+            {% include "includes/episodes_rail_row.xml.tpl" with n=2 & title="$ADDON[script.plezy.native 32419]" & icon="script.plex/plezy/icons/hub_cast.png" & kind="square" & cw=174 & ch=174 & mask="script.plex/plezy/mask-rail-square.png" & placeholder_icon="script.plex/plezy/icons/person.png" %}
 
             <!-- TRAILERS & EXTRAS: wide cards, title + extra type -->
             {% include "includes/episodes_rail_row.xml.tpl" with n=3 & title="$INFO[Window.Property(extras.header)]" & icon="script.plex/plezy/icons/hub_extras.png" & kind="ar16x9" & cw=296 & ch=167 & mask="script.plex/plezy/mask-rail-wide.png" %}

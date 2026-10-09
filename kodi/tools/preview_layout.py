@@ -16,6 +16,9 @@ scenario.json:
                                                 "props": {"item": "1"}}]}},
    "images": {"poster:Arrival": {"size": [200, 300], "colors": ["#3a4a6b", "#0e1420"], "text": "ARRIVAL"}}}
 Any texture value "mock:<key>" is drawn from "images" (a two-colour gradient with optional text).
+Also supported (merged from the wave-1 screen work): textbox/label auto size with max, vertical grouplists with
+align bottom/right/center, usecontrolcoords, togglebutton usealttexture, zoom animations, posy ending in "r",
+String.Contains, and the scenario keys overrides/infolabels/bools/backdrop.
 """
 import json
 import os
@@ -67,6 +70,10 @@ class State(object):
         self.visible = {}      # control id -> visibility (filled as we go)
         self.item = None       # current ListItem dict while drawing a layout
         self.labels = scenario.get('addon_strings', {})
+        self.overrides = {str(k): v for k, v in scenario.get('overrides', {}).items()}
+        self.infolabels = scenario.get('infolabels', {})
+        self.bools = scenario.get('bools', {})
+        self.in_focused_item = False
 
 
 # ---------------------------------------------------------------- infolabels + conditions
@@ -77,7 +84,9 @@ def resolve(text, st):
 
     def info(m):
         return infolabel(m.group(1), st)
-    text = re.sub(r'\$INFO\[([^\]]+?)(?:,[^\]]*)?\]', info, text)
+    text = re.sub(r'\(\$INFO\[[^\]]*\]\)', '', text)  # Player.Time($INFO[...]) -> Player.Time
+    text = re.sub(r'\$INFO\[([^\],]+?)(?:,([^,\]]*)(?:,([^\]]*))?)?\]',
+                  lambda m: (lambda v: ((m.group(2) or '') + v + (m.group(3) or '')) if v else '')(info(m)), text)
     text = re.sub(r'\$ADDON\[[\w.]+ (\d+)\]', lambda m: st.labels.get(m.group(1), m.group(1)), text)
     return text
 
@@ -113,6 +122,10 @@ def infolabel(name, st):
     m = re.match(r'Container\((\d+)\)\.NumItems$', name)
     if m:
         return str(len(st.lists.get(int(m.group(1)), {}).get('items', [])))
+    if name in st.infolabels:
+        return st.infolabels[name]
+    if name.startswith('Player.') and name.split('(')[0] in st.infolabels:
+        return st.infolabels[name.split('(')[0]]
     if name == 'System.Time':
         return st.time
     if name == 'System.CurrentControlID':
@@ -128,6 +141,8 @@ def has_focus(cid, st):
 
 def atom(expr, st):
     expr = expr.strip()
+    if expr in st.bools:
+        return bool(st.bools[expr])
     if expr in ('true', 'True', 'yes'):
         return True
     if expr in ('false', 'False', 'no', ''):
@@ -138,6 +153,9 @@ def atom(expr, st):
     fn, args = m.group(1), m.group(2)
     if fn == 'String.IsEmpty':
         return infolabel(args, st) == ''
+    if fn == 'String.Contains':
+        a, b = args.split(',', 1)
+        return b.strip().lower() in infolabel(a, st).lower()
     if fn == 'String.IsEqual':
         a, b = args.split(',', 1)
         return infolabel(a, st) == b.strip()
@@ -246,7 +264,7 @@ def load_texture(path, st, size):
 def nine_slice(img, border, w, h):
     l, t, r, b = border
     iw, ih = img.size
-    if l + r >= iw or t + b >= ih:  # Kodi still fills these (e.g. border 10 on a 10px square): plain stretch
+    if l + r > iw or t + b > ih:  # Kodi still fills these (e.g. border 10 on a 10px square): plain stretch
         return img.resize((w, h), Image.BILINEAR)
     l, r = min(l, w // 2), min(r, w // 2)
     t, b = min(t, h // 2), min(b, h // 2)
@@ -294,6 +312,8 @@ class Canvas(object):
                 return
             layer = layer.crop((lx0, ly0, lx1, ly1))
             x, y = x + lx0, y + ly0
+        if x + layer.width <= 0 or y + layer.height <= 0 or x >= self.img.width or y >= self.img.height:
+            return
         self.img.alpha_composite(layer, (max(x, 0), max(y, 0)),
                                  (max(-x, 0), max(-y, 0)))
 
@@ -353,6 +373,53 @@ def ctl_size(el):
     return num(w, 0) if w and w != 'auto' else 0, num(h, 0)
 
 
+def _max_attr(el, tag):
+    c = el.find(tag)
+    return num(c.get('max'), 0) if c is not None and c.get('max') else 0
+
+
+def label_text(el, st):
+    raw = child(el, 'label') or (('$INFO[' + child(el, 'info') + ']') if child(el, 'info') else '')
+    s = resolve(raw, st)
+    bold = '[B]' in s or (child(el, 'font') or '') in BOLD_FONTS
+    return re.sub(r'\[/?(B|I|UPPERCASE|LOWERCASE|CAPITALIZE)\]', '', s), bold
+
+
+def measured_size(el, st):
+    """Kodi auto sizes: labels with <width>auto</width> fit their text (up to max), textboxes with
+    <height>auto</height> fit their wrapped lines (up to max)."""
+    w, h = ctl_size(el)
+    kind = el.get('type')
+    if child(el, 'width') == 'auto' and kind in ('label', 'fadelabel'):
+        text, bold = label_text(el, st)
+        w = ImageDraw.Draw(Image.new('RGBA', (1, 1))).textlength(text, font=font(child(el, 'font') or 'font13', bold)) if text.strip() else 0
+        mx = _max_attr(el, 'width')
+        if mx:
+            w = min(w, mx)
+    if child(el, 'height') == 'auto' and kind == 'textbox':
+        text, bold = label_text(el, st)
+        fnt = font(child(el, 'font') or 'font13', bold)
+        d = ImageDraw.Draw(Image.new('RGBA', (1, 1)))
+        lines = 0
+        if text.strip():
+            for para in text.split('[CR]'):
+                line = ''
+                lines += 1
+                for word in para.split():
+                    t = (line + ' ' + word).strip()
+                    if d.textlength(t, font=fnt) <= w:
+                        line = t
+                    else:
+                        lines += 1
+                        line = word
+        asc, desc = fnt.getmetrics()
+        h = lines * int((asc + desc) * 1.12)
+        mx = _max_attr(el, 'height')
+        if mx:
+            h = min(h, mx)
+    return w, h
+
+
 def ctl_pos(el, pw, ph):
     x = child(el, 'posx') or child(el, 'left')
     y = child(el, 'posy') or child(el, 'top')
@@ -361,6 +428,8 @@ def ctl_pos(el, pw, ph):
         x = pw - num(x[:-1]) - 0
     elif child(el, 'right') and not child(el, 'posx'):
         x = pw - num(child(el, 'right')) - w
+    if y and y.endswith('r'):
+        y = ph - num(y[:-1])
     return num(x), num(y)
 
 
@@ -369,14 +438,67 @@ def draw_controls(parent, canvas, st, ox, oy, pw, ph, alpha, clip):
         draw_control(el, canvas, st, ox, oy, pw, ph, alpha, clip)
 
 
+def apply_override(el, st):
+    cid = el.get('id')
+    ov = st.overrides.get(cid) if cid else None
+    if not ov:
+        return
+    for k, v in ov.items():
+        e = el.find(k)
+        if e is None:
+            e = ET.SubElement(el, k)
+        e.text = str(v)
+
+
+def zoom_factor(el, st):
+    z = 1.0
+    for a in el.findall('animation'):
+        kind = (a.text or '').strip() or a.get('type', '')
+        if a.get('effect') != 'zoom':
+            continue
+        if kind == 'Conditional' and cond(a.get('condition', 'false'), st):
+            z = num(a.get('end'), 100) / 100.0
+        elif kind == 'Focus' and st.in_focused_item:
+            z = num(a.get('end'), 100) / 100.0
+    return z
+
+
 def draw_control(el, canvas, st, ox, oy, pw, ph, alpha, clip, at=None):
+    apply_override(el, st)
     if not is_visible(el, st):
         return 0
+    z = zoom_factor(el, st) if el.get('type') in ('group', 'button', 'togglebutton') else 1.0
+    if abs(z - 1.0) > 0.001:
+        # draw onto a transparent layer, then scale it about the control centre (center="auto" or explicit)
+        layer = Canvas(W, H, (0, 0, 0, 0))
+        x0, y0 = at if at is not None else ctl_pos(el, pw, ph)
+        a, dx, dy = anim_state(el, st)
+        w0, h0 = ctl_size(el)
+        cx, cy = ox + x0 + dx + w0 / 2.0, oy + y0 + dy + h0 / 2.0
+        for an in el.findall('animation'):
+            if an.get('effect') == 'zoom' and an.get('center') and an.get('center') != 'auto':
+                parts = [num(v) for v in an.get('center').split(',') if v.strip()]
+                if len(parts) >= 2:
+                    cx, cy = ox + x0 + dx + parts[0], oy + y0 + dy + parts[1]
+                elif parts:  # a lone value is the x centre; Kodi keeps the vertical centre
+                    cx = ox + x0 + dx + parts[0]
+        saved = el.findall('animation')
+        _draw_control_inner(el, layer, st, ox, oy, pw, ph, 1.0, None, at)
+        img = layer.img
+        nw, nh = int(W * z), int(H * z)
+        big = img.resize((nw, nh), Image.LANCZOS)
+        offx, offy = int(cx - cx * z), int(cy - cy * z)
+        canvas.paste(big, offx, offy, alpha * a, clip)
+        return h0
+    return _draw_control_inner(el, canvas, st, ox, oy, pw, ph, alpha, clip, at)
+
+
+def _draw_control_inner(el, canvas, st, ox, oy, pw, ph, alpha, clip, at=None):
     a, dx, dy = anim_state(el, st)
     alpha *= a
     x, y = at if at is not None else ctl_pos(el, pw, ph)
     x, y = ox + x + dx, oy + y + dy
-    w, h = ctl_size(el)
+    w, h = measured_size(el, st)
     kind = el.get('type')
     if alpha <= 0.01:
         return h
@@ -398,6 +520,8 @@ def draw_control(el, canvas, st, ox, oy, pw, ph, alpha, clip, at=None):
 def auto_width(c, st):
     """Width of a control in a horizontal grouplist; buttons with <width>auto</width> fit their label."""
     cw, _ = ctl_size(c)
+    if not cw and c.get('type') in ('label', 'fadelabel'):
+        return measured_size(c, st)[0]
     if cw or c.get('type') != 'button':
         return cw
     lab = re.sub(r'\[/?B\]', '', resolve(child(c, 'label'), st))
@@ -410,19 +534,28 @@ def draw_grouplist(el, canvas, st, x, y, w, h, alpha, clip):
     vertical = (child(el, 'orientation') or 'vertical') == 'vertical'
     sub_clip = intersect(clip, (x, y, x + w, y + h))
     kids = [c for c in el.findall('control') if is_visible(c, st)]
-    sizes = [(ctl_size(c)[1] if vertical else auto_width(c, st)) for c in kids]
+    sizes = [(measured_size(c, st)[1] + num(child(c, 'posy'), 0) if vertical else auto_width(c, st)) for c in kids]
+    if vertical:  # usecontrolcoords: an item's posy shifts it and the items after it
+        sizes = [measured_size(c, st)[1] for c in kids]
     cur = 0.0
-    if not vertical and (child(el, 'align') or 'left') in ('right', 'center'):
+    align = child(el, 'align') or 'left'
+    if align in ('right', 'bottom', 'center'):
         total = sum(sizes) + gap * max(len(kids) - 1, 0)
-        cur = (w - total) if child(el, 'align') == 'right' else (w - total) / 2
+        total += sum(num(child(c, 'posy' if vertical else 'posx'), 0) for c in kids) if child(el, 'usecontrolcoords') == 'true' else 0
+        span = h if vertical else w
+        cur = (span - total) if align in ('right', 'bottom') else (span - total) / 2
     for c, size in zip(kids, sizes):
         px, py = ctl_pos(c, w, h)
         pos = (px, cur + py) if vertical else (cur + px, py)
         if not vertical and c.get('type') == 'button' and not ctl_size(c)[0]:
-            draw_button(c, canvas, st, x + pos[0], y + pos[1], size, ctl_size(c)[1], alpha, sub_clip)
+            draw_button(c, canvas, st, x + pos[0], y + pos[1], auto_width(c, st), ctl_size(c)[1], alpha, sub_clip)
+        elif not vertical and c.get('type') == 'label' and not ctl_size(c)[0]:
+            draw_label(c, canvas, st, x + pos[0], y + pos[1], auto_width(c, st) + 4, ctl_size(c)[1], alpha, sub_clip)
         else:
             draw_control(c, canvas, st, x, y, w, h, alpha, sub_clip, at=pos)
         cur += size + gap
+        if child(el, 'usecontrolcoords') == 'true':
+            cur += (py if vertical else px)
 
 
 def intersect(a, b):
@@ -453,6 +586,7 @@ def draw_list(el, canvas, st, x, y, w, h, alpha, clip):
     for i, item in enumerate(items):
         st.item = item
         lay = pick_layout(el, 'focusedlayout' if i == sel else 'itemlayout', st)
+        st.in_focused_item = (i == sel and st.focus == cid)
         if lay is None:
             continue
         lw, lh = num(lay.get('width'), w), num(lay.get('height'), h)
@@ -471,6 +605,7 @@ def draw_list(el, canvas, st, x, y, w, h, alpha, clip):
         draw_controls(lay, canvas, st, lx, ly, lw, lh, alpha, sub_clip)
         cur += lh if vertical else lw
     st.item = None
+    st.in_focused_item = False
 
 
 def draw_image(el, canvas, st, x, y, w, h, alpha, clip):
@@ -510,6 +645,10 @@ def draw_image(el, canvas, st, x, y, w, h, alpha, clip):
     else:
         layer = img.resize((w, h), Image.LANCZOS)
         offx = offy = 0
+    if tex.get('flipx') == 'true':
+        layer = layer.transpose(Image.FLIP_LEFT_RIGHT)
+    if tex.get('flipy') == 'true':
+        layer = layer.transpose(Image.FLIP_TOP_BOTTOM)
     diffuse = tex.get('diffuse')
     if diffuse:
         mask = load_texture(diffuse, st, (w, h))
@@ -579,6 +718,9 @@ def draw_label(el, canvas, st, x, y, w, h, alpha, clip, wrap=False, text=None, c
 def draw_button(el, canvas, st, x, y, w, h, alpha, clip):
     focused = st.focus == int(el.get('id', '-1') or -1)
     tex = el.find('texturefocus' if focused else 'texturenofocus')
+    if el.get('type') == 'togglebutton' and child(el, 'usealttexture') and cond(child(el, 'usealttexture'), st):
+        alt = el.find('alttexturefocus' if focused else 'alttexturenofocus')
+        tex = alt if alt is not None else tex
     if w <= 0:  # auto width: measure the label
         lab = re.sub(r'\[/?B\]', '', resolve(child(el, 'label'), st))
         w = ImageDraw.Draw(Image.new('RGBA', (1, 1))).textlength(lab, font=font(child(el, 'font') or 'font13')) + 2 * num(child(el, 'textoffsetx'), 0)
@@ -603,6 +745,10 @@ def main():
     # two passes: the first fills control visibility used by Control.IsVisible conditions
     for _ in range(2):
         canvas = Canvas(W, H, colour(scenario.get('window_bg', 'FF000000')))
+        if scenario.get('backdrop_png'):
+            canvas.paste(Image.open(scenario['backdrop_png']).convert('RGBA'), 0, 0, 1.0, None)
+        if scenario.get('backdrop'):
+            canvas.paste(mock_image(scenario['backdrop'], st, (W, H)).resize((W, H)), 0, 0, 1.0, None)
         draw_controls(tree.find('controls'), canvas, st, 0, 0, W, H, 1.0, None)
     canvas.img.convert('RGB').save(out_path)
     print('preview written to', out_path)

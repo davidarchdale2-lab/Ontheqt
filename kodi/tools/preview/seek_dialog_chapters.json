@@ -1,0 +1,211 @@
+{
+ "focus": 501,
+ "props": {
+  "initialized": "1",
+  "show.OSD": "1",
+  "is.show": "1",
+  "video.line2": "S1 · E5 · The Axe Forgets · 42m",
+  "direct.play": "1",
+  "media.show_ends": "1",
+  "time.ends_label": "Ends at",
+  "nav.prevnext": "1",
+  "pq.hasnext": "1",
+  "nav.ffwdrwd": "1",
+  "nav.quick_subtitles": "1",
+  "nav.playlist": "1",
+  "show.buffer": "1",
+  "has.playlist": "1",
+  "nav.repeat": "1",
+  "nav.shuffle": "1",
+  "pq.shuffled": "1",
+  "has.chapters": "1",
+  "show.chapters": "1",
+  "chapters.label": "Video chapters",
+  "time.selection": "12:30"
+ },
+ "infolabels": {
+  "VideoPlayer.TVShowTitle": "Andor",
+  "VideoPlayer.Title": "The Axe Forgets",
+  "Player.Time": "17:04",
+  "Player.TimeRemaining": "24:56",
+  "Player.FinishTime": "9:45 PM",
+  "System.Time": "20:41"
+ },
+ "images": {
+  "frame": {
+   "size": [
+    1920,
+    1080
+   ],
+   "colors": [
+    "#8a9bb0",
+    "#2b3442"
+   ],
+   "text": "",
+   "text_size": 10
+  },
+  "bif": {
+   "size": [
+    240,
+    135
+   ],
+   "colors": [
+    "#c49a6c",
+    "#3d2b1f"
+   ],
+   "text": "BIF",
+   "text_size": 30
+  },
+  "ch1": {
+   "size": [
+    296,
+    167
+   ],
+   "colors": [
+    "#4b6a88",
+    "#1b2633"
+   ],
+   "text": "1"
+  },
+  "ch2": {
+   "size": [
+    296,
+    167
+   ],
+   "colors": [
+    "#6b4b88",
+    "#221b33"
+   ],
+   "text": "2"
+  },
+  "ch3": {
+   "size": [
+    296,
+    167
+   ],
+   "colors": [
+    "#886b4b",
+    "#33261b"
+   ],
+   "text": "3"
+  },
+  "ch4": {
+   "size": [
+    296,
+    167
+   ],
+   "colors": [
+    "#4b886b",
+    "#1b3326"
+   ],
+   "text": "4"
+  },
+  "ch5": {
+   "size": [
+    296,
+    167
+   ],
+   "colors": [
+    "#88804b",
+    "#33301b"
+   ],
+   "text": "5"
+  },
+  "ch6": {
+   "size": [
+    296,
+    167
+   ],
+   "colors": [
+    "#884b5a",
+    "#331b22"
+   ],
+   "text": "6"
+  }
+ },
+ "backdrop": "frame",
+ "overrides": {
+  "201": {
+   "width": 644
+  },
+  "206": {
+   "width": 864
+  },
+  "200": {
+   "width": 644
+  },
+  "500": {
+   "posx": 0,
+   "posy": 0
+  },
+  "501": {
+   "posx": 30,
+   "posy": 624,
+   "height": 250
+  },
+  "202": {
+   "posx": 645,
+   "posy": 898
+  },
+  "203": {
+   "posx": -56
+  }
+ },
+ "bools": {},
+ "lists": {
+  "501": {
+   "selected": 2,
+   "items": [
+    {
+     "label": "Cold open",
+     "label2": "0:00",
+     "thumb": "mock:ch1",
+     "props": {
+      "is.current": ""
+     }
+    },
+    {
+     "label": "Ferrix",
+     "label2": "4:12",
+     "thumb": "mock:ch2",
+     "props": {
+      "is.current": "1"
+     }
+    },
+    {
+     "label": "The heist",
+     "label2": "12:30",
+     "thumb": "mock:ch3",
+     "props": {
+      "is.current": ""
+     }
+    },
+    {
+     "label": "Aldhani",
+     "label2": "21:05",
+     "thumb": "mock:ch4",
+     "props": {
+      "is.current": ""
+     }
+    },
+    {
+     "label": "Escape",
+     "label2": "33:40",
+     "thumb": "mock:ch5",
+     "props": {
+      "is.current": ""
+     }
+    },
+    {
+     "label": "Credits",
+     "label2": "40:02",
+     "thumb": "mock:ch6",
+     "props": {
+      "is.current": ""
+     }
+    }
+   ]
+  }
+ },
+ "_note": "Player OSD scenario (player-osd group). \"overrides\" (positions/widths Python sets at runtime), \"infolabels\", \"bools\" and \"backdrop\" need the extended previewer; the shared one ignores them."
+}

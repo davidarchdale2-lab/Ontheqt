@@ -3360,3 +3360,75 @@ msgstr ""
 msgctxt "#35050"
 msgid "Plezy"
 msgstr ""
+
+msgctxt "#35120"
+msgid "Seasons"
+msgstr ""
+
+msgctxt "#35121"
+msgid "Trailers & extras"
+msgstr ""
+
+msgctxt "#35122"
+msgid "More like this"
+msgstr ""
+
+msgctxt "#35123"
+msgid "{} episodes"
+msgstr ""
+
+msgctxt "#35124"
+msgid "{} episode"
+msgstr ""
+
+msgctxt "#35140"
+msgid "Trailers & extras"
+msgstr ""
+
+msgctxt "#35141"
+msgid "More like this"
+msgstr ""
+
+msgctxt "#35142"
+msgid "{} episode"
+msgstr ""
+
+msgctxt "#35143"
+msgid "{} episodes"
+msgstr ""
+
+msgctxt "#35160"
+msgid "Queue"
+msgstr ""
+
+msgctxt "#35161"
+msgid "Playing next"
+msgstr ""
+
+msgctxt "#35162"
+msgid "On deck"
+msgstr ""
+
+msgctxt "#35163"
+msgid "Related shows"
+msgstr ""
+
+msgctxt "#35164"
+msgid "Related movies"
+msgstr ""
+
+msgctxt "#35165"
+msgid "Video chapters"
+msgstr ""
+
+msgctxt "#35166"
+msgid "Virtual chapters"
+msgstr ""
+
+msgctxt "#35167"
+msgid "Combined chapters"
+msgstr ""
+
+msgctxt "#35168"
+msgid "Next episode"
+msgstr ""

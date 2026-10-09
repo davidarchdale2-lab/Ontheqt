@@ -1,0 +1,170 @@
+{
+ "focus": 101,
+ "props": {},
+ "images": {
+  "frame": {
+   "size": [
+    1920,
+    1080
+   ],
+   "colors": [
+    "#8a9bb0",
+    "#2b3442"
+   ],
+   "text": "",
+   "text_size": 10
+  },
+  "bif": {
+   "size": [
+    240,
+    135
+   ],
+   "colors": [
+    "#c49a6c",
+    "#3d2b1f"
+   ],
+   "text": "BIF",
+   "text_size": 30
+  },
+  "ch1": {
+   "size": [
+    296,
+    167
+   ],
+   "colors": [
+    "#4b6a88",
+    "#1b2633"
+   ],
+   "text": "1"
+  },
+  "ch2": {
+   "size": [
+    296,
+    167
+   ],
+   "colors": [
+    "#6b4b88",
+    "#221b33"
+   ],
+   "text": "2"
+  },
+  "ch3": {
+   "size": [
+    296,
+    167
+   ],
+   "colors": [
+    "#886b4b",
+    "#33261b"
+   ],
+   "text": "3"
+  },
+  "ch4": {
+   "size": [
+    296,
+    167
+   ],
+   "colors": [
+    "#4b886b",
+    "#1b3326"
+   ],
+   "text": "4"
+  },
+  "ch5": {
+   "size": [
+    296,
+    167
+   ],
+   "colors": [
+    "#88804b",
+    "#33301b"
+   ],
+   "text": "5"
+  },
+  "ch6": {
+   "size": [
+    296,
+    167
+   ],
+   "colors": [
+    "#884b5a",
+    "#331b22"
+   ],
+   "text": "6"
+  }
+ },
+ "addon_strings": {
+  "35160": "Queue"
+ },
+ "lists": {
+  "101": {
+   "selected": 1,
+   "items": [
+    {
+     "label": "The Axe Forgets",
+     "label2": "Andor · S1E5",
+     "thumb": "mock:ch1",
+     "props": {
+      "playing": "1",
+      "progress": ""
+     }
+    },
+    {
+     "label": "The Eye",
+     "label2": "Andor · S1E6",
+     "thumb": "mock:ch2",
+     "props": {
+      "playing": "",
+      "progress": ""
+     }
+    },
+    {
+     "label": "Announcement",
+     "label2": "Andor · S1E7",
+     "thumb": "mock:ch3",
+     "props": {
+      "playing": "",
+      "progress": ""
+     }
+    },
+    {
+     "label": "Narkina 5",
+     "label2": "Andor · S1E8",
+     "thumb": "mock:ch4",
+     "props": {
+      "playing": "",
+      "progress": ""
+     }
+    },
+    {
+     "label": "Nobody's Listening!",
+     "label2": "Andor · S1E9",
+     "thumb": "mock:ch5",
+     "props": {
+      "playing": "",
+      "progress": ""
+     }
+    },
+    {
+     "label": "One Way Out",
+     "label2": "Andor · S1E10",
+     "thumb": "mock:ch6",
+     "props": {
+      "playing": "",
+      "progress": ""
+     }
+    },
+    {
+     "label": "Daughter of Ferrix",
+     "label2": "Andor · S1E11",
+     "thumb": "mock:ch1",
+     "props": {
+      "playing": "",
+      "progress": ""
+     }
+    }
+   ]
+  }
+ },
+ "_note": "Player OSD scenario (player-osd group). \"overrides\" (positions/widths Python sets at runtime), \"infolabels\", \"bools\" and \"backdrop\" need the extended previewer; the shared one ignores them."
+}

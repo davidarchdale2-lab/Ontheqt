@@ -27,8 +27,8 @@
         <scrolltime tween="cubic" easing="out">160</scrolltime>
         <orientation>horizontal</orientation>
         <preloaditems>4</preloaditems>
-        {% include "includes/plezy_hub_card.xml.tpl" with kind=kind & focused=False & cw=cw & ch=ch & mask=mask & cond="none" & focus_id=list_id & hub_id=list_id & sub_always=True %}
-        {% include "includes/plezy_hub_card.xml.tpl" with kind=kind & focused=True & cw=cw & ch=ch & mask=mask & cond="none" & focus_id=list_id & hub_id=list_id & sub_always=True %}
+        {% include "includes/plezy_hub_card.xml.tpl" with kind=kind & focused=False & cw=cw & ch=ch & mask=mask & cond="none" & focus_id=list_id & hub_id=list_id & sub_always=True & placeholder_icon=placeholder_icon & selected_ring=selected_ring %}
+        {% include "includes/plezy_hub_card.xml.tpl" with kind=kind & focused=True & cw=cw & ch=ch & mask=mask & cond="none" & focus_id=list_id & hub_id=list_id & sub_always=True & placeholder_icon=placeholder_icon & selected_ring=selected_ring %}
     </control>
 </control>
 {% endwith %}

@@ -13,6 +13,7 @@ from lib import colors
 from lib import kodijsonrpc
 from lib import player
 from lib import util
+from lib import plezy_player_osd as osd
 from lib.util import T
 from plexnet.serverdecision import DecisionFailure
 from . import busy
@@ -52,8 +53,7 @@ class OnDeckPaginator(pagination.MCLPaginator):
         mli.setProperty('watched', mli.dataSource.isFullyWatched and '1' or '')
 
         if data.type in 'episode':
-            mli.setLabel2(
-                u'{0} \u2022 {1}'.format(T(32310, 'S').format(data.parentIndex), T(32311, 'E').format(data.index)))
+            mli.setLabel2(osd.join_meta((T(32310, 'S').format(data.parentIndex), T(32311, 'E').format(data.index))))
         else:
             mli.setLabel2(data.year)
 
@@ -90,11 +90,12 @@ class VideoPlayerWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RolesMi
     width = 1920
     height = 1080
 
-    NEXT_DIM = util.scaleResolution(537, 303)
-    PREV_DIM = util.scaleResolution(462, 259)
-    ONDECK_DIM = util.scaleResolution(329, 185)
-    RELATED_DIM = util.scaleResolution(268, 402)
-    ROLES_DIM = util.scaleResolution(334, 334)
+    # Plezy cards drawn by script-plex-video_player.xml.tpl
+    NEXT_DIM = util.scaleResolution(532, 299)
+    PREV_DIM = util.scaleResolution(400, 225)
+    ONDECK_DIM = util.scaleResolution(400, 225)
+    RELATED_DIM = util.scaleResolution(200, 300)
+    ROLES_DIM = util.scaleResolution(200, 200)
 
     OPTIONS_GROUP_ID = 200
 
@@ -463,7 +464,9 @@ class VideoPlayerWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RolesMi
             'prev.title',
             'prev.subtitle',
             'related.header',
-            'has.next'
+            'has.next',
+            'countdown',
+            'countdown.seconds'
         ), '')
 
         self.onDeckListControl.reset()
@@ -545,6 +548,7 @@ class VideoPlayerWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RolesMi
 
         self.timeout = None
         self.setProperty('countdown', '')
+        self.setProperty('countdown.seconds', '')
 
     def countdown(self):
         while self.timeout and not util.MONITOR.waitForAbort(0.1):
@@ -556,6 +560,7 @@ class VideoPlayerWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RolesMi
             if self.timeout and now > self.timeout:
                 self.timeout = None
                 self.setProperty('countdown', '')
+                self.setProperty('countdown.seconds', '')
                 util.DEBUG_LOG('Post-play timer finished')
                 # This works. The direct method caused the OSD to be broken, possibly because it was triggered from another thread?
                 # That was the only real difference I could see between the direct method and the user actually clicking the button.
@@ -567,6 +572,8 @@ class VideoPlayerWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RolesMi
                 cd = min(abs(util.addonSettings.postplayTimeout - 1), int((self.timeout or now) - now))
                 base = 15 / float(util.addonSettings.postplayTimeout - 1)
                 self.setProperty('countdown', str(15 - int(math.ceil(base*cd))))
+                # Plezy's Play next pill counts whole seconds down ("15 >")
+                self.setProperty('countdown.seconds', str(osd.countdown_seconds(self.timeout, now)))
 
     def getHubs(self):
         try:
@@ -600,8 +607,8 @@ class VideoPlayerWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RolesMi
             if self.next.type == "episode" and hide_spoilers:
                 if self.noTitles:
                     self.setProperty('info.title',
-                                     u'{0} \u2022 {1}'.format(T(32310, 'S').format(self.next.parentIndex),
-                                                              T(32311, 'E').format(self.next.index)))
+                                     osd.join_meta((T(32310, 'S').format(self.next.parentIndex),
+                                                    T(32311, 'E').format(self.next.index))))
                 else:
                     self.setProperty('info.title', self.next.title)
                 self.setProperty('info.summary', T(33008, ''))
@@ -620,7 +627,7 @@ class VideoPlayerWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RolesMi
             self.setProperty('prev.info.summary', self.prev.summary)
 
         if self.prev.type == 'episode':
-            self.setProperty('related.header', T(32306, 'Related Shows'))
+            self.setProperty('related.header', T(35163, 'Related shows'))
             if self.next:
                 thumb_opts = {}
                 if hide_spoilers:
@@ -632,19 +639,19 @@ class VideoPlayerWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RolesMi
                 self.setProperty('next.title', self.next.grandparentTitle)
                 self.setProperty(
                     'next.subtitle',
-                    u'{0} \u2022 {1}'.format(T(32303, 'Season').format(self.next.parentIndex),
-                                             T(32304, 'Episode').format(self.next.index))
+                    osd.join_meta((T(32303, 'Season').format(self.next.parentIndex),
+                                   T(32304, 'Episode').format(self.next.index)))
                 )
             if self.prev:
                 self.setProperty('prev.thumb', self.prev.thumb.asTranscodedImageURL(*self.PREV_DIM))
                 self.setProperty('prev.title', self.prev.grandparentTitle)
                 self.setProperty(
-                    'prev.subtitle', u'{0} \u2022 {1}'.format(T(32303, 'Season').format(self.prev.parentIndex),
-                                                              T(32304, 'Episode').format(self.prev.index))
+                    'prev.subtitle', osd.join_meta((T(32303, 'Season').format(self.prev.parentIndex),
+                                                    T(32304, 'Episode').format(self.prev.index)))
                 )
                 self.setProperty('prev.info.date', util.cleanLeadingZeros(self.prev.originallyAvailableAt.asDatetime('%B %d, %Y')))
         elif self.prev.type == 'movie':
-            self.setProperty('related.header', T(32404, 'Related Movies'))
+            self.setProperty('related.header', T(35164, 'Related movies'))
             if self.next:
                 self.setProperty('next.thumb', self.next.defaultArt.asTranscodedImageURL(*self.NEXT_DIM))
                 self.setProperty('info.date', self.next.year)
@@ -696,6 +703,7 @@ class VideoPlayerWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RolesMi
         for role in video.roles():
             mli = kodigui.ManagedListItem(role.tag, role.role, thumbnailImage=role.thumb.asTranscodedImageURL(*self.ROLES_DIM), data_source=role)
             mli.setProperty('index', str(idx))
+            mli.setProperty('thumb.fallback', 'script.plex/thumb_fallbacks/role.png')
             items.append(mli)
             idx += 1
 

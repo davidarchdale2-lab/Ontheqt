@@ -9,7 +9,7 @@
    308/309 (watchlist), 2302-2305 (watchlist play states), 400-403 (rows), 500-503 (row groups), 60 (rail). #}
 {% block background %}
     {% include "includes/default_background.xml.tpl" with spotlight=True %}
-    {% include "includes/plezy_scrims.xml.tpl" %}
+    {% include "includes/plezy_scrims.xml.tpl" with foot=True %}
 {% endblock %}
 {# Plezy keeps its back button over the artwork at all times: no header slide or band when the rail has focus #}
 {% block header_anim %}{% endblock %}
@@ -329,8 +329,8 @@
                 <orientation>horizontal</orientation>
                 <preloaditems>4</preloaditems>
                 {% with hub_id = 401 %}
-                {% include "includes/plezy_hub_card.xml.tpl" with kind="square" & focused=False & cw=174 & ch=174 & mask="script.plex/plezy/mask-rail-square.png" & cond="none" & sub_always=True %}
-                {% include "includes/plezy_hub_card.xml.tpl" with kind="square" & focused=True & cw=174 & ch=174 & mask="script.plex/plezy/mask-rail-square.png" & cond="none" & sub_always=True %}
+                {% include "includes/plezy_hub_card.xml.tpl" with kind="square" & focused=False & cw=174 & ch=174 & mask="script.plex/plezy/mask-rail-square.png" & cond="none" & sub_always=True & placeholder_icon="script.plex/plezy/icons/person.png" %}
+                {% include "includes/plezy_hub_card.xml.tpl" with kind="square" & focused=True & cw=174 & ch=174 & mask="script.plex/plezy/mask-rail-square.png" & cond="none" & sub_always=True & placeholder_icon="script.plex/plezy/icons/person.png" %}
                 {% endwith %}
             </control>
         </control>

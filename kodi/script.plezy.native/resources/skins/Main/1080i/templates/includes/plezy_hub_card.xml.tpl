@@ -4,6 +4,9 @@
              focus_id - control id whose focus drives glow/ring/scroll (default hub_id)
              sub_always - show Label2 without the hub.text2lines.<hub_id> window property
              item_h - layout height (needed in panels)
+             placeholder_icon - icon drawn on the surface placeholder (person rails: icons/person.png), under the artwork
+             selected_ring - on the focused layout, keep a muted ring on the selected card while another control
+                 has focus (the season screen's actions act on the selected episode)
    Paginator boundary items (ListItem.Property(is.boundary) + left./right.boundary, is.updating) draw as a
    chevron tile, like the add-on's RelatedPaginator rows expect.
    Artwork is clipped to radiusSm (8px) with a diffuse mask; focus is the 2.5px primary-colour outside
@@ -35,6 +38,16 @@
                 <height>{{ ch|vscale }}</height>
                 <texture border="8" colordiffuse="{{ core.plezy.surface }}">script.plex/plezy/r8.png</texture>
             </control>
+            {% if placeholder_icon %}
+            <control type="image">
+                <posx>{{ cw / 2 - 32 }}</posx>
+                <posy>{{ (ch / 2 - 32)|vscale }}</posy>
+                <width>64</width>
+                <height>{{ vscale(64) }}</height>
+                <texture colordiffuse="{{ core.plezy.faint }}">{{ placeholder_icon }}</texture>
+                <aspectratio>keep</aspectratio>
+            </control>
+            {% endif %}
             <control type="group">
                 <visible>!String.IsEmpty(ListItem.Property(is.end)) | !String.IsEmpty(ListItem.Property(is.boundary))</visible>
                 <control type="image">
@@ -108,6 +121,16 @@
                 <height>{{ (ch + 6)|vscale }}</height>
                 <texture border="11" colordiffuse="{{ core.plezy.text }}">script.plex/plezy/ring-8.png</texture>
             </control>
+            {% if selected_ring %}
+            <control type="image">
+                <visible>!Control.HasFocus({{ fid }})</visible>
+                <posx>-3</posx>
+                <posy>{{ vscale(-3) }}</posy>
+                <width>{{ cw + 6 }}</width>
+                <height>{{ (ch + 6)|vscale }}</height>
+                <texture border="11" colordiffuse="{{ core.plezy.muted }}">script.plex/plezy/ring-8.png</texture>
+            </control>
+            {% endif %}
             {% endif %}
         </control>
         <control type="label">

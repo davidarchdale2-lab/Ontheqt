@@ -16,6 +16,7 @@ from six.moves import range
 
 import lib.cache
 from lib import util
+from lib import plezy_player_osd as osd
 from lib.kodijsonrpc import builtin
 from lib.util import T
 from lib.language_util import getNativeLanguages
@@ -113,7 +114,8 @@ class SeekDialog(kodigui.BaseDialog, windowutils.GoHomeMixin, PlexSubtitleDownlo
     SELECTION_INDICATOR_TEXT = 205
     CACHE_IMAGE_ID = 206
     BIF_IMAGE_ID = 300
-    SEEK_IMAGE_WIDTH = 1920
+    # Plezy timeline geometry (lib/plezy_player_osd.py, shared with script-plex-seek_dialog.xml.tpl)
+    SEEK_IMAGE_WIDTH = osd.BAR_W
 
     REPEAT_BUTTON_ID = 401
     SHUFFLE_BUTTON_ID = 402
@@ -135,12 +137,17 @@ class SeekDialog(kodigui.BaseDialog, windowutils.GoHomeMixin, PlexSubtitleDownlo
     SKIP_MARKER_BUTTON_ID = 791
     NO_OSD_BUTTON_ID = 800
 
-    BAR_X = 0
-    BAR_Y = 921
-    BAR_RIGHT = 1920
-    BAR_BOTTOM = 969
-
-    NAVBAR_BTN_SIZE = 60
+    # the player chrome hugs the bottom edge (bottom-anchored vscale on non-16:9 displays)
+    BAR_X = osd.BAR_X
+    BAR_Y = osd.bottom_anchored(osd.BAR_Y, util.vscalei)
+    BAR_RIGHT = osd.BAR_RIGHT
+    BAR_BOTTOM = osd.bottom_anchored(osd.BAR_BOTTOM, util.vscalei)
+    SELECTION_Y = osd.bottom_anchored(osd.SELECTION_Y, util.vscalei)
+    BIF_Y = osd.bottom_anchored(osd.BIF_Y, util.vscalei)
+    BIGSEEK_DOT_Y = osd.bottom_anchored(osd.BIGSEEK_DOT_Y, util.vscalei)
+    BIGSEEK_LIST_H = util.vscalei(osd.BIGSEEK_DOT)
+    CHAPTER_STRIP_Y = osd.bottom_anchored(osd.STRIP_Y, util.vscalei)
+    CHAPTER_STRIP_H = util.vscalei(osd.STRIP_H)
 
     HIDE_DELAY = 4  # This uses the Cron tick so is +/- 1 second accurate
     OSD_HIDE_ANIMATION_DURATION = 0.2
@@ -209,7 +216,6 @@ class SeekDialog(kodigui.BaseDialog, windowutils.GoHomeMixin, PlexSubtitleDownlo
         self.timeFmtKodi = util.timeFormatKN
         self.waitingForBuffer = False
         self.lastSubtitleNavAction = "forward"
-        self.subtitleButtonLeft = 0
         self.ldTimer = True #util.advancedSettings.lowDriftTimer
         self.timeKeeper = None
         self.timeKeeperTime = None
@@ -361,6 +367,7 @@ class SeekDialog(kodigui.BaseDialog, windowutils.GoHomeMixin, PlexSubtitleDownlo
         self.setProperty('show.markerSkip_OSDOnly', '')
         self.setProperty('marker.autoSkip', '')
         self.setProperty('skipMarkerName', '')
+        self.setProperty('marker.next', '')
 
         self._introSkipShownStarted = None
         self._introAutoSkipped = False
@@ -524,17 +531,10 @@ class SeekDialog(kodigui.BaseDialog, windowutils.GoHomeMixin, PlexSubtitleDownlo
                                               ((self.player.video and self.player.video.type == 'episode') or (self.handler and self.handler.playlist))) or
                              navPlaylist == "always")
 
-        if not self.getProperty('nav.playlist'):
-            self.subtitleButtonLeft += self.NAVBAR_BTN_SIZE
-
         navPrevNext = util.getSetting('video_show_prevnext')
         self.setBoolProperty('nav.prevnext', (navPrevNext == "eponly" and
                                               ((self.player.video and self.player.video.type == 'episode') or (self.handler and self.handler.playlist))) or
                              navPrevNext == "always")
-
-        if showQuickSubs:
-            self.subtitleButtonLeft += self.NAVBAR_BTN_SIZE * len(
-                list(x for x in (showRepeat, showFfwdRwd, showShuffle) if not x))
 
         self.updateProperties()
         self.updateChapters()
@@ -589,12 +589,7 @@ class SeekDialog(kodigui.BaseDialog, windowutils.GoHomeMixin, PlexSubtitleDownlo
         self.killTimeKeeper()
 
         self.playbackTime = 0
-
-        if not self.getProperty('nav.playlist'):
-            self.subtitleButtonLeft += self.NAVBAR_BTN_SIZE
-
-        if not self.getProperty('nav.prevnext'):
-            self.subtitleButtonLeft += self.NAVBAR_BTN_SIZE
+        self.updateHeaderInfo()
 
         try:
             if self.player.video.type == 'episode':
@@ -1028,6 +1023,8 @@ class SeekDialog(kodigui.BaseDialog, windowutils.GoHomeMixin, PlexSubtitleDownlo
                 self.updateProgress()
 
         elif controlID == self.BIG_SEEK_LIST_ID:
+            if lastFocusID != self.BIG_SEEK_LIST_ID:
+                self.markCurrentChapter()
             self.setBigSeekShift()
             self.updateBigSeek(changed=False)
 
@@ -1515,8 +1512,8 @@ class SeekDialog(kodigui.BaseDialog, windowutils.GoHomeMixin, PlexSubtitleDownlo
                 }
             )
 
-        # cheap and inaccurate approach to move the dropdown to the left based on how many buttons the user has hidden
-        choice = dropdown.showDropdown(options, (1360 - self.subtitleButtonLeft, 1060), pos_is_bottom=True,
+        # open above the subtitles button in the right-aligned control cluster
+        choice = dropdown.showDropdown(options, self.rightClusterDropdownPos('subtitles'), pos_is_bottom=True,
                                        close_on_playback_ended=True, select_index=selectIndex)
 
         if not choice:
@@ -1638,6 +1635,19 @@ class SeekDialog(kodigui.BaseDialog, windowutils.GoHomeMixin, PlexSubtitleDownlo
                 self.doSeek(self.trueOffset(), settings_changed=True)
             self.lastSubtitleNavAction = "auto_sync"
 
+    def rightClusterDropdownPos(self, key):
+        """
+        Bottom-anchored dropdown position over a control of the OSD's right cluster (grouplist 441, right-aligned):
+        its x depends on which of the optional controls after it are shown.
+        """
+        shown = set()
+        for prop, k in (('nav.quick_subtitles', 'subtitles'), ('nav.playlist', 'playlist'), ('nav.repeat', 'repeat'),
+                        ('nav.shuffle', 'shuffle'), ('nav.vs10', 'vs10')):
+            if self.getProperty(prop):
+                shown.add(k)
+        x, y = osd.dropdown_pos(osd.right_cluster_centre(shown, key))
+        return x, osd.bottom_anchored(y, util.vscalei)
+
     def vs10ButtonClicked(self):
         # amlogic.vs10.mode.raw values: 0/1 = Dolby Vision, 2 = HDR10, 3 = SDR, 5 = Original
         current_mode = xbmc.getInfoLabel('Player.Process(amlogic.vs10.mode.raw)')
@@ -1653,8 +1663,8 @@ class SeekDialog(kodigui.BaseDialog, windowutils.GoHomeMixin, PlexSubtitleDownlo
 
         choice = dropdown.showDropdown(
             options,
-            # Position above the VS10 button (one slot right of the subtitle button)
-            (1360 - self.subtitleButtonLeft + self.NAVBAR_BTN_SIZE, 1060),
+            # Position above the VS10 button
+            self.rightClusterDropdownPos('vs10'),
             pos_is_bottom=True,
             close_on_playback_ended=True,
             with_indicator=True
@@ -1780,10 +1790,11 @@ class SeekDialog(kodigui.BaseDialog, windowutils.GoHomeMixin, PlexSubtitleDownlo
             return
 
         self.bigSeekOffset = self.selectedOffset - closest.dataSource
-        pxOffset = int(self.bigSeekOffset / float(self.duration) * 1920)
+        pxOffset = int(self.bigSeekOffset / float(self.duration) * self.SEEK_IMAGE_WIDTH)
 
         if not self.showChapters:
-            self.bigSeekGroupControl.setPosition(-8 + pxOffset, 917)
+            # the dot of the closest 1/12 step sits on the selected offset on the track
+            self.bigSeekGroupControl.setPosition(osd.bigseek_group_x(pxOffset), self.BIGSEEK_DOT_Y)
         self.bigSeekControl.selectItem(closest.pos())
 
         self._seeking = True
@@ -1845,6 +1856,7 @@ class SeekDialog(kodigui.BaseDialog, windowutils.GoHomeMixin, PlexSubtitleDownlo
             hide_title = True
 
         self.setBoolProperty('hide.title', hide_title)
+        self.updateHeaderInfo()
 
         if self.isDirectPlay:
             self.setProperty('time.fmt', self.timeFmtKodi)
@@ -1867,14 +1879,6 @@ class SeekDialog(kodigui.BaseDialog, windowutils.GoHomeMixin, PlexSubtitleDownlo
 
         self.setBoolProperty('direct.play', self.isDirectPlay)
 
-        if not self.getProperty('nav.playlist') and self.getProperty('nav.quick_subtitles'):
-            # offset the subtitle button
-            self.getControl(self.SUBTITLE_BUTTON_ID).setPosition(30, 0)
-
-        if not self.getProperty('nav.prevnext'):
-            if self.getProperty('nav.ffwdrwd'):
-                self.getControl(self.SKIP_BACK_BUTTON_ID).setPosition(30, 0)
-
         pq = self.handler.playlist
         if pq:
             self.setProperty('has.playlist', '1')
@@ -1890,6 +1894,38 @@ class SeekDialog(kodigui.BaseDialog, windowutils.GoHomeMixin, PlexSubtitleDownlo
 
         self.updateCurrent()
 
+    def updateHeaderInfo(self):
+        """
+        Second header line, Plezy style (VideoControlsHeader multi-line): "S1 · E2 · Title · 45m" for episodes, the
+        runtime for movies. Local data only.
+        """
+        try:
+            v = self.player.video
+            parts = []
+            if v.type == 'episode':
+                if v.parentIndex and v.index:
+                    parts.append(T(32310, 'S{}').format(v.parentIndex))
+                    parts.append(T(32311, 'E{}').format(v.index))
+                if 'no_unwatched_episode_titles' not in self.no_spoilers:
+                    parts.append(v.title)
+            if self._duration:
+                parts.append(util.durationToShortText(self._duration, noSpaces=True))
+            self.setProperty('video.line2', osd.join_meta(parts))
+        except Exception:
+            util.ERROR()
+
+    def markCurrentChapter(self):
+        """Outline the chapter that is playing in the chapter strip (ListItem property is.current)."""
+        if not self.showChapters:
+            return
+        try:
+            items = list(self.bigSeekControl)
+            idx = osd.current_index([mli.dataSource for mli in items], self.trueOffset())
+            for i, mli in enumerate(items):
+                mli.setProperty('is.current', '1' if i == idx else '')
+        except Exception:
+            util.ERROR()
+
     def updateChapters(self):
         items = []
 
@@ -1900,7 +1936,7 @@ class SeekDialog(kodigui.BaseDialog, windowutils.GoHomeMixin, PlexSubtitleDownlo
             thumb_opts = ("blur_chapters" in self.no_spoilers
                           and {"blur": util.addonSettings.episodeNoSpoilerBlur} or {})
             if self.chapters:
-                self.setProperty('chapters.label', T(33605, 'Video Chapters').upper())
+                self.setProperty('chapters.label', T(35165, 'Video chapters'))
                 for index, chapter in enumerate(self.chapters):
                     thumb = chapter.thumb and chapter.thumb.asTranscodedImageURL(
                         *PlaylistDialog.LI_AR16X9_THUMB_DIM, **thumb_opts) or None
@@ -1915,9 +1951,9 @@ class SeekDialog(kodigui.BaseDialog, windowutils.GoHomeMixin, PlexSubtitleDownlo
             # fake chapters by using markers
             if util.getUserSetting('virtual_chapters', True) and self.markers and (not self.chapters or util.getUserSetting('combined_chapters', True)):
                 if not self.chapters:
-                    self.setProperty('chapters.label', T(33606, 'Virtual Chapters').upper())
+                    self.setProperty('chapters.label', T(35166, 'Virtual chapters'))
                 else:
-                    self.setProperty('chapters.label', T(33634, 'Combined Chapters').upper())
+                    self.setProperty('chapters.label', T(35167, 'Combined chapters'))
                 creditsCounter = 0
                 preparedMarkers = []
                 for markerDef in self.markers:
@@ -1965,7 +2001,9 @@ class SeekDialog(kodigui.BaseDialog, windowutils.GoHomeMixin, PlexSubtitleDownlo
                         credCnt += 1
 
             for offset, thumb, label in sorted(chaps):
-                mli = kodigui.ManagedListItem(data_source=offset, thumbnailImage=thumb, label=label)
+                # Plezy's strip subtitle: the chapter's start time
+                mli = kodigui.ManagedListItem(data_source=offset, thumbnailImage=thumb, label=label,
+                                              label2=util.simplifiedTimeDisplay(offset))
                 items.append(mli)
 
         else:
@@ -1975,17 +2013,21 @@ class SeekDialog(kodigui.BaseDialog, windowutils.GoHomeMixin, PlexSubtitleDownlo
                 items.append(kodigui.ManagedListItem(data_source=offset))
 
             # we might've been reinizialized by the handler and have had markers/chapters before. reset height and
-            # positioning of the bigSeekControl
-            self.bigSeekControl.control.setHeight(16)
-            self.bigSeekControl.control.setPosition(self.bigSeekControl.getX(), 0)
+            # positioning of the bigSeekControl: a row of dots on the track (setBigSeekShift moves the group)
+            self.bigSeekControl.control.setHeight(self.BIGSEEK_LIST_H)
+            self.bigSeekControl.control.setPosition(0, 0)
+            self.bigSeekGroupControl.setPosition(osd.bigseek_group_x(0), self.BIGSEEK_DOT_Y)
 
         self.bigSeekControl.reset()
         self.bigSeekControl.addItems(items)
 
         if self.showChapters:
-            # adjust height and positioning of bigSeekControl to accomodate chapters
-            self.bigSeekControl.control.setHeight(160)
-            self.bigSeekControl.control.setPosition(self.bigSeekControl.getX(), -126)
+            # chapter strip above the timeline (Plezy's content strip); the group may still be offset from a
+            # previous non-chapter video
+            self.bigSeekGroupControl.setPosition(0, 0)
+            self.bigSeekControl.control.setHeight(self.CHAPTER_STRIP_H)
+            self.bigSeekControl.control.setPosition(osd.STRIP_X, self.CHAPTER_STRIP_Y)
+            self.markCurrentChapter()
 
     def updateCurrent(self, update_position_control=True, atOffset=None):
         ratio = self.trueOffset() / float(self.duration)
@@ -2121,25 +2163,21 @@ class SeekDialog(kodigui.BaseDialog, windowutils.GoHomeMixin, PlexSubtitleDownlo
 
         current_w = int(self.offset / float(self.duration) * self.SEEK_IMAGE_WIDTH)
 
-        bifx = (w - int(ratio * 324)) + self.BAR_X
-        # bifx = w
-        self.selectionIndicator.setPosition(w, 896)
-        if w < 51:
-            self.selectionBox.setPosition(-50 + (50 - w), 0)
-        elif w > 1869:
-            self.selectionBox.setPosition(-100 + (1920 - w), 0)
-        else:
-            self.selectionBox.setPosition(-50, 0)
+        # Plezy scrub tooltip: the preview is centred on the knob and clamped to the slider; the time pill sits in
+        # its bottom edge, or just above the knob without a preview
+        bifx = osd.bif_x(w)
+        self.selectionIndicator.setPosition(self.BAR_X + w, self.SELECTION_Y)
 
         if self.forceNextTimeAsChapter:
-            self.setProperty('time.selection', self.forceNextTimeAsChapter)
-
-            # fixme: might be superfluous
-            self.selectionIndicatorImage.setWidth(self.selectionIndicatorText.getWidth())
+            label = self.forceNextTimeAsChapter
             self.forceNextTimeAsChapter = False
         else:
-            self.setProperty('time.selection', util.simplifiedTimeDisplay(offset))
-            self.selectionIndicatorImage.setWidth(101)
+            label = util.simplifiedTimeDisplay(offset)
+        self.setProperty('time.selection', label)
+        boxW = osd.pill_width(label)
+        self.selectionIndicatorImage.setWidth(boxW)
+        self.selectionIndicatorText.setWidth(boxW)
+        self.selectionBox.setPosition(osd.pill_x(w, boxW), 0)
 
         self.setProperty('bif.image', "")
         if onlyTimeIndicator:
@@ -2153,7 +2191,9 @@ class SeekDialog(kodigui.BaseDialog, windowutils.GoHomeMixin, PlexSubtitleDownlo
                                                                            *PlaylistDialog.LI_AR16X9_THUMB_DIM,
                                                                            **{"blur": util.addonSettings.episodeNoSpoilerBlur})
                 self.setProperty('bif.image', bifUrl)
-                self.bifImageControl.setPosition(bifx, 752)
+                self.bifImageControl.setPosition(bifx, self.BIF_Y)
+                if not self.getProperty('show.chapters'):
+                    self.selectionBox.setPosition(osd.pill_x(w, boxW, bif_left=bifx), 0)
 
         self.seekbarControl.setPosition(0, self.seekbarControl.getPosition()[1])
         if set_to_current:
@@ -2164,11 +2204,12 @@ class SeekDialog(kodigui.BaseDialog, windowutils.GoHomeMixin, PlexSubtitleDownlo
             if not self.selectedOffset:
                 return
 
-            # current seek position below current offset? set the position bar's width to the current position of the
-            # seek and the seek bar to the current position of the video, to visually indicate the backwards-seeking
+            # current seek position below current offset? the played bar ends where the seek lands and the lighter
+            # seek bar spans the part being rewound, up to the current position of the video
             if self.selectedOffset < self.offset:
-                self.positionControl.setWidth(current_w)
-                self.seekbarControl.setWidth(w)
+                self.positionControl.setWidth(w)
+                self.seekbarControl.setPosition(w, self.seekbarControl.getPosition()[1])
+                self.seekbarControl.setWidth(current_w - w)
 
             # current seek position ahead of current offset? set the position bar's width to the current position of the
             # video and the seek bar to the current position of the seek, to visually indicate the forwards-seeking
@@ -2661,6 +2702,19 @@ class SeekDialog(kodigui.BaseDialog, windowutils.GoHomeMixin, PlexSubtitleDownlo
                 markerName = "  {}   ".format(markerDef["autoSkipName"])
         else:
             markerName = markerDef["name"]
+        # Plezy's SkipMarkerButton reads "Next episode" (skip_next glyph) on final credits that lead straight into
+        # the next queue item
+        isNext = False
+        try:
+            isNext = bool(markerDef["marker_type"] == "credits" and getattr(markerDef["marker"], "final", False) and
+                          not (markerAutoSkip and not markerAutoSkipped) and
+                          self.handler.playlist and self.handler.playlist.hasNext() and
+                          (self.bingeMode or self.skipPostPlay))
+        except Exception:
+            util.ERROR()
+        if isNext:
+            markerName = T(35168, 'Next episode')
+        self.setBoolProperty('marker.next', isNext)
         self.setProperty('skipMarkerName', markerName)
 
         # store current marker
@@ -2810,7 +2864,8 @@ class PlaylistDialog(kodigui.BaseDialog, SpoilersMixin):
     width = 1920
     height = 1080
 
-    LI_AR16X9_THUMB_DIM = (178, 100)
+    # queue/chapter strip thumbs (Plezy content strip, 296x167 on screen)
+    LI_AR16X9_THUMB_DIM = (osd.STRIP_THUMB_W, osd.STRIP_THUMB_H)
     LI_SQUARE_THUMB_DIM = (100, 100)
 
     PLAYLIST_LIST_ID = 101
@@ -2849,12 +2904,12 @@ class PlaylistDialog(kodigui.BaseDialog, SpoilersMixin):
 
     def onAction(self, action):
         controlID = self.getFocusId()
-        if action == xbmcgui.ACTION_MOVE_LEFT:
-            if controlID == self.PLAYLIST_LIST_ID:
-                self.doClose()
-                return
-            elif controlID == self.PLAYLIST_SCROLLBAR_ID:
-                self.setFocusId(self.PLAYLIST_LIST_ID)
+        # Plezy's queue strip is horizontal: LEFT/RIGHT move through it, UP returns to the player controls
+        if action == xbmcgui.ACTION_MOVE_UP and controlID == self.PLAYLIST_LIST_ID:
+            self.doClose()
+            return
+        elif action == xbmcgui.ACTION_MOVE_LEFT and controlID == self.PLAYLIST_SCROLLBAR_ID:
+            self.setFocusId(self.PLAYLIST_LIST_ID)
         super(PlaylistDialog, self).onAction(action)
 
     def playlistListClicked(self):
@@ -2874,10 +2929,11 @@ class PlaylistDialog(kodigui.BaseDialog, SpoilersMixin):
             return self.createMovieListItem(pi)
 
     def createEpisodeListItem(self, episode):
-        label2 = u'{0} \u2022 {1}'.format(
+        # Plezy's queue subtitle (formatQueueItemSubtitle): "Show · S1E2"
+        label2 = osd.join_meta((
             episode.grandparentTitle,
-            u'{0} \u2022 {1}'.format(T(32310, 'S').format(episode.parentIndex), T(32311, 'E').format(episode.index))
-        )
+            u'{0}{1}'.format(T(32310, 'S').format(episode.parentIndex), T(32311, 'E').format(episode.index))
+        ))
         title = episode.title
         thumbnail_opts = {}
         no_spoilers = self.getNoSpoilers(episode)

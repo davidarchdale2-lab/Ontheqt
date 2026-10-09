@@ -7,15 +7,7 @@
     {% include "includes/default_background.xml.tpl" with spotlight=True %}
 {% endblock %}
 {% block content %}
-<!-- Plezy spotlight scrims: bg fade behind the info block, black at the top, bg into the rows -->
-<control type="image">
-    <posx>0</posx><posy>0</posy><width>1920</width><height>{{ vscale(1080) }}</height>
-    <texture>script.plex/plezy/scrim-h.png</texture>
-</control>
-<control type="image">
-    <posx>0</posx><posy>0</posy><width>1920</width><height>{{ vscale(1080) }}</height>
-    <texture>script.plex/plezy/scrim-v.png</texture>
-</control>
+{% include "includes/plezy_scrims.xml.tpl" with foot=True %}
 
 <control type="group" id="50">
     <defaultcontrol>101</defaultcontrol><posx>0</posx><posy>0</posy>
