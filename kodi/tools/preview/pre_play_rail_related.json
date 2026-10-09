@@ -1,0 +1,639 @@
+{
+ "time": "20:41",
+ "window_bg": "FF0E0F12",
+ "addon_strings": {
+  "32419": "Cast",
+  "32953": "Reviews",
+  "32305": "Extras",
+  "32312": "Unavailable",
+  "34005": "Availability"
+ },
+ "images": {
+  "bg": {
+   "size": [
+    1920,
+    1080
+   ],
+   "colors": [
+    "#c98c48",
+    "#2a1708"
+   ]
+  },
+  "logo": {
+   "logo": true,
+   "size": [
+    700,
+    170
+   ],
+   "text": "DUNE: PART TWO",
+   "text_size": 74
+  },
+  "showlogo": {
+   "logo": true,
+   "size": [
+    520,
+    180
+   ],
+   "text": "SEVERANCE",
+   "text_size": 84
+  },
+  "cast0": {
+   "size": [
+    174,
+    174
+   ],
+   "colors": [
+    "#8a7a6a",
+    "#2d2620"
+   ],
+   "text": "TC",
+   "text_size": 48
+  },
+  "cast1": {
+   "size": [
+    174,
+    174
+   ],
+   "colors": [
+    "#8a7a6a",
+    "#2d2620"
+   ],
+   "text": "ZZ",
+   "text_size": 48
+  },
+  "cast2": {
+   "size": [
+    174,
+    174
+   ],
+   "colors": [
+    "#8a7a6a",
+    "#2d2620"
+   ],
+   "text": "RF",
+   "text_size": 48
+  },
+  "cast3": {
+   "size": [
+    174,
+    174
+   ],
+   "colors": [
+    "#8a7a6a",
+    "#2d2620"
+   ],
+   "text": "JB",
+   "text_size": 48
+  },
+  "cast4": {
+   "size": [
+    174,
+    174
+   ],
+   "colors": [
+    "#8a7a6a",
+    "#2d2620"
+   ],
+   "text": "JB",
+   "text_size": 48
+  },
+  "cast5": {
+   "size": [
+    174,
+    174
+   ],
+   "colors": [
+    "#8a7a6a",
+    "#2d2620"
+   ],
+   "text": "AB",
+   "text_size": 48
+  },
+  "cast6": {
+   "size": [
+    174,
+    174
+   ],
+   "colors": [
+    "#8a7a6a",
+    "#2d2620"
+   ],
+   "text": "FP",
+   "text_size": 48
+  },
+  "cast7": {
+   "size": [
+    174,
+    174
+   ],
+   "colors": [
+    "#8a7a6a",
+    "#2d2620"
+   ],
+   "text": "DB",
+   "text_size": 48
+  },
+  "cast8": {
+   "size": [
+    174,
+    174
+   ],
+   "colors": [
+    "#8a7a6a",
+    "#2d2620"
+   ],
+   "text": "CW",
+   "text_size": 48
+  },
+  "cast9": {
+   "size": [
+    174,
+    174
+   ],
+   "colors": [
+    "#8a7a6a",
+    "#2d2620"
+   ],
+   "text": "LS",
+   "text_size": 48
+  },
+  "rel0": {
+   "size": [
+    174,
+    261
+   ],
+   "colors": [
+    "#3a4a6b",
+    "#0e1420"
+   ],
+   "text": "DUNE",
+   "text_size": 26
+  },
+  "rel1": {
+   "size": [
+    174,
+    261
+   ],
+   "colors": [
+    "#6b3a3a",
+    "#1a0c0c"
+   ],
+   "text": "BLADE",
+   "text_size": 26
+  },
+  "rel2": {
+   "size": [
+    174,
+    261
+   ],
+   "colors": [
+    "#3a6b55",
+    "#0c1a14"
+   ],
+   "text": "ARRIVAL",
+   "text_size": 26
+  },
+  "rel3": {
+   "size": [
+    174,
+    261
+   ],
+   "colors": [
+    "#3a4a6b",
+    "#0e1420"
+   ],
+   "text": "INTERSTE",
+   "text_size": 26
+  },
+  "rel4": {
+   "size": [
+    174,
+    261
+   ],
+   "colors": [
+    "#6b3a3a",
+    "#1a0c0c"
+   ],
+   "text": "MAD",
+   "text_size": 26
+  },
+  "rel5": {
+   "size": [
+    174,
+    261
+   ],
+   "colors": [
+    "#3a6b55",
+    "#0c1a14"
+   ],
+   "text": "THE",
+   "text_size": 26
+  },
+  "rel6": {
+   "size": [
+    174,
+    261
+   ],
+   "colors": [
+    "#3a4a6b",
+    "#0e1420"
+   ],
+   "text": "SICARIO",
+   "text_size": 26
+  },
+  "rel7": {
+   "size": [
+    174,
+    261
+   ],
+   "colors": [
+    "#6b3a3a",
+    "#1a0c0c"
+   ],
+   "text": "PRISONER",
+   "text_size": 26
+  },
+  "rel8": {
+   "size": [
+    174,
+    261
+   ],
+   "colors": [
+    "#3a6b55",
+    "#0c1a14"
+   ],
+   "text": "GRAVITY",
+   "text_size": 26
+  },
+  "rel9": {
+   "size": [
+    174,
+    261
+   ],
+   "colors": [
+    "#3a4a6b",
+    "#0e1420"
+   ],
+   "text": "EDGE",
+   "text_size": 26
+  },
+  "ex0": {
+   "size": [
+    296,
+    167
+   ],
+   "colors": [
+    "#b07a3a",
+    "#24160a"
+   ],
+   "text": "OFFICIAL",
+   "text_size": 28
+  },
+  "ex1": {
+   "size": [
+    296,
+    167
+   ],
+   "colors": [
+    "#b07a3a",
+    "#24160a"
+   ],
+   "text": "BEHIND",
+   "text_size": 28
+  },
+  "ex2": {
+   "size": [
+    296,
+    167
+   ],
+   "colors": [
+    "#b07a3a",
+    "#24160a"
+   ],
+   "text": "THE",
+   "text_size": 28
+  },
+  "ex3": {
+   "size": [
+    296,
+    167
+   ],
+   "colors": [
+    "#b07a3a",
+    "#24160a"
+   ],
+   "text": "SANDWORM",
+   "text_size": 28
+  },
+  "ex4": {
+   "size": [
+    296,
+    167
+   ],
+   "colors": [
+    "#b07a3a",
+    "#24160a"
+   ],
+   "text": "COSTUME",
+   "text_size": 28
+  },
+  "ex5": {
+   "size": [
+    296,
+    167
+   ],
+   "colors": [
+    "#b07a3a",
+    "#24160a"
+   ],
+   "text": "DELETED",
+   "text_size": 28
+  }
+ },
+ "focus": 403,
+ "props": {
+  "dynamic_backgrounds": "1",
+  "background": "mock:bg",
+  "background_static": "mock:bg",
+  "initialized": "1",
+  "preview.no": "1",
+  "title": "Dune: Part Two",
+  "hero.title": "Dune: Part Two",
+  "clear.logo": "mock:logo",
+  "meta": "2024 • PG-13 • 2h 46m",
+  "meta.ratings": "1",
+  "rating": "92%",
+  "rating.image": "script.plex/ratings/rottentomatoes/image.rating.ripe.png",
+  "rating2": "95%",
+  "rating2.image": "script.plex/ratings/rottentomatoes/image.rating.upright.png",
+  "summary": "Paul Atreides unites with Chani and the Fremen while seeking revenge against the conspirators who destroyed his family. Facing a choice between the love of his life and the fate of the known universe, he must prevent a terrible future only he can foresee.",
+  "tracks.video": "4K • HEVC • DV P8",
+  "audio": "English (TrueHD Atmos 7.1) • 3 More",
+  "subtitles": "None • 12 Available",
+  "tracks.audio": "English (TRUEHD 7.1)",
+  "tracks.subtitles": "English (SRT)",
+  "trailer.button": "1",
+  "watchlist_enabled": "1",
+  "related.header": "Related Movies",
+  "on.extras": "1",
+  "hub.focus": "3",
+  "collection.header.0": "Dune Collection"
+ },
+ "lists": {
+  "400": {
+   "selected": 2,
+   "items": [
+    {
+     "label": "Timothée Chalamet",
+     "label2": "Paul Atreides",
+     "thumb": "mock:cast0"
+    },
+    {
+     "label": "Zendaya",
+     "label2": "Chani",
+     "thumb": "mock:cast1"
+    },
+    {
+     "label": "Rebecca Ferguson",
+     "label2": "Jessica",
+     "thumb": "mock:cast2"
+    },
+    {
+     "label": "Javier Bardem",
+     "label2": "Stilgar",
+     "thumb": "mock:cast3"
+    },
+    {
+     "label": "Josh Brolin",
+     "label2": "Gurney Halleck",
+     "thumb": "mock:cast4"
+    },
+    {
+     "label": "Austin Butler",
+     "label2": "Feyd-Rautha",
+     "thumb": "mock:cast5"
+    },
+    {
+     "label": "Florence Pugh",
+     "label2": "Princess Irulan",
+     "thumb": "mock:cast6"
+    },
+    {
+     "label": "Dave Bautista",
+     "label2": "Rabban",
+     "thumb": "mock:cast7"
+    },
+    {
+     "label": "Christopher Walken",
+     "label2": "Emperor",
+     "thumb": "mock:cast8"
+    },
+    {
+     "label": "Léa Seydoux",
+     "label2": "Margot Fenring",
+     "thumb": "mock:cast9"
+    }
+   ]
+  },
+  "401": {
+   "selected": 0,
+   "items": [
+    {
+     "label": "The Guardian",
+     "label2": "Peter Bradshaw",
+     "thumb": "image.review.fresh",
+     "props": {
+      "text": "Villeneuve has created something genuinely extraordinary: a science-fiction epic of overwhelming scale that never loses its intimacy, its strangeness or its nerve."
+     }
+    },
+    {
+     "label": "Variety",
+     "label2": "Peter Debruge",
+     "thumb": "image.review.fresh",
+     "props": {
+      "text": "A towering achievement that makes good on the promise of the first film and then some, with set pieces that rank among the most spectacular ever filmed."
+     }
+    },
+    {
+     "label": "Slant",
+     "label2": "Keith Uhlich",
+     "thumb": "image.review.rotten",
+     "props": {
+      "text": "Awesome to behold, but the scale often swamps the story it's telling."
+     }
+    }
+   ]
+  },
+  "402": {
+   "selected": 0,
+   "items": [
+    {
+     "label": "Official trailer 3",
+     "label2": "2:31",
+     "thumb": "mock:ex0",
+     "props": {
+      "extra.duration": "2:31"
+     }
+    },
+    {
+     "label": "Behind the scenes: Arrakis",
+     "label2": "8:12",
+     "thumb": "mock:ex1",
+     "props": {
+      "extra.duration": "8:12"
+     }
+    },
+    {
+     "label": "The Fremen",
+     "label2": "4:05",
+     "thumb": "mock:ex2",
+     "props": {
+      "extra.duration": "4:05"
+     }
+    },
+    {
+     "label": "Sandworm riding",
+     "label2": "3:47",
+     "thumb": "mock:ex3",
+     "props": {
+      "extra.duration": "3:47"
+     }
+    },
+    {
+     "label": "Costume design",
+     "label2": "6:20",
+     "thumb": "mock:ex4",
+     "props": {
+      "extra.duration": "6:20"
+     }
+    },
+    {
+     "label": "Deleted scene",
+     "label2": "1:58",
+     "thumb": "mock:ex5",
+     "props": {
+      "extra.duration": "1:58"
+     }
+    }
+   ]
+  },
+  "403": {
+   "selected": 1,
+   "items": [
+    {
+     "label": "Dune",
+     "label2": "2021",
+     "thumb": "mock:rel0",
+     "props": {}
+    },
+    {
+     "label": "Blade Runner 2049",
+     "label2": "2017",
+     "thumb": "mock:rel1",
+     "props": {
+      "watched": "1"
+     }
+    },
+    {
+     "label": "Arrival",
+     "label2": "2016",
+     "thumb": "mock:rel2",
+     "props": {}
+    },
+    {
+     "label": "Interstellar",
+     "label2": "2014",
+     "thumb": "mock:rel3",
+     "props": {}
+    },
+    {
+     "label": "Mad Max: Fury Road",
+     "label2": "2015",
+     "thumb": "mock:rel4",
+     "props": {}
+    },
+    {
+     "label": "The Martian",
+     "label2": "2015",
+     "thumb": "mock:rel5",
+     "props": {}
+    },
+    {
+     "label": "Sicario",
+     "label2": "2015",
+     "thumb": "mock:rel6",
+     "props": {}
+    },
+    {
+     "label": "Prisoners",
+     "label2": "2013",
+     "thumb": "mock:rel7",
+     "props": {}
+    },
+    {
+     "label": "Gravity",
+     "label2": "2013",
+     "thumb": "mock:rel8",
+     "props": {}
+    },
+    {
+     "label": "Edge of Tomorrow",
+     "label2": "2014",
+     "thumb": "mock:rel9",
+     "props": {}
+    },
+    {
+     "label": "",
+     "thumb": "",
+     "props": {
+      "is.boundary": "1",
+      "right.boundary": "1"
+     }
+    }
+   ]
+  },
+  "404": {
+   "selected": 0,
+   "items": [
+    {
+     "label": "Dune",
+     "label2": "2021",
+     "thumb": "mock:rel0",
+     "props": {}
+    },
+    {
+     "label": "Blade Runner 2049",
+     "label2": "2017",
+     "thumb": "mock:rel1",
+     "props": {
+      "watched": "1"
+     }
+    },
+    {
+     "label": "Arrival",
+     "label2": "2016",
+     "thumb": "mock:rel2",
+     "props": {}
+    },
+    {
+     "label": "Interstellar",
+     "label2": "2014",
+     "thumb": "mock:rel3",
+     "props": {}
+    },
+    {
+     "label": "Mad Max: Fury Road",
+     "label2": "2015",
+     "thumb": "mock:rel4",
+     "props": {}
+    },
+    {
+     "label": "The Martian",
+     "label2": "2015",
+     "thumb": "mock:rel5",
+     "props": {}
+    }
+   ]
+  }
+ }
+}

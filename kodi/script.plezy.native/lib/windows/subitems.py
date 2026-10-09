@@ -7,6 +7,8 @@ from kodi_six import xbmcgui
 from plexnet import playlist, util as pnUtil, plexapp, plexlibrary
 
 from lib import metadata
+from lib import plezy_show_detail
+from lib import plezy_ui
 from lib import util
 from lib.util import T
 from lib.language_util import getNativeLanguages
@@ -39,6 +41,16 @@ class RelatedPaginator(pagination.BaseRelatedPaginator):
         return self.parentWindow.mediaItem.getRelated(offset=offset, limit=amount)
 
 
+class ShowRelatedPaginator(RelatedPaginator):
+    """The show's "More like this" row: Plezy cards carry the year under the title."""
+    def prepareListItem(self, data, mli):
+        RelatedPaginator.prepareListItem(self, data, mli)
+        try:
+            mli.setLabel2(data.year or '')
+        except Exception:
+            util.DEBUG_LOG('ShowRelatedPaginator: no year for {}', data)
+
+
 class ShowWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMixin, DeleteMediaMixin, RatingsMixin,
                  RolesMixin, PlaybackBtnMixin, WatchlistUtilsMixin, ThemeMusicMixin, CommonMixin, TasksMixin,
                  playbacksettings.PlaybackSettingsMixin):
@@ -52,7 +64,8 @@ class ShowWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMixin, 
     EXTRA_DIM = util.scaleResolution(329, 185)
     RELATED_DIM = util.scaleResolution(268, 402)
     ROLES_DIM = util.scaleResolution(334, 334)
-    CLEAR_LOGO_DIM = util.scaleResolution(380, 72)
+    # Plezy's TV hero logo slot (desiredLogoWidth 790 x desiredLogoHeight 220)
+    CLEAR_LOGO_DIM = util.scaleResolution(790, 220)
 
     SUB_ITEM_LIST_ID = 400
 
@@ -73,6 +86,16 @@ class ShowWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMixin, 
     PLAY_BUTTON_ID = 302
     SHUFFLE_BUTTON_ID = 303
     OPTIONS_BUTTON_ID = 304
+    WATCHED_BUTTON_ID = 305
+    TRAILER_BUTTON_ID = 306
+
+    # Plezy TV detail behaviour; ArtistWindow inherits this class and keeps the PM4K behaviour through these flags.
+    # The hero describes the focused season (Plezy: the focused rail episode), not only the show.
+    HERO_FOLLOWS_SEASON = True
+    # PM4K swapped the backdrop to the focused related item; Plezy keeps the show's backdrop behind its hero.
+    RELATED_BACKGROUND = False
+    # top-left of the More (304) menu: under the action row, around where the button sits
+    OPTIONS_DD_POS = (440, 656)
 
     def __init__(self, *args, **kwargs):
         kodigui.ControlledWindow.__init__(self, *args, **kwargs)
@@ -97,6 +120,9 @@ class ShowWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMixin, 
         self.initialized = False
         self.relatedPaginator = None
         self.useBGM = False
+        self.trailer = None
+        self._heroShow = None
+        self._heroShown = None
 
     def doClose(self, **kw):
         self.relatedPaginator = None
@@ -127,8 +153,15 @@ class ShowWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMixin, 
             # fixme, multiple? choice?
             self.mediaItem.related_source = "more-from-credits"
         self.mediaItem.reload(includeExtras=1, includeExtrasCount=10, includeOnDeck=1)
-        self.relatedPaginator = RelatedPaginator(self.relatedListControl, leaf_count=int(self.mediaItem.relatedCount),
-                                                 parent_window=self)
+        self.relatedPaginator = ShowRelatedPaginator(self.relatedListControl,
+                                                     leaf_count=int(self.mediaItem.relatedCount), parent_window=self)
+        # Plezy's trailer action, from the extras this reload already brought (no request of its own)
+        try:
+            self.trailer = plezy_show_detail.first_trailer(self.mediaItem.extras)
+        except Exception:
+            util.ERROR()
+            self.trailer = None
+        self.setBoolProperty('trailer.button', bool(self.trailer))
 
         self.watchlist_setup(self.mediaItem)
         if self.fromWatchlist:
@@ -155,14 +188,15 @@ class ShowWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMixin, 
         self.setProperty('info', '')
         self.setProperty('date', self.mediaItem.year)
         self.setBoolProperty('disable_playback', self.fromWatchlist)
-        if not self.mediaItem.isWatched:
-            self.setProperty('unwatched.count', str(self.mediaItem.unViewedLeafCount) or '')
-            self.setBoolProperty('unwatched.count.large', self.mediaItem.unViewedLeafCount > 999)
-        else:
-            self.setBoolProperty('watched', self.mediaItem.isWatched)
+        # always written: the watched toggle (305) shows remove_done while this is set
+        watched = self.mediaItem.isWatched
+        self.setProperty('unwatched.count', '' if watched else (str(self.mediaItem.unViewedLeafCount) or ''))
+        self.setBoolProperty('unwatched.count.large', not watched and self.mediaItem.unViewedLeafCount > 999)
+        self.setBoolProperty('watched', watched)
 
-        self.setProperty('extras.header', T(32305, 'Extras'))
-        self.setProperty('related.header', T(32306, 'Related Shows') if not self.fromWatchlist else T(34018, 'Related Media'))
+        # Plezy rail titles (discover.extras / discover.moreLikeThis)
+        self.setProperty('extras.header', T(35121, 'Trailers & extras'))
+        self.setProperty('related.header', T(35122, 'More like this'))
 
         if self.mediaItem.creator:
             self.setProperty('directors', u'{0}    {1}'.format(T(32418, 'Creator').upper(), self.mediaItem.creator))
@@ -181,6 +215,7 @@ class ShowWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMixin, 
                              util.cleanLeadingZeros(self.mediaItem.originallyAvailableAt.asDatetime('%B %d, %Y')))
 
         self.populateRatings(self.mediaItem, self)
+        self.updateHeroProperties()
 
         sas = self.mediaItem.selectedAudioStream()
         self.setProperty('audio', sas and sas.getTitle() or 'None')
@@ -209,6 +244,57 @@ class ShowWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMixin, 
             wBase = 0 < wBase < 0.01 and 0.01 or wBase
             width = (int(wBase * self.width)) or 1
             self.progressImageControl.setWidth(width)
+
+    def updateHeroProperties(self):
+        """
+        Plezy TV hero text for the show (media_detail_screen.dart _tvDetailMetadataParts: year, content rating,
+        runtime; the rating badges are images in the template) and the Play pill's 'S1 E3' label from the
+        on-deck episode (_getPlayButtonLabel/_getPlayButtonIcon). In-memory reads only.
+        """
+        try:
+            self._heroShow = {
+                'line': '',
+                'meta': plezy_ui.detail_meta(self.mediaItem, hide_ratings=True),
+                'summary': self.mediaItem.summary or '',
+            }
+            label, resume = plezy_show_detail.play_state(
+                self.mediaItem.onDeck,
+                lambda season, episode: plezy_ui.play_label(season, episode, T(32310, 'S{}'), T(32311, 'E{}')),
+                T(33020, 'Play'))
+            self.setProperty('play.label', label)
+            self.setBoolProperty('play.resume', resume)
+        except Exception:
+            util.ERROR()
+            self._heroShow = {'line': '', 'meta': '', 'summary': self.mediaItem.summary or ''}
+            self.setProperty('play.label', T(33020, 'Play'))
+            self.setBoolProperty('play.resume', False)
+        self._heroShown = None
+        self.syncHero()
+
+    def syncHero(self, controlID=None):
+        """
+        hero.line/meta/summary: the focused season while the seasons row has focus (Plezy's hero follows the focused
+        rail item), the show otherwise. Attribute reads on objects already loaded: safe in focus handlers.
+        """
+        if not self.HERO_FOLLOWS_SEASON or not self._heroShow:
+            return
+        try:
+            hero = self._heroShow
+            if controlID is None:
+                controlID = self.getFocusId()
+            if controlID == self.SUB_ITEM_LIST_ID:
+                mli = self.subItemListControl.getSelectedItem()
+                if mli and mli.dataSource:
+                    hero = plezy_show_detail.season_hero(mli.dataSource, self.mediaItem.summary or '',
+                                                         T(35124, '{} episode'), T(35123, '{} episodes'))
+            shown = (hero['line'], hero['meta'], hero['summary'])
+            if shown != self._heroShown:
+                self._heroShown = shown
+                self.setProperties(('hero.line', 'hero.meta', 'hero.summary'), list(shown))
+        except (SystemError, RuntimeError):
+            pass
+        except Exception:
+            util.ERROR()
 
     def focusPlayButton(self, extended=False):
         if extended:
@@ -282,8 +368,12 @@ class ShowWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMixin, 
                 if self.relatedPaginator and self.relatedPaginator.boundaryHit:
                     self.relatedPaginator.paginate()
                     return
-                elif action in (xbmcgui.ACTION_MOVE_LEFT, xbmcgui.ACTION_MOVE_RIGHT):
+                elif action in (xbmcgui.ACTION_MOVE_LEFT, xbmcgui.ACTION_MOVE_RIGHT) and self.RELATED_BACKGROUND:
                     self.updateBackgroundFrom(self.relatedListControl.getSelectedItem().dataSource)
+
+            if controlID == self.SUB_ITEM_LIST_ID:
+                # the selected season may have moved (left/right, page keys, wheel): the hero follows it
+                self.syncHero(controlID)
 
         except:
             util.ERROR()
@@ -317,6 +407,11 @@ class ShowWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMixin, 
             self.infoButtonClicked()
         elif controlID == self.PLAY_BUTTON_ID:
             self.playButtonClicked()
+        elif controlID == self.WATCHED_BUTTON_ID:
+            self.toggleWatched(self.mediaItem)
+        elif controlID == self.TRAILER_BUTTON_ID:
+            if self.trailer:
+                self.openItem(item=self.trailer)
         elif controlID in self.WL_RELEVANT_BTNS and self.fromWatchlist and self.wl_availability:
             self.wl_item_opener(self.mediaItem, self.openItem)
         elif controlID in self.WL_BTN_STATE_BTNS:
@@ -335,7 +430,7 @@ class ShowWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMixin, 
         if 399 < controlID < 500:
             self.setProperty('hub.focus', str(controlID - 400))
 
-            if controlID == self.RELATED_LIST_ID:
+            if controlID == self.RELATED_LIST_ID and self.RELATED_BACKGROUND:
                 self.updateBackgroundFrom(self.relatedListControl.getSelectedItem().dataSource)
 
         if xbmc.getCondVisibility('ControlGroup(50).HasFocus(0) + ControlGroup(300).HasFocus(0)'):
@@ -343,7 +438,12 @@ class ShowWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMixin, 
         elif xbmc.getCondVisibility('ControlGroup(50).HasFocus(0) + !ControlGroup(300).HasFocus(0)'):
             self.setProperty('on.extras', '1')
 
+        self.syncHero(controlID)
+
     def toggleWatched(self, item, state=None, **kw):
+        if item is self.mediaItem and self.HERO_FOLLOWS_SEASON:
+            # markWatched/markUnwatched reload the show anyway; with its on-deck episode Play's 'S1 E3' stays right
+            kw.setdefault('includeOnDeck', 1)
         watched = super(ShowWindow, self).toggleWatched(item, state=state, **kw)
         if watched is None:
             return
@@ -471,7 +571,8 @@ class ShowWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMixin, 
         if update:
             if mli and mli.dataSource:
                 mli.setProperty('unwatched.count', not mli.dataSource.isWatched and str(mli.dataSource.unViewedLeafCount) or '')
-            self.mediaItem.reload(includeRelated=1, includeRelatedCount=10, includeExtras=1, includeExtrasCount=10)
+            self.mediaItem.reload(includeRelated=1, includeRelatedCount=10, includeExtras=1, includeExtrasCount=10,
+                                  includeOnDeck=1)
             self.updateProperties()
 
         try:
@@ -570,12 +671,7 @@ class ShowWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMixin, 
         if 'items' in util.getSetting('cache_requests'):
             options.append({'key': 'cache_reset', 'display': T(33728, "Clear cache for item")})
 
-        pos = (880, 618)
-        if from_item:
-            viewPos = self.subItemListControl.getViewPosition()
-            optsLen = len(list(filter(None, options)))
-            # dropDown handles any overlap with the right window boundary so we don't need to care here
-            pos = ((((viewPos + 1) * 218) - 100), 460 if optsLen < 7 else 460 - 66 * (optsLen - 6))
+        pos = self.optionsDropdownPos(options, from_item)
 
         choice = dropdown.showDropdown(options, pos, close_direction='left')
         if not choice:
@@ -618,6 +714,13 @@ class ShowWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMixin, 
             except Exception as e:
                 util.DEBUG_LOG("Couldn't clear cache: {}", e)
 
+    def optionsDropdownPos(self, options, from_item=False):
+        """The More menu opens under the action row; a season's menu next to its card in the bottom rail (the
+        dropdown shifts itself up/left when it would leave the screen)."""
+        if from_item:
+            return plezy_show_detail.season_menu_pos(self.subItemListControl.getViewPosition())
+        return self.OPTIONS_DD_POS
+
     def getRoleItemDDPosition(self, *args, **kwargs):
         y = 980
         if xbmc.getCondVisibility('Control.IsVisible(500)'):
@@ -643,6 +746,15 @@ class ShowWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMixin, 
     @busy.dialog()
     def fill(self, update=False):
         self.fillSeasons(self.mediaItem, update=update, do_focus=not self.manuallySelectedSeason)
+        self.setProperty('seasons.header', T(35120, 'Seasons'))
+        self.syncHero()
+
+    def _createListItem(self, mediaItem, obj):
+        # ShowWindow only (EpisodesWindow shares SeasonsMixin): Plezy cards carry the episode count under the title
+        mli = SeasonsMixin._createListItem(self, mediaItem, obj)
+        if mli and obj.TYPE == 'season':
+            mli.setLabel2(plezy_show_detail.season_subtitle(obj, T(35124, '{} episode'), T(35123, '{} episodes')))
+        return mli
 
     def fillExtras(self):
         items = []
@@ -701,6 +813,7 @@ class ShowWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMixin, 
                                           thumbnailImage=role.thumb.asTranscodedImageURL(*self.ROLES_DIM),
                                           data_source=role)
             mli.setProperty('index', str(idx))
+            mli.setProperty('thumb.fallback', 'script.plex/thumb_fallbacks/role.png')
             items.append(mli)
             idx += 1
 
@@ -716,6 +829,25 @@ class ArtistWindow(ShowWindow):
     EXTRA_LIST_ID = None
     ROLES_LIST_ID = None
     RELATED_LIST_ID = 401
+
+    # keep the PM4K behaviour ShowWindow had before the Plezy show detail (see ShowWindow)
+    HERO_FOLLOWS_SEASON = False
+    RELATED_BACKGROUND = True
+    OPTIONS_DD_POS = (880, 618)
+    WATCHED_BUTTON_ID = None  # not in script-plex-artist.xml: never match a click there
+    TRAILER_BUTTON_ID = None
+
+    def optionsDropdownPos(self, options, from_item=False):
+        pos = self.OPTIONS_DD_POS
+        if from_item:
+            viewPos = self.subItemListControl.getViewPosition()
+            optsLen = len(list(filter(None, options)))
+            # dropDown handles any overlap with the right window boundary so we don't need to care here
+            pos = ((((viewPos + 1) * 218) - 100), 460 if optsLen < 7 else 460 - 66 * (optsLen - 6))
+        return pos
+
+    def _createListItem(self, mediaItem, obj):
+        return SeasonsMixin._createListItem(self, mediaItem, obj)
 
     def onFirstInit(self):
         self.subItemListControl = kodigui.ManagedControlList(self, self.SUB_ITEM_LIST_ID, 5)

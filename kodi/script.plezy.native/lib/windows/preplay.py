@@ -7,6 +7,7 @@ from kodi_six import xbmcgui
 from plexnet import plexplayer, media, plexobjects, util as pnUtil, plexapp, plexlibrary, playlist, playqueue
 
 from lib import metadata
+from lib import plezy_movie_detail
 from lib import util
 from lib.util import T
 from lib.language_util import getNativeLanguages
@@ -103,7 +104,8 @@ class PrePlayWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RatingsMixi
     EXTRA_DIM = util.scaleResolution(329, 185)
     ROLES_DIM = util.scaleResolution(334, 334)
     PREVIEW_DIM = util.scaleResolution(343, 193)
-    CLEAR_LOGO_DIM = util.scaleResolution(380, 72)
+    # Plezy TV detail hero: the clear logo is contained in a 790x220 slot (media_detail_screen.dart)
+    CLEAR_LOGO_DIM = util.scaleResolution(790, 220)
 
     ROLES_LIST_ID = 400
     REVIEWS_LIST_ID = 401
@@ -124,6 +126,8 @@ class PrePlayWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RatingsMixi
     SETTINGS_BUTTON_ID = 305
     OPTIONS_BUTTON_ID = 306
     MEDIA_BUTTON_ID = 307
+    # Plezy's watched toggle in the action row (check / remove_done); a togglebutton whose glyph follows 'watched'
+    WATCHED_BUTTON_ID = 310
 
     POSSIBLE_PLAY_BUTTON_IDS = [302, 2302, 2303, 2304, 2305]
 
@@ -250,7 +254,8 @@ class PrePlayWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RatingsMixi
                         self.OPTIONS_GROUP_ID)) or not controlID) and \
                         not util.addonSettings.fastBack:
                     if self.getProperty('on.extras'):
-                        self.setFocusId(self.OPTIONS_GROUP_ID)
+                        # Plezy: back from the rail returns to the action row (the header no longer slides away)
+                        self.setFocusId(self.MAIN_BUTTON_GROUP_ID)
                         return
 
             elif self.isWatchedAction(action) and xbmc.getCondVisibility('ControlGroup({}).HasFocus(0)'.format(self.MAIN_BUTTON_GROUP_ID)):
@@ -268,17 +273,12 @@ class PrePlayWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RatingsMixi
                 self.setFocusId(300)
                 self.prev()
 
-            elif action == xbmcgui.ACTION_MOVE_UP and controlID in (self.REVIEWS_LIST_ID,
-                                                                    self.ROLES_LIST_ID,
-                                                                    self.EXTRA_LIST_ID):
-                self.updateBackgroundFrom(self.video)
-
+            # Plezy keeps the item's own backdrop while the rail is browsed (only show detail lets episodes drive
+            # the hero), so related items no longer swap the background - and no art is fetched per focus step.
             if controlID == self.RELATED_LIST_ID:
                 if self.relatedPaginator.boundaryHit:
                     self.relatedPaginator.paginate()
                     return
-                elif action in (xbmcgui.ACTION_MOVE_LEFT, xbmcgui.ACTION_MOVE_RIGHT):
-                    self.updateBackgroundFrom(self.relatedListControl.getSelectedItem().dataSource)
 
             if controlID in self.COLLECTION_LIST_IDS:
                 idx = self.COLLECTION_LIST_IDS.index(controlID)
@@ -305,6 +305,9 @@ class PrePlayWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RatingsMixi
                 return
         elif controlID == self.PLAY_BUTTON_ID:
             self.playVideo()
+        elif controlID == self.WATCHED_BUTTON_ID:
+            # same call as the options menu's Mark played / unplayed; the glyph follows the refreshed 'watched'
+            self.toggleWatched(self.video, state=not self.video.isFullyWatched, **VIDEO_RELOAD_KW)
         elif controlID in self.WL_RELEVANT_BTNS and self.fromWatchlist and self.wl_availability:
             self.wl_item_opener(self.video, self.openItem)
         elif controlID in self.WL_BTN_STATE_BTNS:
@@ -330,9 +333,6 @@ class PrePlayWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RatingsMixi
 
         if 399 < controlID < 500:
             self.setProperty('hub.focus', str(controlID - 400))
-
-            if controlID == self.RELATED_LIST_ID:
-                self.updateBackgroundFrom(self.relatedListControl.getSelectedItem().dataSource)
 
         if xbmc.getCondVisibility('ControlGroup(50).HasFocus(0) + ControlGroup(300).HasFocus(0)'):
             self.setProperty('on.extras', '')
@@ -405,12 +405,20 @@ class PrePlayWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RatingsMixi
 
         # if False:
         #     options.append({'key': 'add_to_playlist', 'display': 'Add To Playlist'})
-        posy = 880
-        if not util.getGlobalProperty('hide.resume'):
-            posy += 106
-        if self.getProperty('trailer.button'):
-            posy += 106
-        choice = dropdown.showDropdown(options, (posy, 618), close_direction='left')
+        # open under the 'more' button: its x follows the actions visible before it in the row (grouplist 301)
+        def shown(*ids):
+            return any(xbmc.getCondVisibility('Control.IsVisible({0})'.format(i)) for i in ids)
+
+        try:
+            posx = plezy_movie_detail.more_menu_x(
+                play=shown(*self.POSSIBLE_PLAY_BUTTON_IDS), version=shown(self.MEDIA_BUTTON_ID),
+                trailer=shown(self.TRAILER_BUTTON_ID), watched=shown(self.WATCHED_BUTTON_ID),
+                watchlist=shown(self.WL_BTN_STATE_NOT_WATCHLISTED, self.WL_BTN_STATE_WATCHLISTED),
+                settings=shown(self.SETTINGS_BUTTON_ID))
+        except Exception:
+            util.ERROR()
+            posx = plezy_movie_detail.ROW_X
+        choice = dropdown.showDropdown(options, (posx, util.vscalei(654)), close_direction='left')
         if not choice:
             return
 
@@ -747,6 +755,7 @@ class PrePlayWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RatingsMixi
             self.setBoolProperty('media.multiple', len(list(filter(lambda x: x.isAccessible(), self.video.media()))) > 1)
 
         self.populateRatings(self.video, self)
+        self.setHeroInfo()
 
         if not self.fromWatchlist:
             self.setAudioAndSubtitleInfo()
@@ -763,6 +772,30 @@ class PrePlayWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RatingsMixi
                 self.setProperty('remainingTime', T(33615, "{time} left").format(time=self.video.remainingTimeString))
             else:
                 self.setProperty('remainingTime', '')
+
+    def setHeroInfo(self):
+        """
+        Plezy's TV detail hero (media_detail_screen.dart _buildTvDetailForeground): the logo/title slot, the
+        episode's own title line, the metadata line (score badges only when they fit), the Play glyph and the
+        video part of the track status. Built from the already-loaded item, never the network.
+        """
+        props = {'hero.title': '', 'episode.title': '', 'meta': '', 'meta.ratings': '', 'play.resume': '',
+                 'tracks.video': ''}
+        try:
+            props['hero.title'], props['episode.title'] = plezy_movie_detail.hero_titles(self.video)
+            studios = self.fromWatchlist and self.getProperty('studios') or u''
+            meta, ratings_fit = plezy_movie_detail.hero_meta(self.video, season_fmt=T(32310, 'S{}'),
+                                                             episode_fmt=T(32311, 'E{}'), extra=studios)
+            props['meta'] = meta
+            props['meta.ratings'] = ratings_fit and '1' or ''
+            props['play.resume'] = self.video.viewOffset.asInt() and not self.startOver and '1' or ''
+            if not self.fromWatchlist:
+                props['tracks.video'] = plezy_movie_detail.tracks_video(
+                    self.video.resolutionString(), self.video.videoCodecString(), self.video.videoCodecRendering)
+        except Exception:
+            util.ERROR("PrePlay: couldn't build the hero for {0}".format(self.video))
+        for key, value in props.items():
+            self.setProperty(key, value)
 
     def setAudioAndSubtitleInfo(self):
         # discover external audio files for mapped direct play
@@ -797,6 +830,10 @@ class PrePlayWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RatingsMixi
             else:
                 self.setProperty('subtitles', T(32309, u'None'))
 
+        # Plezy's track status names only the tracks playback will use (the rest is in the settings dialog, 305)
+        self.setProperty('tracks.audio', sas and sas.getTitle(metadata.apiTranslate) or '')
+        self.setProperty('tracks.subtitles', sss and sss.getTitle(metadata.apiTranslate) or T(32309, u'None'))
+
     def createListItem(self, obj):
         mli = kodigui.ManagedListItem(obj.title or '', thumbnailImage=obj.thumb.asTranscodedImageURL(*self.EXTRA_DIM), data_source=obj)
         return mli
@@ -826,6 +863,8 @@ class PrePlayWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RatingsMixi
                     'thumb.fallback', 'script.plex/thumb_fallbacks/{0}.png'.format(extra.type in ('show', 'season', 'episode') and 'show' or 'movie')
                 )
                 mli.setProperty('extra.duration', extra.duration and util.simplifiedTimeDisplay(extra.duration.asInt()))
+                # the rail card's subtitle line (plezy_hub_card shows Label2 under the title)
+                mli.setLabel2(mli.getProperty('extra.duration') or '')
                 items.append(mli)
                 idx += 1
 

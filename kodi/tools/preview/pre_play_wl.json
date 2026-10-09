@@ -1,0 +1,440 @@
+{
+ "time": "20:41",
+ "window_bg": "FF0E0F12",
+ "addon_strings": {
+  "32419": "Cast",
+  "32953": "Reviews",
+  "32305": "Extras",
+  "32312": "Unavailable",
+  "34005": "Availability"
+ },
+ "images": {
+  "bg": {
+   "size": [
+    1920,
+    1080
+   ],
+   "colors": [
+    "#c98c48",
+    "#2a1708"
+   ]
+  },
+  "logo": {
+   "logo": true,
+   "size": [
+    700,
+    170
+   ],
+   "text": "DUNE: PART TWO",
+   "text_size": 74
+  },
+  "showlogo": {
+   "logo": true,
+   "size": [
+    520,
+    180
+   ],
+   "text": "SEVERANCE",
+   "text_size": 84
+  },
+  "cast0": {
+   "size": [
+    174,
+    174
+   ],
+   "colors": [
+    "#8a7a6a",
+    "#2d2620"
+   ],
+   "text": "TC",
+   "text_size": 48
+  },
+  "cast1": {
+   "size": [
+    174,
+    174
+   ],
+   "colors": [
+    "#8a7a6a",
+    "#2d2620"
+   ],
+   "text": "ZZ",
+   "text_size": 48
+  },
+  "cast2": {
+   "size": [
+    174,
+    174
+   ],
+   "colors": [
+    "#8a7a6a",
+    "#2d2620"
+   ],
+   "text": "RF",
+   "text_size": 48
+  },
+  "cast3": {
+   "size": [
+    174,
+    174
+   ],
+   "colors": [
+    "#8a7a6a",
+    "#2d2620"
+   ],
+   "text": "JB",
+   "text_size": 48
+  },
+  "cast4": {
+   "size": [
+    174,
+    174
+   ],
+   "colors": [
+    "#8a7a6a",
+    "#2d2620"
+   ],
+   "text": "JB",
+   "text_size": 48
+  },
+  "cast5": {
+   "size": [
+    174,
+    174
+   ],
+   "colors": [
+    "#8a7a6a",
+    "#2d2620"
+   ],
+   "text": "AB",
+   "text_size": 48
+  },
+  "cast6": {
+   "size": [
+    174,
+    174
+   ],
+   "colors": [
+    "#8a7a6a",
+    "#2d2620"
+   ],
+   "text": "FP",
+   "text_size": 48
+  },
+  "cast7": {
+   "size": [
+    174,
+    174
+   ],
+   "colors": [
+    "#8a7a6a",
+    "#2d2620"
+   ],
+   "text": "DB",
+   "text_size": 48
+  },
+  "cast8": {
+   "size": [
+    174,
+    174
+   ],
+   "colors": [
+    "#8a7a6a",
+    "#2d2620"
+   ],
+   "text": "CW",
+   "text_size": 48
+  },
+  "cast9": {
+   "size": [
+    174,
+    174
+   ],
+   "colors": [
+    "#8a7a6a",
+    "#2d2620"
+   ],
+   "text": "LS",
+   "text_size": 48
+  },
+  "rel0": {
+   "size": [
+    174,
+    261
+   ],
+   "colors": [
+    "#3a4a6b",
+    "#0e1420"
+   ],
+   "text": "DUNE",
+   "text_size": 26
+  },
+  "rel1": {
+   "size": [
+    174,
+    261
+   ],
+   "colors": [
+    "#6b3a3a",
+    "#1a0c0c"
+   ],
+   "text": "BLADE",
+   "text_size": 26
+  },
+  "rel2": {
+   "size": [
+    174,
+    261
+   ],
+   "colors": [
+    "#3a6b55",
+    "#0c1a14"
+   ],
+   "text": "ARRIVAL",
+   "text_size": 26
+  },
+  "rel3": {
+   "size": [
+    174,
+    261
+   ],
+   "colors": [
+    "#3a4a6b",
+    "#0e1420"
+   ],
+   "text": "INTERSTE",
+   "text_size": 26
+  },
+  "rel4": {
+   "size": [
+    174,
+    261
+   ],
+   "colors": [
+    "#6b3a3a",
+    "#1a0c0c"
+   ],
+   "text": "MAD",
+   "text_size": 26
+  },
+  "rel5": {
+   "size": [
+    174,
+    261
+   ],
+   "colors": [
+    "#3a6b55",
+    "#0c1a14"
+   ],
+   "text": "THE",
+   "text_size": 26
+  },
+  "rel6": {
+   "size": [
+    174,
+    261
+   ],
+   "colors": [
+    "#3a4a6b",
+    "#0e1420"
+   ],
+   "text": "SICARIO",
+   "text_size": 26
+  },
+  "rel7": {
+   "size": [
+    174,
+    261
+   ],
+   "colors": [
+    "#6b3a3a",
+    "#1a0c0c"
+   ],
+   "text": "PRISONER",
+   "text_size": 26
+  },
+  "rel8": {
+   "size": [
+    174,
+    261
+   ],
+   "colors": [
+    "#3a6b55",
+    "#0c1a14"
+   ],
+   "text": "GRAVITY",
+   "text_size": 26
+  },
+  "rel9": {
+   "size": [
+    174,
+    261
+   ],
+   "colors": [
+    "#3a4a6b",
+    "#0e1420"
+   ],
+   "text": "EDGE",
+   "text_size": 26
+  },
+  "ex0": {
+   "size": [
+    296,
+    167
+   ],
+   "colors": [
+    "#b07a3a",
+    "#24160a"
+   ],
+   "text": "OFFICIAL",
+   "text_size": 28
+  },
+  "ex1": {
+   "size": [
+    296,
+    167
+   ],
+   "colors": [
+    "#b07a3a",
+    "#24160a"
+   ],
+   "text": "BEHIND",
+   "text_size": 28
+  },
+  "ex2": {
+   "size": [
+    296,
+    167
+   ],
+   "colors": [
+    "#b07a3a",
+    "#24160a"
+   ],
+   "text": "THE",
+   "text_size": 28
+  },
+  "ex3": {
+   "size": [
+    296,
+    167
+   ],
+   "colors": [
+    "#b07a3a",
+    "#24160a"
+   ],
+   "text": "SANDWORM",
+   "text_size": 28
+  },
+  "ex4": {
+   "size": [
+    296,
+    167
+   ],
+   "colors": [
+    "#b07a3a",
+    "#24160a"
+   ],
+   "text": "COSTUME",
+   "text_size": 28
+  },
+  "ex5": {
+   "size": [
+    296,
+    167
+   ],
+   "colors": [
+    "#b07a3a",
+    "#24160a"
+   ],
+   "text": "DELETED",
+   "text_size": 28
+  }
+ },
+ "focus": 2304,
+ "props": {
+  "dynamic_backgrounds": "1",
+  "background": "mock:bg",
+  "background_static": "mock:bg",
+  "initialized": "1",
+  "preview.no": "1",
+  "title": "Dune: Part Two",
+  "hero.title": "Dune: Part Two",
+  "clear.logo": "mock:logo",
+  "meta": "2025 • R • 2h 12m • A24",
+  "meta.ratings": "1",
+  "rating": "92%",
+  "rating.image": "script.plex/ratings/rottentomatoes/image.rating.ripe.png",
+  "rating2": "95%",
+  "rating2.image": "script.plex/ratings/rottentomatoes/image.rating.upright.png",
+  "summary": "A short summary that only needs a single line.",
+  "tracks.video": "",
+  "audio": "English (TrueHD Atmos 7.1) • 3 More",
+  "subtitles": "None • 12 Available",
+  "tracks.audio": "",
+  "tracks.subtitles": "",
+  "trailer.button": "1",
+  "watchlist_enabled": "1",
+  "related.header": "Related Movies",
+  "disable_playback": "1",
+  "wl_availability": "1",
+  "wl_server_availability_verbose": "Living Room: 4K (58.4 Mbps)",
+  "is_watchlisted": "1"
+ },
+ "lists": {
+  "403": {
+   "selected": 0,
+   "items": [
+    {
+     "label": "Dune",
+     "label2": "2021",
+     "thumb": "mock:rel0",
+     "props": {}
+    },
+    {
+     "label": "Blade Runner 2049",
+     "label2": "2017",
+     "thumb": "mock:rel1",
+     "props": {
+      "watched": "1"
+     }
+    },
+    {
+     "label": "Arrival",
+     "label2": "2016",
+     "thumb": "mock:rel2",
+     "props": {}
+    },
+    {
+     "label": "Interstellar",
+     "label2": "2014",
+     "thumb": "mock:rel3",
+     "props": {}
+    },
+    {
+     "label": "Mad Max: Fury Road",
+     "label2": "2015",
+     "thumb": "mock:rel4",
+     "props": {}
+    },
+    {
+     "label": "The Martian",
+     "label2": "2015",
+     "thumb": "mock:rel5",
+     "props": {}
+    },
+    {
+     "label": "Sicario",
+     "label2": "2015",
+     "thumb": "mock:rel6",
+     "props": {}
+    },
+    {
+     "label": "Prisoners",
+     "label2": "2013",
+     "thumb": "mock:rel7",
+     "props": {}
+    }
+   ]
+  }
+ }
+}

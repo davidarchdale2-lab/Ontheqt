@@ -1,2 +1,5 @@
-{% include template with name="watchlist" & id=308 & visible="!String.IsEmpty(Window.Property(watchlist_enabled)) + String.IsEmpty(Window.Property(is_watchlisted))" %}
-{% include template with name="watchlisted" & id=309 & visible="!String.IsEmpty(Window.Property(watchlist_enabled)) + !String.IsEmpty(Window.Property(is_watchlisted))" %}
+{% if plezy %}{# Plezy action row: bookmark_add / bookmark_added circles (includes/plezy_action_button.xml.tpl) #}
+{% include "includes/plezy_action_button.xml.tpl" with id=308 & icon="bookmark_add" & visible="!String.IsEmpty(Window.Property(watchlist_enabled)) + String.IsEmpty(Window.Property(is_watchlisted))" %}
+{% include "includes/plezy_action_button.xml.tpl" with id=309 & icon="bookmark_added" & visible="!String.IsEmpty(Window.Property(watchlist_enabled)) + !String.IsEmpty(Window.Property(is_watchlisted))" %}
+{% else %}{% include template with name="watchlist" & id=308 & visible="!String.IsEmpty(Window.Property(watchlist_enabled)) + String.IsEmpty(Window.Property(is_watchlisted))" %}
+{% include template with name="watchlisted" & id=309 & visible="!String.IsEmpty(Window.Property(watchlist_enabled)) + !String.IsEmpty(Window.Property(is_watchlisted))" %}{% endif %}

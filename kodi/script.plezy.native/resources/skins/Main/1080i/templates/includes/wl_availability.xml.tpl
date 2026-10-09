@@ -1,3 +1,48 @@
+{% if plezy %}{# Plezy detail: the availability note in the action row's track-status slot (right-aligned, read-only).
+   params: x (default 1176), y (default 590), width (default 684), height (default 56) #}
+    {% with ax = x|default(1176) & ay = y|default(590) & aw = width|default(684) & ah = height|default(56) %}
+    <control type="grouplist">
+        <visible>!String.IsEmpty(Window.Property(wl_server_availability_verbose))</visible>
+        <posx>{{ ax }}</posx>
+        <posy>{{ ay|vscale }}</posy>
+        <width>{{ aw }}</width>
+        <height>{{ ah|vscale }}</height>
+        <align>right</align>
+        <itemgap>0</itemgap>
+        <orientation>horizontal</orientation>
+        <usecontrolcoords>true</usecontrolcoords>
+        <control type="label">
+            <width max="{{ aw }}">auto</width>
+            <height>{{ ah|vscale }}</height>
+            <font>font10</font>
+            <align>left</align>
+            <aligny>center</aligny>
+            <textcolor>{{ core.plezy.muted }}</textcolor>
+            <label>[B]$ADDON[script.plezy.native 34005][/B]</label>
+        </control>
+        <control type="image">
+            <posx>14</posx>
+            <posy>{{ ((ah - 24) / 2)|vscale }}</posy>
+            <width>24</width>
+            <height>{{ vscale(24) }}</height>
+            <texture colordiffuse="{{ core.plezy.muted }}">script.plex/plezy/icons/dns.png</texture>
+            <aspectratio>keep</aspectratio>
+        </control>
+        <control type="label">
+            <posx>8</posx>
+            <width max="{{ aw - 220 }}">auto</width>
+            <height>{{ ah|vscale }}</height>
+            <font>font10</font>
+            <align>left</align>
+            <aligny>center</aligny>
+            <scroll>true</scroll>
+            <scrollspeed>10</scrollspeed>
+            <textcolor>{{ core.plezy.muted }}</textcolor>
+            <label>[B]$INFO[Window.Property(wl_server_availability_verbose)][/B]</label>
+        </control>
+    </control>
+    {% endwith %}
+{% else %}
     <control type="grouplist">
         <visible>!String.IsEmpty(Window.Property(wl_server_availability_verbose))</visible>
         <posx>466</posx>
@@ -33,3 +78,4 @@
             <label>$INFO[Window.Property(wl_server_availability_verbose)]</label>
         </control>
     </control>
+{% endif %}

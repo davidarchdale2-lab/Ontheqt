@@ -1,0 +1,86 @@
+{
+  "focus": 302,
+  "time": "20:41",
+  "window_bg": "FF0E0F12",
+  "addon_strings": {"32419": "Cast", "34005": "Availability"},
+  "props": {
+    "dynamic_backgrounds": "1",
+    "background": "mock:bg",
+    "background_static": "mock:bg",
+    "initialized": "1",
+    "title": "Severance",
+    "clear.logo": "mock:logo",
+    "hero.meta": "2022 \u2022 TV-MA",
+    "hero.summary": "Mark leads a team of office workers whose memories have been surgically divided between their work and personal lives. When a mysterious colleague appears outside of work, it begins a journey to discover the truth about their jobs.",
+    "rating": "96%",
+    "rating.image": "script.plex/ratings/rottentomatoes/image.rating.ripe.png",
+    "rating2": "88%",
+    "rating2.image": "script.plex/ratings/rottentomatoes/image.rating.upright.png",
+    "play.label": "S2 E4",
+    "play.resume": "1",
+    "trailer.button": "1",
+    "watchlist_enabled": "1",
+    "unwatched.count": "7",
+    "seasons.header": "Seasons",
+    "extras.header": "Trailers & extras",
+    "related.header": "More like this"
+  },
+  "lists": {
+    "400": {"selected": 1, "items": [
+      {"label": "Season 1", "label2": "9 episodes", "thumb": "mock:s1", "props": {"watched": "1"}},
+      {"label": "Season 2", "label2": "10 episodes", "thumb": "mock:s2", "props": {"unwatched.count": "7", "progress": "script.plex/progress/30.png"}},
+      {"label": "Specials", "label2": "3 episodes", "thumb": "mock:s3", "props": {"unwatched.count": "3"}}
+    ]},
+    "401": {"selected": 0, "items": [
+      {"label": "Adam Scott", "label2": "Mark Scout", "thumb": "mock:c1"},
+      {"label": "Britt Lower", "label2": "Helly R.", "thumb": "mock:c2"},
+      {"label": "Zach Cherry", "label2": "Dylan G.", "thumb": "mock:c3"},
+      {"label": "Tramell Tillman", "label2": "Seth Milchick", "thumb": "mock:c4"},
+      {"label": "John Turturro", "label2": "Irving B.", "thumb": "mock:c5"},
+      {"label": "Christopher Walken", "label2": "Burt G.", "thumb": "mock:c6"},
+      {"label": "Patricia Arquette", "label2": "Harmony Cobel", "thumb": "mock:c1"},
+      {"label": "Dichen Lachman", "label2": "Ms. Casey", "thumb": "mock:c2"},
+      {"label": "Jen Tullock", "label2": "Devon Scout-Hale", "thumb": "mock:c3"},
+      {"label": "Michael Chernus", "label2": "Ricken Hale", "thumb": "mock:c4"}
+    ]},
+    "402": {"selected": 0, "items": [
+      {"label": "Season 2 official trailer", "label2": "Trailer", "thumb": "mock:e1"},
+      {"label": "Inside the episode", "label2": "Behind the Scenes", "thumb": "mock:e2"},
+      {"label": "The making of Lumon", "label2": "Featurette", "thumb": "mock:e3"},
+      {"label": "Teaser", "label2": "Trailer", "thumb": "mock:e1"},
+      {"label": "Cast interview", "label2": "Interview", "thumb": "mock:e2"},
+      {"label": "Table read", "label2": "Other", "thumb": "mock:e3"}
+    ]},
+    "403": {"selected": 0, "items": [
+      {"label": "The Leftovers", "label2": "2014", "thumb": "mock:r1", "props": {"watched": "1"}},
+      {"label": "Mr. Robot", "label2": "2015", "thumb": "mock:r2"},
+      {"label": "Dark", "label2": "2017", "thumb": "mock:r3", "props": {"unwatched.count": "26"}},
+      {"label": "Black Mirror", "label2": "2011", "thumb": "mock:r4"},
+      {"label": "Westworld", "label2": "2016", "thumb": "mock:r1"},
+      {"label": "Devs", "label2": "2020", "thumb": "mock:r2"},
+      {"label": "Silo", "label2": "2023", "thumb": "mock:r3"},
+      {"label": "Fringe", "label2": "2008", "thumb": "mock:r4"},
+      {"label": "", "thumb": "", "props": {"is.boundary": "1", "right.boundary": "1"}}
+    ]}
+  },
+  "images": {
+    "bg": {"size": [1920, 1080], "colors": ["#5d7f96", "#16222c"]},
+    "logo": {"logo": true, "size": [760, 160], "text": "SEVERANCE", "text_size": 120},
+    "s1": {"size": [174, 261], "colors": ["#3f6a86", "#0d1a24"], "text": "S1"},
+    "s2": {"size": [174, 261], "colors": ["#9fb7c8", "#2b3d4a"], "text": "S2"},
+    "s3": {"size": [174, 261], "colors": ["#56606a", "#1b1f24"], "text": "SP"},
+    "c1": {"size": [174, 174], "colors": ["#a08670", "#3b2c22"]},
+    "c2": {"size": [174, 174], "colors": ["#7d8ea0", "#27303a"]},
+    "c3": {"size": [174, 174], "colors": ["#8a7a6a", "#2a221c"]},
+    "c4": {"size": [174, 174], "colors": ["#6c7f74", "#1f2823"]},
+    "c5": {"size": [174, 174], "colors": ["#9a8c80", "#2f2925"]},
+    "c6": {"size": [174, 174], "colors": ["#7a7f8c", "#24262c"]},
+    "e1": {"size": [296, 167], "colors": ["#4f7896", "#14202a"], "text": "TRAILER"},
+    "e2": {"size": [296, 167], "colors": ["#7b8d78", "#1d241c"]},
+    "e3": {"size": [296, 167], "colors": ["#8c6f5b", "#2a1f18"]},
+    "r1": {"size": [174, 261], "colors": ["#6f7f8f", "#1a1f26"], "text": "LEFT"},
+    "r2": {"size": [174, 261], "colors": ["#2f2f2f", "#0b0b0b"], "text": "ROBOT"},
+    "r3": {"size": [174, 261], "colors": ["#4d5b4a", "#121611"], "text": "DARK"},
+    "r4": {"size": [174, 261], "colors": ["#3b3b4f", "#101018"], "text": "BM"}
+  }
+}
