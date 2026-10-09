@@ -43,11 +43,11 @@ player_track, player_buffer, player_card, player_tooltip, active (amber, active 
 
 | include | what | params |
 | --- | --- | --- |
-| `plezy_hub_card.xml.tpl` | Plezy media card for horizontal rows/rails and panels | kind, focused, cw, ch, mask; optional cond (`"none"` = no condition), focus_id, sub_always, item_h; handles is.end / is.boundary tiles |
+| `plezy_hub_card.xml.tpl` | Plezy media card for horizontal rows/rails and panels | kind, focused, cw, ch, mask; optional cond (`"none"` = no condition), focus_id, sub_always, item_h, placeholder_icon (person rails), selected_ring (muted ring on the selected card while another control has focus); handles is.end / is.boundary tiles |
 | `plezy_action_button.xml.tpl` | detail action button (baked textures) | id, icon, shape circle/pill/label/split/version, label, alt_icon + alt_cond (togglebutton), visible, enable, posx/posy, onleft/onright/onup/ondown, onclick, onfocus |
 | `plezy_row_header.xml.tpl` | 28px icon + bold title (+ muted count), 44px tall | icon, title, count, x, y, width, fallback_icon |
 | `plezy_spinner.xml.tpl` | CircularProgressIndicator stand-in (rotating arc) | x, y, size, visible, color |
-| `plezy_scrims.xml.tpl` | spotlight scrims (left column fade, top black, bottom bg) | - |
+| `plezy_scrims.xml.tpl` | spotlight scrims (left column fade, top black, bottom bg) | foot=True carries the bg colour below the scrims on non-16:9 displays (not over video) |
 | `default_background.xml.tpl` | window background; `with spotlight=True` drops the flat dim | spotlight |
 
 Detail screens: `{% block background %}{% include "includes/default_background.xml.tpl" with spotlight=True %}{% include "includes/plezy_scrims.xml.tpl" %}{% endblock %}`.
@@ -87,6 +87,21 @@ spotlight scrims; a bottom-aligned hero column; an action row; a rail of hubs an
 - Rail below (~y 670+): `plezy_row_header` + `plezy_hub_card` rows at tallPosterScale .72: poster 174x261,
   person/square 174x174, wide 296x167; pitch card + 24; active row on top, next one peeks, others dim.
 - `plezy_ui.detail_meta / season_meta / play_label / episode_label / abbreviated_date` build the text.
+
+### What the wave-1 screens settled (reuse these patterns)
+
+- Hero column = a vertical grouplist with `<align>right</align>` (bottom alignment; Kodi's GetAlignOffset) and
+  `<height max=..>auto</height>` textboxes, so a missing logo or short summary lets the column sit lower, as in
+  Plezy. Info-block focus fill = a twin grouplist clipped at the column foot plus a clipped r8 cap.
+- Action rows are one grouplist of `plezy_action_button`s inside the group the Python calls 300 (so
+  `ControlGroup(300).HasFocus(0)` keeps its meaning); Play "S1E3" uses shape `label`, movies/episodes use `pill`.
+- Rails: `pre_play_rail_row.xml.tpl` / `episodes_rail_row.xml.tpl` = `plezy_row_header` + `plezy_hub_card` row of
+  height ch + 136; each row's slide animation must equal its own height; rows above the active one fade out, rows
+  below dim, the whole band dims while focus is above it. 4:3: vscale(1080) = 810, so use `plezy_scrims ... foot=True`.
+- Python builds the text in Kodi-free modules (`lib/plezy_*.py`) with tests; focus handlers never touch the network.
+- Plezy chrome that is not TV-scaled (player) is x1.5, bottom-anchored with `{{ vscale(1080 - y) }}r`; the player
+  uses the "plezy" button theme art with a 1.12 zoom and `core.plezy.active` (amber) for active toggles.
+- The preview tool understands these (auto width/height, bottom align, usecontrolcoords, alt textures, zoom).
 
 ## Verified Kodi behaviour (do not "fix")
 
