@@ -56,7 +56,7 @@
                     <texture colordiffuse="{{ core.plezy.text }}">$INFO[ListItem.Property(progress)]</texture>
                 </control>
             </control>
-            {% include "includes/watched_indicator.xml.tpl" with xoff=183 & yoff=12 & uw_size=24 & with_count=False & scale="tiny" %}
+            {% include "includes/watched_indicator.xml.tpl" with xoff=183 & yoff=12 & uw_size=32 & with_count=False & scale="small" %}
             {% endif %}
             <!-- playing track: equalizer glyph, then the title shifts right -->
             <control type="image">

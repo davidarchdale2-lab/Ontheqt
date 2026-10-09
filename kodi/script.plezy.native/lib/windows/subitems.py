@@ -829,6 +829,7 @@ class ArtistWindow(ShowWindow):
     EXTRA_LIST_ID = None
     ROLES_LIST_ID = None
     RELATED_LIST_ID = 401
+    RELATED_DIM = util.scaleResolution(240, 240)  # square cards for similar artists
 
     # keep the PM4K behaviour ShowWindow had before the Plezy show detail (see ShowWindow)
     HERO_FOLLOWS_SEASON = False
@@ -880,15 +881,16 @@ class ArtistWindow(ShowWindow):
     def fill(self):
         self.mediaItem.reload(includeRelated=1, includeRelatedCount=20)
         self.setProperty('artist.title', self.mediaItem.title)
-        genres = u' / '.join([g.tag for g in util.removeDups(self.mediaItem.genres())][:6])
+        genres = u' \u2022 '.join([g.tag for g in util.removeDups(self.mediaItem.genres())][:6])
         self.setProperty('artist.genre', genres)
         items = []
         idx = 0
-        for album in sorted(self.mediaItem.albums() + list(self.mediaItem.otherAlbums), key=lambda x: x.year):
+        for album in sorted(self.mediaItem.albums() + list(self.mediaItem.otherAlbums), key=lambda x: x.year, reverse=True):
             mli = self.createListItem(album)
             if mli:
                 mli.setProperty('index', str(idx))
                 mli.setProperty('year', album.year)
+                mli.setLabel2(album.year)
                 mli.setProperty('thumb.fallback', 'script.plex/thumb_fallbacks/music.png')
                 items.append(mli)
                 idx += 1

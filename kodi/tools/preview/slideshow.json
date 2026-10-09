@@ -1,0 +1,13 @@
+{
+ "time": "20:41",
+ "window_bg": "FF0E0F12",
+ "props": {
+  "clock": "20:41",
+  "title": "Sunset at Lake Tahoe",
+  "thumb": "mock:photo",
+  "align": "0"
+ },
+ "images": {
+  "photo": {"size": [1920, 1080], "colors": ["#e0a050", "#1a2a4a"], "text": "PHOTO", "text_size": 120}
+ }
+}

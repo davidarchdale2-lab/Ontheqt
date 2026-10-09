@@ -3504,3 +3504,35 @@ msgstr ""
 msgctxt "#35230"
 msgid "PIN protected"
 msgstr ""
+
+msgctxt "#35240"
+msgid "Filmography"
+msgstr ""
+
+msgctxt "#35241"
+msgid "{0} title"
+msgstr ""
+
+msgctxt "#35242"
+msgid "{0} item"
+msgstr ""
+
+msgctxt "#35243"
+msgid "{0} items"
+msgstr ""
+
+msgctxt "#35244"
+msgid "{0} track"
+msgstr ""
+
+msgctxt "#35245"
+msgid "{0} tracks"
+msgstr ""
+
+msgctxt "#35246"
+msgid "Smart"
+msgstr ""
+
+msgctxt "#35247"
+msgid "{0} titles"
+msgstr ""
