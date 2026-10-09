@@ -1,0 +1,208 @@
+{
+ "focus": 101,
+ "time": "20:41",
+ "window_bg": "FF0E0F12",
+ "addon_strings": {
+  "208": "Play"
+ },
+ "props": {
+  "dynamic_backgrounds": "1",
+  "background": "mock:bg",
+  "background_static": "mock:bg",
+  "playlist.thumb": "mock:cover",
+  "playlist.title": "Road Trip Mix",
+  "playlist.meta": "42 items \u2022 2h 54m \u2022 Smart",
+  "script.plezy.native.track.ID": "102"
+ },
+ "infolabels": {
+  "Player.HasAudio": "1"
+ },
+ "bools": {
+  "Player.HasAudio": true,
+  "Player.Playing": true
+ },
+ "lists": {
+  "101": {
+   "selected": 1,
+   "items": [
+    {
+     "label": "Let It Happen",
+     "label2": "Tame Impala \u2022 Currents",
+     "thumb": "mock:m0",
+     "props": {
+      "track.duration": "7:47",
+      "track.ID": "100",
+      "track.number": "1",
+      "index": "0"
+     }
+    },
+    {
+     "label": "Redbone",
+     "label2": "Childish Gambino \u2022 \"Awaken, My Love!\"",
+     "thumb": "mock:m1",
+     "props": {
+      "track.duration": "5:27",
+      "track.ID": "101",
+      "track.number": "2",
+      "index": "1"
+     }
+    },
+    {
+     "label": "Electric Feel",
+     "label2": "MGMT \u2022 Oracular Spectacular",
+     "thumb": "mock:m2",
+     "props": {
+      "track.duration": "3:49",
+      "track.ID": "102",
+      "track.number": "3",
+      "index": "2"
+     }
+    },
+    {
+     "label": "Get Lucky",
+     "label2": "Daft Punk \u2022 Random Access Memories",
+     "thumb": "mock:m3",
+     "props": {
+      "track.duration": "6:09",
+      "track.ID": "103",
+      "track.number": "4",
+      "index": "3"
+     }
+    },
+    {
+     "label": "Nights",
+     "label2": "Frank Ocean \u2022 Blonde",
+     "thumb": "mock:m0",
+     "props": {
+      "track.duration": "5:07",
+      "track.ID": "104",
+      "track.number": "5",
+      "index": "4"
+     }
+    },
+    {
+     "label": "Genesis",
+     "label2": "Grimes \u2022 Visions",
+     "thumb": "mock:m1",
+     "props": {
+      "track.duration": "4:15",
+      "track.ID": "105",
+      "track.number": "6",
+      "index": "5"
+     }
+    }
+   ]
+  }
+ },
+ "images": {
+  "bg": {
+   "size": [
+    1920,
+    1080
+   ],
+   "colors": [
+    "#4a5a7a",
+    "#14111f"
+   ]
+  },
+  "cover": {
+   "size": [
+    216,
+    216
+   ],
+   "colors": [
+    "#e0568a",
+    "#3a1a6e"
+   ],
+   "text": "MIX"
+  },
+  "m0": {
+   "size": [
+    96,
+    96
+   ],
+   "colors": [
+    "#e0568a",
+    "#3a1a6e"
+   ],
+   "text": "A"
+  },
+  "m1": {
+   "size": [
+    96,
+    96
+   ],
+   "colors": [
+    "#56c0e0",
+    "#1a3a6e"
+   ],
+   "text": "B"
+  },
+  "m2": {
+   "size": [
+    96,
+    96
+   ],
+   "colors": [
+    "#e0c056",
+    "#6e3a1a"
+   ],
+   "text": "C"
+  },
+  "m3": {
+   "size": [
+    96,
+    96
+   ],
+   "colors": [
+    "#70e056",
+    "#1a6e3a"
+   ],
+   "text": "D"
+  },
+  "v0": {
+   "size": [
+    171,
+    96
+   ],
+   "colors": [
+    "#8a56e0",
+    "#2a1a6e"
+   ],
+   "text": "S"
+  },
+  "v1": {
+   "size": [
+    171,
+    96
+   ],
+   "colors": [
+    "#e05656",
+    "#6e1a1a"
+   ],
+   "text": "A"
+  },
+  "v2": {
+   "size": [
+    171,
+    96
+   ],
+   "colors": [
+    "#56e0b0",
+    "#1a6e5a"
+   ],
+   "text": "N"
+  },
+  "v3": {
+   "size": [
+    171,
+    96
+   ],
+   "colors": [
+    "#e0a056",
+    "#6e4a1a"
+   ],
+   "text": "D"
+  }
+ }
+}

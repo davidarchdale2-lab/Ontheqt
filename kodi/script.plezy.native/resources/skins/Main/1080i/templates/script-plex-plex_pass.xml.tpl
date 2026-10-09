@@ -1,29 +1,12 @@
-{% extends "base.xml.tpl" %}{# this template is unused at the moment #}
+{% extends "base.xml.tpl" %}{# this template is unused at the moment (plex.py requirePlexPass() always passes); it keeps the sign-in look #}
 {% block headers %}<defaultcontrol>100</defaultcontrol>{% endblock %}
+{% block backgroundcolor %}<backgroundcolor>0x{{ core.plezy.bg }}</backgroundcolor>{% endblock %}
 {% block controls %}
-<control type="image">
-    <posx>0</posx>
-    <posy>0</posy>
-    <width>1920</width>
-    <height>1080</height>
-    <texture>script.plex/sign_in/plexpass.jpg</texture>
-</control>
+{% include "includes/plezy_auth_brand.xml.tpl" %}
 
-<control type="button" id="100">
-    <posx>1436</posx>
-    <posy>{{ vscale(802) }}</posy>
-    <width>275</width>
-    <height>{{ vscale(100) }}</height>
-    <onup>200</onup>
-    <font>font13</font>
-    <textcolor>FFFFFFFF</textcolor>
-    <focusedcolor>FFFFFFFF</focusedcolor>
-    <align>center</align>
-    <aligny>center</aligny>
-    <texturefocus>-</texturefocus>
-    <texturenofocus>-</texturenofocus>
-    <textoffsetx>0</textoffsetx>
-    <textoffsety>0</textoffsety>
-    <label> </label>
+<control type="group">
+    <posx>0</posx>
+    <posy>{{ vperc(vscale(1080)) }}</posy>
+    {% include "includes/plezy_signin_button.xml.tpl" with bid = 100 & x = 996 & y = 508 & w = 528 & variant = "primary" & label = "$ADDON[script.plezy.native 35032]" %}
 </control>
 {% endblock controls %}

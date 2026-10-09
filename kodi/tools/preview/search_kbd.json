@@ -1,0 +1,247 @@
+{
+ "focus": 650,
+ "window_bg": "FF0E0F12",
+ "addon_strings": {
+  "32431": "Search",
+  "32345": "All",
+  "32348": "Movies",
+  "32350": "Shows",
+  "32394": "Music",
+  "32349": "photos",
+  "35004": "History",
+  "35180": "Search movies, shows, music...",
+  "35181": "Search your media",
+  "35182": "Enter a title, actor, or keyword",
+  "35183": "No results found",
+  "35184": "Try a different search term",
+  "35185": "People"
+ },
+ "props": {
+  "search.section": "all",
+  "hide.kbd": "1"
+ },
+ "lists": {},
+ "images": {
+  "m1": {
+   "size": [
+    244,
+    361
+   ],
+   "colors": [
+    "#d9a35f",
+    "#4a2a10"
+   ],
+   "text": "DUNE",
+   "text_size": 30
+  },
+  "m2": {
+   "size": [
+    244,
+    361
+   ],
+   "colors": [
+    "#d9a35f",
+    "#3a1f0a"
+   ],
+   "text": "DUNE: PART TWO",
+   "text_size": 22
+  },
+  "m3": {
+   "size": [
+    244,
+    361
+   ],
+   "colors": [
+    "#8d6e4f",
+    "#1c130a"
+   ],
+   "text": "DUNE",
+   "text_size": 30
+  },
+  "m4": {
+   "size": [
+    244,
+    361
+   ],
+   "colors": [
+    "#7a96b8",
+    "#1a2433"
+   ],
+   "text": "DUNE (1984)",
+   "text_size": 24
+  },
+  "m5": {
+   "size": [
+    244,
+    361
+   ],
+   "colors": [
+    "#9aa3ad",
+    "#2b3138"
+   ],
+   "text": "ARRIVAL",
+   "text_size": 26
+  },
+  "s1": {
+   "size": [
+    244,
+    361
+   ],
+   "colors": [
+    "#c48b5a",
+    "#3b2414"
+   ],
+   "text": "SEVERANCE",
+   "text_size": 24
+  },
+  "s2": {
+   "size": [
+    244,
+    361
+   ],
+   "colors": [
+    "#7c8c6a",
+    "#20281a"
+   ],
+   "text": "ANDOR",
+   "text_size": 30
+  },
+  "e1": {
+   "size": [
+    532,
+    299
+   ],
+   "colors": [
+    "#8fa6c4",
+    "#2b3a52"
+   ],
+   "text": "SEVERANCE",
+   "text_size": 34
+  },
+  "e2": {
+   "size": [
+    532,
+    299
+   ],
+   "colors": [
+    "#c48b5a",
+    "#3b2414"
+   ],
+   "text": "THE BEAR",
+   "text_size": 34
+  },
+  "e3": {
+   "size": [
+    532,
+    299
+   ],
+   "colors": [
+    "#7c8c6a",
+    "#20281a"
+   ],
+   "text": "ANDOR",
+   "text_size": 34
+  },
+  "e4": {
+   "size": [
+    532,
+    299
+   ],
+   "colors": [
+    "#b25b4a",
+    "#2a1210"
+   ],
+   "text": "SHOGUN",
+   "text_size": 34
+  },
+  "a1": {
+   "size": [
+    244,
+    244
+   ],
+   "colors": [
+    "#6f7ea8",
+    "#1d2a3d"
+   ],
+   "text": "DISCOVERY",
+   "text_size": 26
+  },
+  "a2": {
+   "size": [
+    244,
+    244
+   ],
+   "colors": [
+    "#b08cc4",
+    "#2a1a3a"
+   ],
+   "text": "HOMEWORK",
+   "text_size": 26
+  },
+  "a3": {
+   "size": [
+    244,
+    244
+   ],
+   "colors": [
+    "#8cc4b0",
+    "#1a3a2e"
+   ],
+   "text": "RANDOM ACCESS",
+   "text_size": 20
+  },
+  "p1": {
+   "size": [
+    244,
+    244
+   ],
+   "colors": [
+    "#d4b49a",
+    "#5a4030"
+   ],
+   "text": "TIMOTHEE",
+   "text_size": 22
+  },
+  "p2": {
+   "size": [
+    244,
+    244
+   ],
+   "colors": [
+    "#9aa8d4",
+    "#303a5a"
+   ],
+   "text": "ZENDAYA",
+   "text_size": 24
+  },
+  "p3": {
+   "size": [
+    244,
+    244
+   ],
+   "colors": [
+    "#d49a9a",
+    "#5a3030"
+   ],
+   "text": "REBECCA",
+   "text_size": 24
+  },
+  "p4": {
+   "size": [
+    244,
+    244
+   ],
+   "colors": [
+    "#a8d49a",
+    "#305a30"
+   ],
+   "text": "DENIS",
+   "text_size": 28
+  }
+ },
+ "overrides": {
+  "651": {
+   "label": "|"
+  }
+ }
+}

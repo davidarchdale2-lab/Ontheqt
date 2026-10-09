@@ -5,6 +5,7 @@ import time
 from kodi_six import xbmc, xbmcgui
 
 from lib import util
+from lib import plezy_settings
 from . import kodigui
 
 SEPARATOR = None
@@ -67,7 +68,7 @@ class DropdownDialog(kodigui.BaseDialog):
     def y(self):
         y = self.pos[1]
         if self.posIsBottom:
-            y -= (len(self.options) * self.optionHeight) + 80
+            y -= plezy_settings.bottom_anchored_dropdown_y(len(self.options), self.optionHeight)
         return y
 
     def onFirstInit(self):
@@ -439,6 +440,14 @@ class DropdownDialog(kodigui.BaseDialog):
                 item.setProperty('with.indicator', self.withIndicator and '1' or '')
                 item.setProperty('has.submenu', '1' if o.get('has_submenu') else '')
                 item.setProperty('align', self.alignItems)
+                # Plezy menu rows: selected (current choice) rows are bold; slots = trailing icons the label must leave
+                # room for
+                try:
+                    for key, value in plezy_settings.menu_row_properties(
+                            self.withIndicator, o.get('indicator', ''), o.get('has_submenu')).items():
+                        item.setProperty(key, value)
+                except Exception:
+                    util.ERROR()
                 items.append(item)
                 options.append(o)
             else:
@@ -517,7 +526,11 @@ def showDropdown(
 ):
 
     if header:
-        pos = pos or (660, 400)
+        if pos is None:
+            # Plezy shows TV menus as a sheet at the bottom of the screen; callers that pass a position keep it.
+            # y 1074: the list's top is y - (rows * 66 + 80), so the 86px of header and padding end on the screen edge
+            pos = (660, 1074)
+            pos_is_bottom = True
         w = DropdownHeaderDialog.open(
             options=options, pos=pos,
             pos_is_bottom=pos_is_bottom,

@@ -1,0 +1,152 @@
+{
+ "focus": 101,
+ "time": "20:41",
+ "window_bg": "FF0E0F12",
+ "props": {
+  "dynamic_backgrounds": "1",
+  "background": "mock:bg",
+  "background_static": "mock:bg",
+  "initialized": "1",
+  "screen.title": "Movies \u00b7 Categories",
+  "items.count": "12"
+ },
+ "lists": {
+  "101": {
+   "selected": 1,
+   "items": [
+    {
+     "label": "Action",
+     "thumb": "mock:g0",
+     "props": {}
+    },
+    {
+     "label": "Adventure",
+     "thumb": "mock:g1",
+     "props": {}
+    },
+    {
+     "label": "Animation",
+     "thumb": "mock:g2",
+     "props": {}
+    },
+    {
+     "label": "Comedy",
+     "thumb": "",
+     "props": {}
+    },
+    {
+     "label": "Crime",
+     "thumb": "mock:g4",
+     "props": {}
+    },
+    {
+     "label": "Documentary",
+     "thumb": "mock:g0",
+     "props": {}
+    },
+    {
+     "label": "Drama",
+     "thumb": "mock:g1",
+     "props": {}
+    },
+    {
+     "label": "Family",
+     "thumb": "",
+     "props": {}
+    },
+    {
+     "label": "Fantasy",
+     "thumb": "mock:g3",
+     "props": {}
+    },
+    {
+     "label": "History",
+     "thumb": "mock:g4",
+     "props": {}
+    },
+    {
+     "label": "Horror",
+     "thumb": "mock:g0",
+     "props": {}
+    },
+    {
+     "label": "Music",
+     "thumb": "mock:g1",
+     "props": {}
+    }
+   ]
+  }
+ },
+ "images": {
+  "bg": {
+   "size": [
+    1920,
+    1080
+   ],
+   "colors": [
+    "#3a4a5a",
+    "#14111f"
+   ]
+  },
+  "g0": {
+   "size": [
+    400,
+    225
+   ],
+   "colors": [
+    "#8a56e0",
+    "#2a1a6e"
+   ],
+   "text": "A",
+   "text_size": 60
+  },
+  "g1": {
+   "size": [
+    400,
+    225
+   ],
+   "colors": [
+    "#e05656",
+    "#6e1a1a"
+   ],
+   "text": "B",
+   "text_size": 60
+  },
+  "g2": {
+   "size": [
+    400,
+    225
+   ],
+   "colors": [
+    "#56e0b0",
+    "#1a6e5a"
+   ],
+   "text": "C",
+   "text_size": 60
+  },
+  "g3": {
+   "size": [
+    400,
+    225
+   ],
+   "colors": [
+    "#e0a056",
+    "#6e4a1a"
+   ],
+   "text": "D",
+   "text_size": 60
+  },
+  "g4": {
+   "size": [
+    400,
+    225
+   ],
+   "colors": [
+    "#56a0e0",
+    "#1a3a6e"
+   ],
+   "text": "E",
+   "text_size": 60
+  }
+ }
+}

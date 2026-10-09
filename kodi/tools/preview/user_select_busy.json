@@ -1,0 +1,45 @@
+{
+ "focus": 101,
+ "window_bg": "FF0E0F12",
+ "time": "20:41",
+ "addon_strings": {
+  "32342": "Switch User",
+  "32980": "Refresh Users",
+  "35225": "Switching profile\u2026",
+  "32926": "Wrong pin entered!"
+ },
+ "props": {
+  "initialized": "1",
+  "busy": "1"
+ },
+ "images": {
+  "av1": {
+   "size": [
+    200,
+    200
+   ],
+   "colors": [
+    "#c9a77a",
+    "#6b4a2b"
+   ],
+   "text": ""
+  },
+  "av2": {
+   "size": [
+    200,
+    200
+   ],
+   "colors": [
+    "#7aa0c9",
+    "#2b4a6b"
+   ],
+   "text": ""
+  }
+ },
+ "lists": {
+  "101": {
+   "selected": 0,
+   "items": []
+  }
+ }
+}

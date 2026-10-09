@@ -373,6 +373,11 @@ def ctl_size(el):
     return num(w, 0) if w and w != 'auto' else 0, num(h, 0)
 
 
+def _max_attr_min(el, tag):
+    c = el.find(tag)
+    return num(c.get('min'), 0) if c is not None and c.get('min') else 0
+
+
 def _max_attr(el, tag):
     c = el.find(tag)
     return num(c.get('max'), 0) if c is not None and c.get('max') else 0
@@ -512,7 +517,7 @@ def _draw_control_inner(el, canvas, st, ox, oy, pw, ph, alpha, clip, at=None):
         draw_image(el, canvas, st, x, y, w, h, alpha, clip)
     elif kind in ('label', 'textbox', 'fadelabel'):
         draw_label(el, canvas, st, x, y, w, h, alpha, clip, wrap=kind == 'textbox')
-    elif kind in ('button', 'radiobutton', 'togglebutton'):
+    elif kind in ('button', 'radiobutton', 'togglebutton', 'edit'):
         draw_button(el, canvas, st, x, y, w, h, alpha, clip)
     return h
 
@@ -524,9 +529,10 @@ def auto_width(c, st):
         return measured_size(c, st)[0]
     if cw or c.get('type') != 'button':
         return cw
-    lab = re.sub(r'\[/?B\]', '', resolve(child(c, 'label'), st))
-    tw = ImageDraw.Draw(Image.new('RGBA', (1, 1))).textlength(lab, font=font(child(c, 'font') or 'font13'))
-    return tw + 2 * num(child(c, 'textoffsetx'), 0)
+    raw = resolve(child(c, 'label'), st)
+    lab = re.sub(r'\[/?B\]', '', raw)
+    tw = ImageDraw.Draw(Image.new('RGBA', (1, 1))).textlength(lab, font=font(child(c, 'font') or 'font13', '[B]' in raw))
+    return max(tw + 2 * num(child(c, 'textoffsetx'), 0), _max_attr_min(c, 'width'))
 
 
 def draw_grouplist(el, canvas, st, x, y, w, h, alpha, clip):
@@ -702,7 +708,7 @@ def draw_label(el, canvas, st, x, y, w, h, alpha, clip, wrap=False, text=None, c
     raw = text if text is not None else (child(el, 'label') or (('$INFO[' + child(el, 'info') + ']') if child(el, 'info') else ''))
     s = resolve(raw, st)
     bold = '[B]' in s
-    s = re.sub(r'\[/?(B|I|UPPERCASE|LOWERCASE|CAPITALIZE)\]', '', s)
+    s = re.sub(r'\[/?(B|I|UPPERCASE|LOWERCASE|CAPITALIZE)\]|\[/?COLOR[^\]]*\]', '', s)
     if '[UPPERCASE]' in (raw or ''):
         s = s.upper()
     if not s.strip() or w <= 0:
@@ -722,8 +728,9 @@ def draw_button(el, canvas, st, x, y, w, h, alpha, clip):
         alt = el.find('alttexturefocus' if focused else 'alttexturenofocus')
         tex = alt if alt is not None else tex
     if w <= 0:  # auto width: measure the label
-        lab = re.sub(r'\[/?B\]', '', resolve(child(el, 'label'), st))
-        w = ImageDraw.Draw(Image.new('RGBA', (1, 1))).textlength(lab, font=font(child(el, 'font') or 'font13')) + 2 * num(child(el, 'textoffsetx'), 0)
+        raw = resolve(child(el, 'label'), st)
+        lab = re.sub(r'\[/?B\]', '', raw)
+        w = max(ImageDraw.Draw(Image.new('RGBA', (1, 1))).textlength(lab, font=font(child(el, 'font') or 'font13', '[B]' in raw)) + 2 * num(child(el, 'textoffsetx'), 0), _max_attr_min(el, 'width'))
     if tex is not None and tex.text and tex.text.strip() != '-':
         fake = ET.Element('control', type='image')
         t = ET.SubElement(fake, 'texture', dict(tex.attrib))
@@ -731,7 +738,13 @@ def draw_button(el, canvas, st, x, y, w, h, alpha, clip):
         draw_image(fake, canvas, st, x, y, w, h, alpha, clip)
     col = child(el, 'focusedcolor') if focused else child(el, 'textcolor')
     off = num(child(el, 'textoffsetx'), 0)
-    draw_label(el, canvas, st, x + off, y, w - 2 * off, h, alpha, clip, color=col)
+    text = None
+    if el.get('type') == 'togglebutton' and child(el, 'usealttexture') and cond(child(el, 'usealttexture'), st) and child(el, 'altlabel'):
+        text = child(el, 'altlabel')
+        m = re.search(r'\[COLOR ([0-9A-Fa-f]{8})\]', text)
+        if m:
+            col = m.group(1)
+    draw_label(el, canvas, st, x + off, y, w - 2 * off, h, alpha, clip, text=text, color=col)
     return w
 
 

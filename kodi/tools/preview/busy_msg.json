@@ -1,0 +1,20 @@
+{
+ "focus": 0,
+ "images": {
+  "bd": {
+   "size": [
+    1920,
+    1080
+   ],
+   "colors": [
+    "#c8b27a",
+    "#4a3b22"
+   ]
+  }
+ },
+ "backdrop": "mock:bd",
+ "props": {
+  "message": "Buffer: 35 %"
+ },
+ "infolabels": {}
+}

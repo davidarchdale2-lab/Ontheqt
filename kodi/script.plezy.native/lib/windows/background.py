@@ -6,6 +6,7 @@ from . import kodigui
 util.setGlobalProperty('background.busy', '')
 util.setGlobalProperty('background.shutdown', '')
 util.setGlobalProperty('background.splash', '')
+util.setGlobalProperty('background.message', '')
 
 
 class BackgroundWindow(kodigui.BaseWindow):
@@ -51,6 +52,11 @@ def setSplash(on=True):
 
 def setShutdown(on=True):
     util.setGlobalProperty('background.shutdown', on and '1' or '')
+
+
+def setMessage(message=''):
+    """The optional status line under the splash / busy mark (Plezy's SetupScreen status text); '' clears it."""
+    util.setGlobalProperty('background.message', message or '')
 
 
 def killMonitor():

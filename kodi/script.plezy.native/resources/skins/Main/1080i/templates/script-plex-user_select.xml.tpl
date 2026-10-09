@@ -1,897 +1,153 @@
 {% extends "base.xml.tpl" %}
-{% block headers %}<defaultcontrol>100</defaultcontrol>{% endblock %}
+{# Plezy's profile switcher (edde746/plezy lib/screens/profile/profile_switch_screen.dart + pin_entry_dialog.dart) at x1.5 chrome:
+   a pinned app bar (power menu button, title, clock), then one M3E connected group of full-width profile tiles (list 101, rows from
+   includes/profile_tile.xml.tpl) ending in an outlined "Refresh users" stadium. Focus is a white @20% fill, never a ring. A PIN
+   protected profile opens Plezy's PIN dialog (group 400, includes/pin_dialog.xml.tpl) over a scrim. Picking a profile shows
+   ProfileSwitchingOverlay. The theme-music mini player (buttons 404 406 409 407, grouplist 600) is kept at the bottom.
+   Control ids the Python uses: 101 the profiles, 400 the PIN pad (200-211 its keys; 212 close is skin-only), 500 the power menu.
+   Window properties: busy, initialized, dropdown, switching, pin.error. Item properties: see includes/profile_tile.xml.tpl. #}
+{% block headers %}<defaultcontrol>100</defaultcontrol>
+<animation effect="fade" start="0" end="100" time="200" tween="cubic" easing="out">WindowOpen</animation>{% endblock %}
 {% block backgroundcolor %}<backgroundcolor>$INFO[Window.Property(background_colour_opaque)]</backgroundcolor>{% endblock %}
 {% block controls %}
-<control type="group">
+<control type="image">
     <visible>String.IsEmpty(Window.Property(use_solid_background))</visible>
-    <control type="image">
-        <visible>String.IsEmpty(Window.Property(use_solid_background)) + String.IsEmpty(Window.Property(use_bg_fallback)) + String.IsEmpty(Window.Property(background_static))</visible>
-        <posx>0</posx>
-        <posy>0</posy>
-        <width>1920</width>
-        <height>1080</height>
-        <texture>script.plex/home/background-fallback_black.png</texture>
-    </control>
-    <control type="image">
-        <visible>!String.IsEmpty(Window.Property(use_bg_fallback))</visible>
-        <posx>0</posx>
-        <posy>0</posy>
-        <width>1920</width>
-        <height>1080</height>
-        <texture>script.plex/home/background-fallback.png</texture>
-    </control>
+    <posx>0</posx>
+    <posy>0</posy>
+    <width>1920</width>
+    <height>1080</height>
+    <texture colordiffuse="{{ core.plezy.bg }}">script.plex/white-square.png</texture>
 </control>
 
+{# theme-music mini player: a surface bar with the cover, title, artist / album, progress and four round transport buttons #}
 <control type="group">
-    <animation effect="fade" time="100" start="100" end="20" condition="ControlGroup(400).HasFocus(0)">Conditional</animation>
     <visible>Player.HasAudio + String.IsEmpty(Window(10000).Property(script.plezy.native.theme_playing))</visible>
-    <posx>441</posx>
-    <posy>{{ vscale(780) }}</posy>
-
+    <posx>72</posx>
+    <posy>{{ vscale(956) }}</posy>
     <control type="image">
         <posx>0</posx>
         <posy>0</posy>
-        <width>225</width>
-        <height>{{ vscale(225) }}</height>
-        <texture>$INFO[Player.Art(thumb)]</texture>
+        <width>1776</width>
+        <height>{{ vscale(96) }}</height>
+        <texture border="20" colordiffuse="{{ core.plezy.surface }}">script.plex/plezy/r20.png</texture>
     </control>
-
-    <control type="group">
-        <posx>255</posx>
-        <posy>0</posy>
-        <control type="label">
-            <posx>0</posx>
-            <posy>0</posy>
-            <width>783</width>
-            <height>{{ vscale(40) }}</height>
-            <font>font10</font>
-            <align>left</align>
-            <aligny>center</aligny>
-            <textcolor>FFFFFFFF</textcolor>
-            <info>MusicPlayer.Artist</info>
-        </control>
-        <control type="label">
-            <posx>0</posx>
-            <posy>{{ vscale(40) }}</posy>
-            <width>783</width>
-            <height>{{ vscale(40) }}</height>
-            <font>font10</font>
-            <align>left</align>
-            <aligny>center</aligny>
-            <textcolor>FFFFFFFF</textcolor>
-            <info>MusicPlayer.Album</info>
-        </control>
-        <control type="label">
-            <posx>0</posx>
-            <posy>{{ vscale(80) }}</posy>
-            <width>783</width>
-            <height>{{ vscale(40) }}</height>
-            <font>font10</font>
-            <align>left</align>
-            <aligny>center</aligny>
-            <textcolor>FFFFFFFF</textcolor>
-            <label>[B]$INFO[MusicPlayer.Title][/B]</label>
-        </control>
+    <control type="image">
+        <posx>12</posx>
+        <posy>{{ vscale(12) }}</posy>
+        <width>72</width>
+        <height>{{ vscale(72) }}</height>
+        <texture diffuse="script.plex/plezy/mask-square.png">$INFO[Player.Art(thumb)]</texture>
+        <aspectratio>scale</aspectratio>
     </control>
-
-    <control type="grouplist" id="600">
-        <defaultcontrol>406</defaultcontrol>
-        <hitrect x="460" y="998" w="1000" h="55" />
-        <posx>255</posx>
-        <posy>{{ vscale(134) }}</posy>
-        <width>783</width>
-        <height>{{ vscale(124) }}</height>
-        <align>center</align>
-        <onup>101</onup>
-        <itemgap>-40</itemgap>
-        <orientation>horizontal</orientation>
-        <scrolltime tween="quadratic" easing="out">200</scrolltime>
-        <usecontrolcoords>true</usecontrolcoords>
-
-        <control type="button" id="404">
-            <enable>MusicPlayer.HasPrevious</enable>
-            <animation effect="zoom" start="100" end="124" time="100" center="93,{{ vscale(50) }}" reversible="false">Focus</animation>
-            <animation effect="zoom" start="124" end="100" time="100" center="93,{{ vscale(50) }}" reversible="false">UnFocus</animation>
-            <hitrect x="28" y="28" w="69" h="45" />
-            <posx>30</posx>
-            <posy>0</posy>
-            <width>125</width>
-            <height>{{ vscale(101) }}</height>
-            <font>font12</font>
-            <texturefocus flipx="true" colordiffuse="FFFFFFFF">script.plex/buttons/next-focus.png</texturefocus>
-            <texturenofocus flipx="true" colordiffuse="99FFFFFF">script.plex/buttons/next.png</texturenofocus>
-            <onclick>PlayerControl(Previous)</onclick>
-            <label> </label>
-        </control>
-        <control type="togglebutton" id="406">
-            <animation effect="zoom" start="100" end="124" time="100" center="63,{{ vscale(50) }}" reversible="false">Focus</animation>
-            <animation effect="zoom" start="124" end="100" time="100" center="63,{{ vscale(50) }}" reversible="false">UnFocus</animation>
-            <hitrect x="28" y="28" w="69" h="45" />
-            <posx>0</posx>
-            <posy>0</posy>
-            <width>125</width>
-            <height>{{ vscale(101) }}</height>
-            <font>font12</font>
-            <texturefocus colordiffuse="FFFFFFFF">script.plex/buttons/pause-focus.png</texturefocus>
-            <texturenofocus colordiffuse="99FFFFFF">script.plex/buttons/pause.png</texturenofocus>
-            <usealttexture>Player.Paused | Player.Forwarding | Player.Rewinding</usealttexture>
-            <alttexturefocus colordiffuse="FFFFFFFF">script.plex/buttons/play-focus.png</alttexturefocus>
-            <alttexturenofocus colordiffuse="99FFFFFF">script.plex/buttons/play.png</alttexturenofocus>
-            <onclick>PlayerControl(Play)</onclick>
-            <label> </label>
-        </control>
-        <control type="button" id="409">
-            <enable>MusicPlayer.HasNext</enable>
-            <animation effect="zoom" start="100" end="124" time="100" center="63,{{ vscale(50) }}" reversible="false">Focus</animation>
-            <animation effect="zoom" start="124" end="100" time="100" center="63,{{ vscale(50) }}" reversible="false">UnFocus</animation>
-            <hitrect x="28" y="28" w="69" h="45" />
-            <posx>0</posx>
-            <posy>0</posy>
-            <width>125</width>
-            <height>{{ vscale(101) }}</height>
-            <font>font12</font>
-            <texturefocus colordiffuse="FFFFFFFF">script.plex/buttons/next-focus.png</texturefocus>
-            <texturenofocus colordiffuse="99FFFFFF">script.plex/buttons/next.png</texturenofocus>
-            <onclick>PlayerControl(Next)</onclick>
-            <label> </label>
-        </control>
-        <control type="button" id="407">
-            <animation effect="zoom" start="100" end="124" time="100" center="63,{{ vscale(50) }}" reversible="false">Focus</animation>
-            <animation effect="zoom" start="124" end="100" time="100" center="63,{{ vscale(50) }}" reversible="false">UnFocus</animation>
-            <hitrect x="28" y="28" w="69" h="45" />
-            <posx>0</posx>
-            <posy>0</posy>
-            <width>125</width>
-            <height>{{ vscale(101) }}</height>
-            <font>font12</font>
-            <texturefocus colordiffuse="FFFFFFFF">script.plex/buttons/stop-focus.png</texturefocus>
-            <texturenofocus colordiffuse="99FFFFFF">script.plex/buttons/stop.png</texturenofocus>
-            <onclick>PlayerControl(Stop)</onclick>
-            <label> </label>
-        </control>
-    </control>
-
     <control type="label">
-        <posx>255</posx>
-        <posy>{{ vscale(177) }}</posy>
-        <width>783</width>
-        <height>{{ vscale(40) }}</height>
+        <posx>100</posx>
+        <posy>{{ vscale(8) }}</posy>
+        <width>1100</width>
+        <height>{{ vscale(36) }}</height>
+        <font>font12</font>
+        <align>left</align>
+        <aligny>center</aligny>
+        <scroll>false</scroll>
+        <textcolor>{{ core.plezy.text }}</textcolor>
+        <label>[B]$INFO[MusicPlayer.Title][/B]</label>
+    </control>
+    <control type="label">
+        <posx>100</posx>
+        <posy>{{ vscale(44) }}</posy>
+        <width>1100</width>
+        <height>{{ vscale(30) }}</height>
         <font>font10</font>
         <align>left</align>
         <aligny>center</aligny>
-        <textcolor>FFFFFFFF</textcolor>
-        <info>MusicPlayer.Time</info>
+        <scroll>false</scroll>
+        <textcolor>{{ core.plezy.muted }}</textcolor>
+        <label>$INFO[MusicPlayer.Artist]$INFO[MusicPlayer.Album, &#8226; ]</label>
     </control>
-    <control type="label">
-        <posx>1038</posx>
-        <posy>{{ vscale(177) }}</posy>
-        <width>783</width>
-        <height>{{ vscale(40) }}</height>
-        <font>font10</font>
-        <align>right</align>
-        <aligny>center</aligny>
-        <textcolor>FFFFFFFF</textcolor>
-        <info>MusicPlayer.TimeRemaining</info>
-    </control>
-
-
     <control type="progress">
         <description>Progressbar</description>
-        <posx>255</posx>
-        <posy>{{ vscale(222) }}</posy>
-        <width>783</width>
-        <height>{{ vscale(3) }}</height>
-        <texturebg colordiffuse="9AFFFFFF">script.plex/white-square-1px.png</texturebg>
+        <posx>100</posx>
+        <posy>{{ vscale(82) }}</posy>
+        <width>1100</width>
+        <height>{{ vscale(4) }}</height>
+        <texturebg colordiffuse="{{ core.plezy.track }}">script.plex/white-square-1px.png</texturebg>
         <lefttexture>-</lefttexture>
         <midtexture colordiffuse="{{ core.plezy.text }}">script.plex/white-square-1px.png</midtexture>
         <righttexture>-</righttexture>
         <overlaytexture>-</overlaytexture>
         <info>Player.Progress</info>
     </control>
-</control>
-
-<control type="image" id="110">
-    <visible>ControlGroup(400).HasFocus(0) + String.IsEmpty(Window.Property(busy))</visible>
-    <posx>770</posx>
-    <posy>{{ vscale(275) }}</posy>
-    <width>380</width>
-    <height>{{ vscale(695) }}</height>
-    <texture border="42">script.plex/drop-shadow.png</texture>
-</control>
-
-<control type="group" id="100">
-    <posx>0</posx>
-    <posy>{{ vscale(315) }}</posy>
-    <defaultcontrol always="true">101</defaultcontrol>
-
-    <control type="fixedlist" id="101">
-        <posx>-180</posx>
-        <posy>{{ vscale(-40) }}</posy>
-        <width>2100</width>
-        <height>{{ vscale(455) }}</height>
-        <scrolltime>200</scrolltime>
-        <onup>500</onup>
-        <ondown condition="Player.HasAudio">600</ondown>
-        <ondown condition="!String.IsEmpty(Container(101).ListItem.Property(protected))">400</ondown>
+    <control type="grouplist" id="600">
+        <defaultcontrol>406</defaultcontrol>
+        <posx>1368</posx>
+        <posy>{{ vscale(16) }}</posy>
+        <width>396</width>
+        <height>{{ vscale(64) }}</height>
+        <align>right</align>
+        <onup>101</onup>
+        <itemgap>0</itemgap>
         <orientation>horizontal</orientation>
-        <focusposition>3</focusposition>
-
-        <!-- ITEM LAYOUT ########################################## -->
-        <itemlayout width="330">
-
-            <control type="group">
-                <visible>!String.IsEmpty(ListItem.Property(empty))</visible>
-                <posx>0</posx>
-                <posy>{{ vscale(40) }}</posy>
-                <control type="image">
-                    <visible>Control.HasFocus(101) | ControlGroup(400).HasFocus(0)</visible>
-                    <posx>75</posx>
-                    <posy>{{ vscale(75) }}</posy>
-                    <width>150</width>
-                    <height>{{ vscale(150) }}</height>
-                    <texture>script.plex/user_select/refresh.png</texture>
-                    <colordiffuse>FFA0A0A0</colordiffuse>
-                </control>
-            </control>
-
-            <control type="group">
-                <visible>String.IsEmpty(ListItem.Property(empty))</visible>
-                <posx>0</posx>
-                <posy>{{ vscale(40) }}</posy>
-                <width>300</width>
-                <height>{{ vscale(300) }}</height>
-                <control type="image">
-                    <posx>0</posx>
-                    <posy>0</posy>
-                    <texture diffuse="script.plex/user_select/item-background.png" fallback="script.plex/gray-square.png">$INFO[ListItem.Property(back.image)]</texture>
-                    <colordiffuse>FFA0A0A0</colordiffuse>
-                </control>
-
-                <control type="image">
-                    <posx>45</posx>
-                    <posy>{{ vscale(45) }}</posy>
-                    <width>210</width>
-                    <height>{{ vscale(210) }}</height>
-                    <texture>script.plex/user_select/avatar-background.png</texture>
-                    <colordiffuse>E0C0C0C0</colordiffuse>
-                </control>
-                <control type="image">
-                    <posx>54</posx>
-                    <posy>{{ vscale(54) }}</posy>
-                    <width>192</width>
-                    <height>{{ vscale(192) }}</height>
-                    <texture diffuse="script.plex/user_select/avatar-diffuse.png" fallback="script.plex/gray-square.png">$INFO[ListItem.Thumb]</texture>
-                </control>
-                <control type="label">
-                    <visible>String.IsEmpty(ListItem.Thumb)</visible>
-                    <posx>54</posx>
-                    <posy>{{ vscale(54) }}</posy>
-                    <width>192</width>
-                    <height>{{ vscale(192) }}</height>
-                    <font>WeatherTemp</font>
-                    <align>center</align>
-                    <aligny>center</aligny>
-                    <textcolor>FFFFFFFF</textcolor>
-                    <label>$INFO[ListItem.Label2]</label>
-                </control>
-
-                <control type="group">
-                    <visible>!String.IsEmpty(ListItem.Property(protected))</visible>
-                    <posx>15</posx>
-                    <posy>{{ vscale(231) }}</posy>
-                    <control type="image">
-                        <posx>0</posx>
-                        <posy>0</posy>
-                        <width>54</width>
-                        <height>{{ vscale(54) }}</height>
-                        <texture>script.plex/user_select/protected-back.png</texture>
-                        <colordiffuse>A0000000</colordiffuse>
-                    </control>
-                    <control type="image">
-                        <posx>0</posx>
-                        <posy>0</posy>
-                        <width>54</width>
-                        <height>{{ vscale(54) }}</height>
-                        <texture>script.plex/user_select/protected-icon.png</texture>
-                    </control>
-                </control>
-
-                <control type="group">
-                    <visible>!String.IsEmpty(ListItem.Property(admin))</visible>
-                    <posx>231</posx>
-                    <posy>{{ vscale(231) }}</posy>
-                    <control type="image">
-                        <posx>0</posx>
-                        <posy>0</posy>
-                        <width>54</width>
-                        <height>{{ vscale(54) }}</height>
-                        <texture>script.plex/user_select/admin-back.png</texture>
-                        <colordiffuse>A0000000</colordiffuse>
-                    </control>
-                    <control type="image">
-                        <posx>0</posx>
-                        <posy>0</posy>
-                        <width>54</width>
-                        <height>{{ vscale(54) }}</height>
-                        <texture>script.plex/user_select/admin-icon.png</texture>
-                    </control>
-                </control>
-            </control>
-
-        </itemlayout>
-
-        <!-- FOCUSED LAYOUT ####################################### -->
-        <focusedlayout width="330">
-
-            <control type="group">
-                <visible>!String.IsEmpty(ListItem.Property(empty))</visible>
-                <posx>0</posx>
-                <posy>{{ vscale(40) }}</posy>
-                <control type="image">
-                    <visible>Control.HasFocus(101) | ControlGroup(400).HasFocus(0)</visible>
-                    <posx>75</posx>
-                    <posy>{{ vscale(75) }}</posy>
-                    <width>150</width>
-                    <height>{{ vscale(150) }}</height>
-                    <texture>script.plex/user_select/refresh.png</texture>
-                    <colordiffuse>FFFFFFFF</colordiffuse>
-                </control>
-            </control>
-
-            <control type="group">
-                <visible>String.IsEmpty(ListItem.Property(empty))</visible>
-                <posx>0</posx>
-                <posy>{{ vscale(40) }}</posy>
-                <control type="image" id="110">
-                    <visible>Control.HasFocus(101)</visible>
-                    <posx>-40</posx>
-                    <posy>{{ vscale(-40) }}</posy>
-                    <width>380</width>
-                    <height>{{ vscale(455) }}</height>
-                    <texture border="48">script.plex/plezy/glow.png</texture>
-                </control>
-                <control type="image">
-                    <visible>Control.HasFocus(101) | ControlGroup(400).HasFocus(0)</visible>
-                    <posx>0</posx>
-                    <posy>0</posy>
-                    <width>300</width>
-                    <height>{{ vscale(300) }}</height>
-                    <texture diffuse="script.plex/user_select/item-background-top.png" fallback="script.plex/gray-square.png">$INFO[ListItem.Property(back.image)]</texture>
-                    <colordiffuse>FFA0A0A0</colordiffuse>
-                </control>
-                <control type="image">
-                    <visible>!Control.HasFocus(101) + !ControlGroup(400).HasFocus(0)</visible>
-                    <posx>0</posx>
-                    <posy>0</posy>
-                    <width>300</width>
-                    <height>{{ vscale(300) }}</height>
-                    <texture diffuse="script.plex/user_select/item-background.png" fallback="script.plex/gray-square.png">$INFO[ListItem.Property(back.image)]</texture>
-                    <colordiffuse>FFA0A0A0</colordiffuse>
-                </control>
-                <control type="group">
-                    <visible>Control.HasFocus(101)</visible>
-                    <control type="image">
-                        <posx>0</posx>
-                        <posy>{{ vscale(300) }}</posy>
-                        <width>300</width>
-                        <height>{{ vscale(75) }}</height>
-                        <texture>script.plex/user_select/item-background-bottom.png</texture>
-                        <colordiffuse>FF000000</colordiffuse>
-                    </control>
-                    <control type="image">
-                        <posx>0</posx>
-                        <posy>{{ vscale(300) }}</posy>
-                        <width>300</width>
-                        <height>{{ vscale(75) }}</height>
-                        <texture diffuse="script.plex/user_select/item-background-bottom.png" fallback="script.plex/gray-square.png">$INFO[ListItem.Property(back.image)]</texture>
-                        <aspectratio scalediffuse="false">stretch</aspectratio>
-                        <colordiffuse>40FFFFFF</colordiffuse>
-                    </control>
-                </control>
-
-                <control type="image">
-                    <visible>!Control.HasFocus(101) + !ControlGroup(400).HasFocus(0)</visible>
-                    <posx>45</posx>
-                    <posy>{{ vscale(45) }}</posy>
-                    <width>210</width>
-                    <height>{{ vscale(210) }}</height>
-                    <texture>script.plex/user_select/avatar-background.png</texture>
-                    <colordiffuse>E0C0C0C0</colordiffuse>
-                </control>
-                <control type="image">
-                    <visible>ControlGroup(400).HasFocus(0)</visible>
-                    <posx>45</posx>
-                    <posy>{{ vscale(45) }}</posy>
-                    <width>210</width>
-                    <height>{{ vscale(210) }}</height>
-                    <texture>script.plex/user_select/avatar-background.png</texture>
-                    <colordiffuse>{{ core.plezy.text }}</colordiffuse>
-                </control>
-                <control type="image">
-                    <visible>Control.HasFocus(101)</visible>
-                    <posx>45</posx>
-                    <posy>{{ vscale(45) }}</posy>
-                    <width>210</width>
-                    <height>{{ vscale(210) }}</height>
-                    <texture>script.plex/user_select/avatar-background.png</texture>
-                    <colordiffuse>FFFFFFFF</colordiffuse>
-                </control>
-
-                <control type="image">
-                    <posx>54</posx>
-                    <posy>{{ vscale(54) }}</posy>
-                    <width>192</width>
-                    <height>{{ vscale(192) }}</height>
-                    <texture diffuse="script.plex/user_select/avatar-diffuse.png" fallback="script.plex/gray-square.png">$INFO[ListItem.Thumb]</texture>
-                </control>
-                <control type="label">
-                    <visible>String.IsEmpty(ListItem.Thumb)</visible>
-                    <posx>54</posx>
-                    <posy>{{ vscale(54) }}</posy>
-                    <width>192</width>
-                    <height>{{ vscale(192) }}</height>
-                    <font>WeatherTemp</font>
-                    <align>center</align>
-                    <aligny>center</aligny>
-                    <textcolor>FFFFFFFF</textcolor>
-                    <label>$INFO[ListItem.Label2]</label>
-                </control>
-
-                <control type="group">
-                    <visible>!String.IsEmpty(ListItem.Property(protected))</visible>
-                    <posx>15</posx>
-                    <posy>{{ vscale(231) }}</posy>
-                    <control type="image">
-                        <posx>0</posx>
-                        <posy>0</posy>
-                        <width>54</width>
-                        <height>{{ vscale(54) }}</height>
-                        <texture>script.plex/user_select/protected-back.png</texture>
-                        <colordiffuse>A0000000</colordiffuse>
-                    </control>
-                    <control type="image">
-                        <posx>0</posx>
-                        <posy>0</posy>
-                        <width>54</width>
-                        <height>{{ vscale(54) }}</height>
-                        <texture>script.plex/user_select/protected-icon.png</texture>
-                    </control>
-                </control>
-
-                <control type="group">
-                    <visible>!String.IsEmpty(ListItem.Property(admin))</visible>
-                    <posx>231</posx>
-                    <posy>{{ vscale(231) }}</posy>
-                    <control type="image">
-                        <posx>0</posx>
-                        <posy>0</posy>
-                        <width>54</width>
-                        <height>{{ vscale(54) }}</height>
-                        <texture>script.plex/user_select/admin-back.png</texture>
-                        <colordiffuse>A0000000</colordiffuse>
-                    </control>
-                    <control type="image">
-                        <posx>0</posx>
-                        <posy>0</posy>
-                        <width>54</width>
-                        <height>{{ vscale(54) }}</height>
-                        <texture>script.plex/user_select/admin-icon.png</texture>
-                    </control>
-                </control>
-
-                <control type="label">
-                    <visible>Control.HasFocus(101)</visible>
-                    <posx>10</posx>
-                    <posy>{{ vscale(300) }}</posy>
-                    <width>280</width>
-                    <height>{{ vscale(75) }}</height>
-                    <font>font13</font>
-                    <align>center</align>
-                    <aligny>center</aligny>
-                    <textcolor>{{ core.plezy.text }}</textcolor>
-                    <label>$INFO[ListItem.Label]</label>
-                </control>
-            </control>
-
-        </focusedlayout>
+        <scrolltime tween="quadratic" easing="out">200</scrolltime>
+        {% include "includes/mini_player_button.xml.tpl" with bid = 404 & asset = "next" & flip = True & enable = "MusicPlayer.HasPrevious" & onclick = "PlayerControl(Previous)" %}
+        {% include "includes/mini_player_button.xml.tpl" with bid = 406 & asset = "pause" & alt_asset = "play" & alt_cond = "Player.Paused | Player.Forwarding | Player.Rewinding" & onclick = "PlayerControl(Play)" %}
+        {% include "includes/mini_player_button.xml.tpl" with bid = 409 & asset = "next" & enable = "MusicPlayer.HasNext" & onclick = "PlayerControl(Next)" %}
+        {% include "includes/mini_player_button.xml.tpl" with bid = 407 & asset = "stop" & onclick = "PlayerControl(Stop)" %}
     </control>
-
-    <control type="group" id="400">
-        <defaultcontrol always="true">205</defaultcontrol>
-        <visible allowhiddenfocus="true">!String.IsEmpty(Container(101).ListItem.Property(protected)) + ControlGroup(400).HasFocus(0) + !String.IsEmpty(Window.Property(initialized))</visible>
-        <posx>810</posx>
-        <posy>{{ vscale(375) }}</posy>
-        <control type="button">
-            <posx>0</posx>
-            <posy>0</posy>
-            <width>300</width>
-            <height>{{ vscale(239) }}</height>
-            <onleft>400</onleft>
-            <onright>400</onright>
-            <onup>400</onup>
-            <ondown>400</ondown>
-            <texturefocus>-</texturefocus>
-            <texturenofocus>-</texturenofocus>
-            <label> </label>
-        </control>
-        <control type="image">
-            <posx>0</posx>
-            <posy>{{ vscale(-75) }}</posy>
-            <width>300</width>
-            <height>{{ vscale(75) }}</height>
-            <texture>script.plex/white-square.png</texture>
-            <colordiffuse>FF000000</colordiffuse>
-        </control>
-        <control type="image">
-            <posx>0</posx>
-            <posy>{{ vscale(-75) }}</posy>
-            <width>300</width>
-            <height>{{ vscale(75) }}</height>
-            <texture fallback="script.plex/gray-square.png">$INFO[Container(101).ListItem.Property(back.image)]</texture>
-            <colordiffuse>40FFFFFF</colordiffuse>
-        </control>
-        <control type="label">
-            <visible>String.IsEmpty(Container(101).ListItem.Property(editing.pin))</visible>
-            <posx>0</posx>
-            <posy>{{ vscale(-75) }}</posy>
-            <width>300</width>
-            <height>{{ vscale(75) }}</height>
-            <font>font13</font>
-            <align>center</align>
-            <aligny>center</aligny>
-            <textcolor>{{ core.plezy.text }}</textcolor>
-            <label>$INFO[Container(101).ListItem.Label]</label>
-        </control>
-        <control type="label">
-            <visible>!String.IsEmpty(Container(101).ListItem.Property(editing.pin))</visible>
-            <posx>0</posx>
-            <posy>{{ vscale(-75) }}</posy>
-            <width>300</width>
-            <height>{{ vscale(75) }}</height>
-            <font>font13</font>
-            <align>center</align>
-            <aligny>center</aligny>
-            <textcolor>{{ core.plezy.text }}</textcolor>
-            <label>[B]$INFO[Container(101).ListItem.Property(pin)][/B]</label>
-        </control>
-        <control type="image">
-            <posx>0</posx>
-            <posy>0</posy>
-            <width>300</width>
-            <height>{{ vscale(239) }}</height>
-            <texture>script.plex/white-square.png</texture>
-            <colordiffuse>FF000000</colordiffuse>
-        </control>
-        <control type="group" id="300">
-            <defaultcontrol>205</defaultcontrol>
-            <control type="group" id="200">
-                <defaultcontrol>205</defaultcontrol>
-                <control type="button" id="201">
-                    <posx>0</posx>
-                    <posy>0</posy>
-                    <width>73</width>
-                    <height>{{ vscale(58) }}</height>
-                    <onright>202</onright>
-                    <onup>101</onup>
-                    <ondown>204</ondown>
-                    <font>font12</font>
-                    <textcolor>FFFFFFFF</textcolor>
-                    <focusedcolor>FF000000</focusedcolor>
-                    <align>center</align>
-                    <aligny>center</aligny>
-                    <texturefocus colordiffuse="{{ core.plezy.text }}">script.plex/white-square.png</texturefocus>
-                    <texturenofocus colordiffuse="FF333333">script.plex/white-square.png</texturenofocus>
-                    <textoffsetx>0</textoffsetx>
-                    <textoffsety>0</textoffsety>
-                    <label>[B]1[/B]</label>
-                </control>
-                <control type="button" id="202">
-                    <posx>75</posx>
-                    <posy>0</posy>
-                    <width>73</width>
-                    <height>{{ vscale(58) }}</height>
-                    <onright>203</onright>
-                    <onleft>201</onleft>
-                    <onup>101</onup>
-                    <ondown>205</ondown>
-                    <font>font12</font>
-                    <textcolor>FFFFFFFF</textcolor>
-                    <focusedcolor>FF000000</focusedcolor>
-                    <align>center</align>
-                    <aligny>center</aligny>
-                    <texturefocus colordiffuse="{{ core.plezy.text }}">script.plex/white-square.png</texturefocus>
-                    <texturenofocus colordiffuse="FF333333">script.plex/white-square.png</texturenofocus>
-                    <textoffsetx>0</textoffsetx>
-                    <textoffsety>0</textoffsety>
-                    <label>[B]2[/B]</label>
-                </control>
-                <control type="button" id="203">
-                    <posx>150</posx>
-                    <posy>0</posy>
-                    <width>73</width>
-                    <height>{{ vscale(58) }}</height>
-                    <onright>211</onright>
-                    <onleft>202</onleft>
-                    <onup>101</onup>
-                    <ondown>206</ondown>
-                    <font>font12</font>
-                    <textcolor>FFFFFFFF</textcolor>
-                    <focusedcolor>FF000000</focusedcolor>
-                    <align>center</align>
-                    <aligny>center</aligny>
-                    <texturefocus colordiffuse="{{ core.plezy.text }}">script.plex/white-square.png</texturefocus>
-                    <texturenofocus colordiffuse="FF333333">script.plex/white-square.png</texturenofocus>
-                    <textoffsetx>0</textoffsetx>
-                    <textoffsety>0</textoffsety>
-                    <label>[B]3[/B]</label>
-                </control>
-                <control type="button" id="204">
-                    <posx>0</posx>
-                    <posy>{{ vscale(60) }}</posy>
-                    <width>73</width>
-                    <height>{{ vscale(58) }}</height>
-                    <onright>205</onright>
-                    <ondown>207</ondown>
-                    <onup>201</onup>
-                    <font>font12</font>
-                    <textcolor>FFFFFFFF</textcolor>
-                    <focusedcolor>FF000000</focusedcolor>
-                    <align>center</align>
-                    <aligny>center</aligny>
-                    <texturefocus colordiffuse="{{ core.plezy.text }}">script.plex/white-square.png</texturefocus>
-                    <texturenofocus colordiffuse="FF333333">script.plex/white-square.png</texturenofocus>
-                    <textoffsetx>0</textoffsetx>
-                    <textoffsety>0</textoffsety>
-                    <label>[B]4[/B]</label>
-                </control>
-                <control type="button" id="205">
-                    <posx>75</posx>
-                    <posy>{{ vscale(60) }}</posy>
-                    <width>73</width>
-                    <height>{{ vscale(58) }}</height>
-                    <onright>206</onright>
-                    <onleft>204</onleft>
-                    <ondown>208</ondown>
-                    <onup>202</onup>
-                    <font>font12</font>
-                    <textcolor>FFFFFFFF</textcolor>
-                    <focusedcolor>FF000000</focusedcolor>
-                    <align>center</align>
-                    <aligny>center</aligny>
-                    <texturefocus colordiffuse="{{ core.plezy.text }}">script.plex/white-square.png</texturefocus>
-                    <texturenofocus colordiffuse="FF333333">script.plex/white-square.png</texturenofocus>
-                    <textoffsetx>0</textoffsetx>
-                    <textoffsety>0</textoffsety>
-                    <label>[B]5[/B]</label>
-                </control>
-                <control type="button" id="206">
-                    <posx>150</posx>
-                    <posy>{{ vscale(60) }}</posy>
-                    <width>73</width>
-                    <height>{{ vscale(58) }}</height>
-                    <onright>211</onright>
-                    <onleft>205</onleft>
-                    <ondown>209</ondown>
-                    <onup>203</onup>
-                    <font>font12</font>
-                    <textcolor>FFFFFFFF</textcolor>
-                    <focusedcolor>FF000000</focusedcolor>
-                    <align>center</align>
-                    <aligny>center</aligny>
-                    <texturefocus colordiffuse="{{ core.plezy.text }}">script.plex/white-square.png</texturefocus>
-                    <texturenofocus colordiffuse="FF333333">script.plex/white-square.png</texturenofocus>
-                    <textoffsetx>0</textoffsetx>
-                    <textoffsety>0</textoffsety>
-                    <label>[B]6[/B]</label>
-                </control>
-                <control type="button" id="207">
-                    <posx>0</posx>
-                    <posy>{{ vscale(120) }}</posy>
-                    <width>73</width>
-                    <height>{{ vscale(58) }}</height>
-                    <onright>208</onright>
-                    <ondown>210</ondown>
-                    <onup>204</onup>
-                    <font>font12</font>
-                    <textcolor>FFFFFFFF</textcolor>
-                    <focusedcolor>FF000000</focusedcolor>
-                    <align>center</align>
-                    <aligny>center</aligny>
-                    <texturefocus colordiffuse="{{ core.plezy.text }}">script.plex/white-square.png</texturefocus>
-                    <texturenofocus colordiffuse="FF333333">script.plex/white-square.png</texturenofocus>
-                    <textoffsetx>0</textoffsetx>
-                    <textoffsety>0</textoffsety>
-                    <label>[B]7[/B]</label>
-                </control>
-                <control type="button" id="208">
-                    <posx>75</posx>
-                    <posy>{{ vscale(120) }}</posy>
-                    <width>73</width>
-                    <height>{{ vscale(58) }}</height>
-                    <onright>209</onright>
-                    <onleft>207</onleft>
-                    <ondown>210</ondown>
-                    <onup>205</onup>
-                    <font>font12</font>
-                    <textcolor>FFFFFFFF</textcolor>
-                    <focusedcolor>FF000000</focusedcolor>
-                    <align>center</align>
-                    <aligny>center</aligny>
-                    <texturefocus colordiffuse="{{ core.plezy.text }}">script.plex/white-square.png</texturefocus>
-                    <texturenofocus colordiffuse="FF333333">script.plex/white-square.png</texturenofocus>
-                    <textoffsetx>0</textoffsetx>
-                    <textoffsety>0</textoffsety>
-                    <label>[B]8[/B]</label>
-                </control>
-                <control type="button" id="209">
-                    <posx>150</posx>
-                    <posy>{{ vscale(120) }}</posy>
-                    <width>73</width>
-                    <height>{{ vscale(58) }}</height>
-                    <onright>211</onright>
-                    <onleft>208</onleft>
-                    <ondown>210</ondown>
-                    <onup>206</onup>
-                    <font>font12</font>
-                    <textcolor>FFFFFFFF</textcolor>
-                    <focusedcolor>FF000000</focusedcolor>
-                    <align>center</align>
-                    <aligny>center</aligny>
-                    <texturefocus colordiffuse="{{ core.plezy.text }}">script.plex/white-square.png</texturefocus>
-                    <texturenofocus colordiffuse="FF333333">script.plex/white-square.png</texturenofocus>
-                    <textoffsetx>0</textoffsetx>
-                    <textoffsety>0</textoffsety>
-                    <label>[B]9[/B]</label>
-                </control>
-            </control>
-            <control type="button" id="210">
-                <posx>0</posx>
-                <posy>{{ vscale(180) }}</posy>
-                <width>223</width>
-                <height>{{ vscale(59) }}</height>
-                <onright>211</onright>
-                <onup>200</onup>
-                <font>font12</font>
-                <textcolor>FFFFFFFF</textcolor>
-                <focusedcolor>FF000000</focusedcolor>
-                <align>center</align>
-                <aligny>center</aligny>
-                <texturefocus colordiffuse="{{ core.plezy.text }}">script.plex/white-square.png</texturefocus>
-                <texturenofocus colordiffuse="FF333333">script.plex/white-square.png</texturenofocus>
-                <textoffsetx>0</textoffsetx>
-                <textoffsety>0</textoffsety>
-                <label>[B]0[/B]</label>
-            </control>
-        </control>
-        <control type="button" id="211">
-            <posx>225</posx>
-            <posy>0</posy>
-            <width>75</width>
-            <height>{{ vscale(239) }}</height>
-            <onleft>300</onleft>
-            <onup>101</onup>
-            <font>font12</font>
-            <textcolor>FFFFFFFF</textcolor>
-            <focusedcolor>FF000000</focusedcolor>
-            <align>center</align>
-            <aligny>center</aligny>
-            <texturefocus>script.plex/user_select/backspace.png</texturefocus>
-            <texturenofocus>script.plex/user_select/backspace_nf.png</texturenofocus>
-            <textoffsetx>0</textoffsetx>
-            <textoffsety>0</textoffsety>
-            <label> </label>
-        </control>
-    </control>
-
 </control>
 
+{# app bar (FocusedScrollScaffold): the power menu as a 64px round icon button, the title, the clock #}
 <control type="group">
-    <defaultcontrol always="true">201</defaultcontrol>
     <posx>0</posx>
     <posy>0</posy>
-    <width>1920</width>
-    <height>{{ vscale(135) }}</height>
-    <control type="image">
-        <posx>0</posx>
-        <posy>0</posy>
-        <width>1920</width>
-        <height>{{ vscale(135) }}</height>
-        <texture>script.plex/white-square.png</texture>
-        <colordiffuse>19000000</colordiffuse>
-    </control>
-
-    <control type="grouplist">
-        <posx>60</posx>
-        <posy>{{ vscale(34.5) }}</posy>
-        <width>1000</width>
-        <height>{{ vscale(66) }}</height>
-        <align>left</align>
-        <itemgap>60</itemgap>
-        <orientation>horizontal</orientation>
+    <control type="button" id="500">
+        <posx>72</posx>
+        <posy>{{ vscale(36) }}</posy>
+        <width>64</width>
+        <height>{{ vscale(64) }}</height>
         <ondown>101</ondown>
-        <usecontrolcoords>true</usecontrolcoords>
-        <control type="group">
-            <posx>0</posx>
-            <posy>0</posy>
-            <width>124</width>
-            <height>{{ vscale(66) }}</height>
-            <control type="button" id="500">
-                <posx>0</posx>
-                <posy>0</posy>
-                <width>124</width>
-                <height>{{ vscale(66) }}</height>
-                <ondown>101</ondown>
-                <onright>101</onright>
-                <align>right</align>
-                <aligny>center</aligny>
-                <texturefocus colordiffuse="FFFFFFFF" border="10">script.plex/white-square-rounded.png</texturefocus>
-                <texturenofocus>-</texturenofocus>
-                <label> </label>
-            </control>
-            <control type="image">
-                <visible>!String.IsEmpty(Window.Property(dropdown))</visible>
-                <posx>0</posx>
-                <posy>0</posy>
-                <width>124</width>
-                <height>{{ vscale(66) }}</height>
-                <texture colordiffuse="{{ core.plezy.text }}" border="10">script.plex/white-square-rounded.png</texture>
-            </control>
-            <control type="group">
-                <posx>27</posx>
-                <posy>{{ vscale(13) }}</posy>
-                <control type="group">
-                    <visible>!Control.HasFocus(500) + String.IsEmpty(Window.Property(dropdown))</visible>
-                    <posx>0</posx>
-                    <posy>0</posy>
-                    <control type="image">
-                        <posx>0</posx>
-                        <posy>0</posy>
-                        <width>40</width>
-                        <height>{{ vscale(40) }}</height>
-                        <texture colordiffuse="99FFFFFF">script.plex/buttons/power.png</texture>
-                    </control>
-                    <control type="image">
-                        <posx>55</posx>
-                        <posy>{{ vscale(13.5) }}</posy>
-                        <width>15</width>
-                        <height>{{ vscale(13) }}</height>
-                        <texture colordiffuse="99FFFFFF">script.plex/indicators/dropdown-triangle.png</texture>
-                    </control>
-                </control>
-                <control type="group">
-                    <visible>Control.HasFocus(500) | !String.IsEmpty(Window.Property(dropdown))</visible>
-                    <posx>0</posx>
-                    <posy>0</posy>
-                    <control type="image">
-                        <posx>0</posx>
-                        <posy>0</posy>
-                        <width>40</width>
-                        <height>{{ vscale(40) }}</height>
-                        <texture colordiffuse="FF000000">script.plex/buttons/power.png</texture>
-                    </control>
-                    <control type="image">
-                        <posx>55</posx>
-                        <posy>{{ vscale(13.5) }}</posy>
-                        <width>15</width>
-                        <height>{{ vscale(13) }}</height>
-                        <texture colordiffuse="FF000000">script.plex/indicators/dropdown-triangle.png</texture>
-                    </control>
-                </control>
-            </control>
-        </control>
-        <control type="label">
-            <posx>-27</posx>
-            <posy>0</posy>
-            <width max="500">auto</width>
-            <height>{{ vscale(66) }}</height>
-            <font>font12</font>
-            <align>left</align>
-            <aligny>center</aligny>
-            <textcolor>FFFFFFFF</textcolor>
-            <label>[UPPERCASE]$ADDON[script.plezy.native 32437][/UPPERCASE]</label>
-        </control>
+        <onright>101</onright>
+        <font>font12</font>
+        <texturefocus border="32" colordiffuse="{{ core.plezy.text }}">script.plex/plezy/pill-64.png</texturefocus>
+        <texturenofocus>-</texturenofocus>
+        <label> </label>
     </control>
-
+    <control type="image">
+        <visible>!String.IsEmpty(Window.Property(dropdown)) + !Control.HasFocus(500)</visible>
+        <posx>72</posx>
+        <posy>{{ vscale(36) }}</posy>
+        <width>64</width>
+        <height>{{ vscale(64) }}</height>
+        <texture border="32" colordiffuse="{{ core.plezy.text }}">script.plex/plezy/pill-64.png</texture>
+    </control>
+    <control type="image">
+        <visible>!Control.HasFocus(500) + String.IsEmpty(Window.Property(dropdown))</visible>
+        <posx>86</posx>
+        <posy>{{ vscale(50) }}</posy>
+        <width>36</width>
+        <height>{{ vscale(36) }}</height>
+        <texture colordiffuse="{{ core.plezy.muted }}">script.plex/plezy/icons/power_settings_new.png</texture>
+        <aspectratio>keep</aspectratio>
+    </control>
+    <control type="image">
+        <visible>Control.HasFocus(500) | !String.IsEmpty(Window.Property(dropdown))</visible>
+        <posx>86</posx>
+        <posy>{{ vscale(50) }}</posy>
+        <width>36</width>
+        <height>{{ vscale(36) }}</height>
+        <texture colordiffuse="{{ core.plezy.on_primary }}">script.plex/plezy/icons/power_settings_new.png</texture>
+        <aspectratio>keep</aspectratio>
+    </control>
+    <control type="label">
+        <posx>156</posx>
+        <posy>{{ vscale(36) }}</posy>
+        <width>1200</width>
+        <height>{{ vscale(64) }}</height>
+        <font>font14</font>
+        <align>left</align>
+        <aligny>center</aligny>
+        <scroll>false</scroll>
+        <textcolor>{{ core.plezy.text }}</textcolor>
+        <label>[B]$ADDON[script.plezy.native 32342][/B]</label>
+    </control>
     <control type="label">
         <right>60</right>
         <posy>{{ vscale(35) }}</posy>
@@ -905,23 +161,89 @@
     </control>
 </control>
 
+<control type="group" id="100">
+    <posx>0</posx>
+    <posy>0</posy>
+    <defaultcontrol always="true">101</defaultcontrol>
+
+    {# the profiles: one tile per row (pitch 115 = 112 + the 3px group gap), then the refresh stadium #}
+    <control type="list" id="101">
+        <posx>72</posx>
+        <posy>{{ vscale(144) }}</posy>
+        <width>1776</width>
+        <height>{{ vscale(800) }}</height>
+        <orientation>vertical</orientation>
+        <scrolltime tween="cubic" easing="out">160</scrolltime>
+        <preloaditems>2</preloaditems>
+        <onup>500</onup>
+        <ondown condition="Player.HasAudio + String.IsEmpty(Window(10000).Property(script.plezy.native.theme_playing))">600</ondown>
+
+        <itemlayout width="1776" height="{{ vscale(115) }}">
+            {% include "includes/profile_tile.xml.tpl" %}
+        </itemlayout>
+        <focusedlayout width="1776" height="{{ vscale(115) }}">
+            {% include "includes/profile_tile.xml.tpl" with focused = True %}
+        </focusedlayout>
+    </control>
+
+    {# modal scrim behind the PIN dialog (Plezy's showDialog barrier, black54) #}
+    <control type="image" id="110">
+        <visible>ControlGroup(400).HasFocus(0) + String.IsEmpty(Window.Property(busy)) + String.IsEmpty(Window.Property(switching))</visible>
+        <animation effect="fade" start="0" end="100" time="150" tween="cubic" easing="out">Visible</animation>
+        <posx>0</posx>
+        <posy>0</posy>
+        <width>1920</width>
+        <height>1080</height>
+        <texture colordiffuse="{{ core.plezy.dialog_scrim }}">script.plex/white-square.png</texture>
+    </control>
+
+    {% include "includes/pin_dialog.xml.tpl" %}
+</control>
+
+{# loading the profiles: Plezy's centred CircularProgressIndicator #}
 <control type="group">
-    <visible>!String.IsEmpty(Window.Property(busy))</visible>
-    <animation effect="fade" start="0" end="100">Visible</animation>
+    <visible>!String.IsEmpty(Window.Property(busy)) + String.IsEmpty(Window.Property(switching))</visible>
+    <posx>0</posx>
+    <posy>{{ vperc(vscale(60)) }}</posy>
+    {% include "includes/plezy_spinner.xml.tpl" with x = 930 & y = 0 & size = 60 & color = core.plezy.text %}
+</control>
+
+{# ProfileSwitchingOverlay: a barrier, a surface card (radius 14) with the spinner and "Switching profile...". The spinner is the busy
+   dialog's: it sits at the same spot and hides while that dialog is open, so one spinner is ever shown #}
+<control type="group">
+    <visible>!String.IsEmpty(Window.Property(switching))</visible>
+    <animation effect="fade" start="0" end="100" time="120" tween="cubic" easing="out">Visible</animation>
     <control type="image">
-        <posx>840</posx>
-        <posy>{{ vperc(vscale(150)) }}</posy>
-        <width>240</width>
-        <height>{{ vscale(150) }}</height>
-        <texture>script.plex/busy-back.png</texture>
-        <colordiffuse>A0FFFFFF</colordiffuse>
+        <posx>0</posx>
+        <posy>0</posy>
+        <width>1920</width>
+        <height>1080</height>
+        <texture colordiffuse="{{ core.plezy.dialog_scrim }}">script.plex/white-square.png</texture>
     </control>
     <control type="image">
-        <posx>915</posx>
-        <posy>{{ vperc(vscale(38)) }}</posy>
-        <width>90</width>
-        <height>{{ vscale(38) }}</height>
-        <texture diffuse="script.plex/busy-diffuse.png">script.plex/busy.gif</texture>
+        <posx>750</posx>
+        <posy>{{ 540 - vscale(66) }}</posy>
+        <width>420</width>
+        <height>{{ vscale(196) }}</height>
+        <texture border="14" colordiffuse="{{ core.plezy.surface }}">script.plex/plezy/r14.png</texture>
+    </control>
+    <control type="group">
+        <visible>!Window.IsVisible(script-plex-busy.xml)</visible>
+        <posx>0</posx>
+        <posy>{{ vperc(vscale(60)) }}</posy>
+        {% include "includes/plezy_spinner.xml.tpl" with x = 930 & y = 0 & size = 60 & color = core.plezy.text %}
+    </control>
+    <control type="label">
+        <posx>750</posx>
+        <posy>{{ 540 + vscale(54) }}</posy>
+        <width>420</width>
+        <height>{{ vscale(40) }}</height>
+        <font>font12</font>
+        <align>center</align>
+        <aligny>center</aligny>
+        <scroll>false</scroll>
+        <textcolor>{{ core.plezy.text }}</textcolor>
+        <label>$ADDON[script.plezy.native 35225]</label>
     </control>
 </control>
 {% endblock controls %}

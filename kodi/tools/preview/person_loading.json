@@ -1,0 +1,228 @@
+{
+ "focus": 401,
+ "time": "20:41",
+ "window_bg": "FF0E0F12",
+ "addon_strings": {
+  "35240": "Filmography",
+  "32478": "No items found in your library"
+ },
+ "props": {
+  "dynamic_backgrounds": "1",
+  "background": "mock:bg",
+  "background_static": "mock:bg",
+  "person.name": "Christopher Nolan",
+  "person.type_label": "Director",
+  "person.meta": "Director \u2022 30 July 1970 (54) \u2022 London, England, UK",
+  "person.thumb": "mock:avatar",
+  "person.summary": "Christopher Edward Nolan is a British and American filmmaker. Known for his Hollywood blockbusters with complex storytelling, Nolan is considered a leading filmmaker of the 21st century. His films have grossed over $6 billion worldwide.",
+  "filmography.filter": "All",
+  "filmography.total": "9 titles",
+  "hub.focus": "0",
+  "discover.hub.0.label": "Not in library - Movies",
+  "loading": "1",
+  "filmography.header": "Filmography"
+ },
+ "lists": {
+  "400": {
+   "selected": 0,
+   "items": [
+    {
+     "label": "The Prestige",
+     "label2": "2006",
+     "thumb": "mock:p0",
+     "props": {
+      "thumb.fallback": "script.plex/thumb_fallbacks/movie.png",
+      "watched": ""
+     }
+    },
+    {
+     "label": "Inception",
+     "label2": "2010",
+     "thumb": "mock:p1",
+     "props": {
+      "thumb.fallback": "script.plex/thumb_fallbacks/movie.png",
+      "watched": "1"
+     }
+    },
+    {
+     "label": "Interstellar",
+     "label2": "2014",
+     "thumb": "mock:p2",
+     "props": {
+      "thumb.fallback": "script.plex/thumb_fallbacks/movie.png",
+      "watched": ""
+     }
+    },
+    {
+     "label": "Dunkirk",
+     "label2": "2017",
+     "thumb": "mock:p3",
+     "props": {
+      "thumb.fallback": "script.plex/thumb_fallbacks/movie.png",
+      "watched": ""
+     }
+    },
+    {
+     "label": "Tenet",
+     "label2": "2020",
+     "thumb": "mock:p4",
+     "props": {
+      "thumb.fallback": "script.plex/thumb_fallbacks/movie.png",
+      "watched": ""
+     }
+    },
+    {
+     "label": "Oppenheimer",
+     "label2": "2023",
+     "thumb": "mock:p0",
+     "props": {
+      "thumb.fallback": "script.plex/thumb_fallbacks/movie.png",
+      "watched": ""
+     }
+    },
+    {
+     "label": "Memento",
+     "label2": "2000",
+     "thumb": "mock:p1",
+     "props": {
+      "thumb.fallback": "script.plex/thumb_fallbacks/movie.png",
+      "watched": ""
+     }
+    },
+    {
+     "label": "Following",
+     "label2": "1998",
+     "thumb": "mock:p2",
+     "props": {
+      "thumb.fallback": "script.plex/thumb_fallbacks/movie.png",
+      "watched": ""
+     }
+    },
+    {
+     "label": "Batman Begins",
+     "label2": "2005",
+     "thumb": "mock:p3",
+     "props": {
+      "thumb.fallback": "script.plex/thumb_fallbacks/movie.png",
+      "watched": ""
+     }
+    }
+   ]
+  },
+  "401": {
+   "selected": 0,
+   "items": [
+    {
+     "label": "Doodlebug",
+     "label2": "1997",
+     "thumb": "mock:p0",
+     "props": {
+      "thumb.fallback": "script.plex/thumb_fallbacks/movie.png"
+     }
+    },
+    {
+     "label": "Insomnia",
+     "label2": "2002",
+     "thumb": "mock:p1",
+     "props": {
+      "thumb.fallback": "script.plex/thumb_fallbacks/movie.png"
+     }
+    },
+    {
+     "label": "The Dark Knight",
+     "label2": "2008",
+     "thumb": "mock:p2",
+     "props": {
+      "thumb.fallback": "script.plex/thumb_fallbacks/movie.png"
+     }
+    },
+    {
+     "label": "The Dark Knight Rises",
+     "label2": "2012",
+     "thumb": "mock:p3",
+     "props": {
+      "thumb.fallback": "script.plex/thumb_fallbacks/movie.png"
+     }
+    }
+   ]
+  }
+ },
+ "images": {
+  "bg": {
+   "size": [
+    1920,
+    1080
+   ],
+   "colors": [
+    "#3a4a5a",
+    "#14111f"
+   ]
+  },
+  "avatar": {
+   "size": [
+    120,
+    120
+   ],
+   "colors": [
+    "#c0a080",
+    "#3a2a1a"
+   ],
+   "text": "CN"
+  },
+  "p0": {
+   "size": [
+    200,
+    300
+   ],
+   "colors": [
+    "#8a56e0",
+    "#2a1a6e"
+   ],
+   "text": "A"
+  },
+  "p1": {
+   "size": [
+    200,
+    300
+   ],
+   "colors": [
+    "#e05656",
+    "#6e1a1a"
+   ],
+   "text": "B"
+  },
+  "p2": {
+   "size": [
+    200,
+    300
+   ],
+   "colors": [
+    "#56e0b0",
+    "#1a6e5a"
+   ],
+   "text": "C"
+  },
+  "p3": {
+   "size": [
+    200,
+    300
+   ],
+   "colors": [
+    "#e0a056",
+    "#6e4a1a"
+   ],
+   "text": "D"
+  },
+  "p4": {
+   "size": [
+    200,
+    300
+   ],
+   "colors": [
+    "#56a0e0",
+    "#1a3a6e"
+   ],
+   "text": "E"
+  }
+ }
+}

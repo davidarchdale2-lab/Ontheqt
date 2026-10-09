@@ -3432,3 +3432,75 @@ msgstr ""
 msgctxt "#35168"
 msgid "Next episode"
 msgstr ""
+
+msgctxt "#35180"
+msgid "Search movies, shows, music..."
+msgstr ""
+
+msgctxt "#35181"
+msgid "Search your media"
+msgstr ""
+
+msgctxt "#35182"
+msgid "Enter a title, actor, or keyword"
+msgstr ""
+
+msgctxt "#35183"
+msgid "No results found"
+msgstr ""
+
+msgctxt "#35184"
+msgid "Try a different search term"
+msgstr ""
+
+msgctxt "#35185"
+msgid "People"
+msgstr ""
+
+msgctxt "#35186"
+msgid "Search failed"
+msgstr ""
+
+msgctxt "#35220"
+msgid "Sign in with Plex"
+msgstr ""
+
+msgctxt "#35221"
+msgid "or"
+msgstr ""
+
+msgctxt "#35222"
+msgid "Scan the QR code, or visit the address below and enter this code:"
+msgstr ""
+
+msgctxt "#35223"
+msgid "Waiting for authentication…"
+msgstr ""
+
+msgctxt "#35224"
+msgid "PIN expired before sign-in. Please try again."
+msgstr ""
+
+msgctxt "#35225"
+msgid "Switching profile…"
+msgstr ""
+
+msgctxt "#35226"
+msgid "Active"
+msgstr ""
+
+msgctxt "#35227"
+msgid "Administrator"
+msgstr ""
+
+msgctxt "#35228"
+msgid "Managed user"
+msgstr ""
+
+msgctxt "#35229"
+msgid "Home user"
+msgstr ""
+
+msgctxt "#35230"
+msgid "PIN protected"
+msgstr ""

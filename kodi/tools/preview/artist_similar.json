@@ -1,0 +1,248 @@
+{
+ "focus": 401,
+ "time": "20:41",
+ "window_bg": "FF0E0F12",
+ "addon_strings": {
+  "208": "Play",
+  "32461": "Albums"
+ },
+ "props": {
+  "dynamic_backgrounds": "1",
+  "background": "mock:bg",
+  "background_static": "mock:bg",
+  "thumb": "mock:portrait",
+  "artist.title": "Tame Impala",
+  "artist.genre": "Psychedelic Rock / Indie / Synth-pop",
+  "summary": "Tame Impala is the musical project of Australian multi-instrumentalist Kevin Parker, who writes, records, performs and produces the music himself. Starting out in Perth, the project grew from home recordings into one of the most influential psychedelic acts of the 2010s, with a sound that blends fuzzy guitars, dreamy synths and heavy drum loops.",
+  "related.header": "Similar artists",
+  "hub.focus": "1",
+  "on.extras": "1"
+ },
+ "lists": {
+  "400": {
+   "selected": 0,
+   "items": [
+    {
+     "label": "Currents",
+     "thumb": "mock:al0",
+     "props": {
+      "year": "2015",
+      "thumb.fallback": "script.plex/thumb_fallbacks/music.png"
+     }
+    },
+    {
+     "label": "Lonerism",
+     "thumb": "mock:al1",
+     "props": {
+      "year": "2012",
+      "thumb.fallback": "script.plex/thumb_fallbacks/music.png"
+     }
+    },
+    {
+     "label": "InnerSpeaker",
+     "thumb": "mock:al2",
+     "props": {
+      "year": "2010",
+      "thumb.fallback": "script.plex/thumb_fallbacks/music.png"
+     }
+    },
+    {
+     "label": "The Slow Rush",
+     "thumb": "mock:al3",
+     "props": {
+      "year": "2020",
+      "thumb.fallback": "script.plex/thumb_fallbacks/music.png"
+     }
+    },
+    {
+     "label": "Tame Impala (EP)",
+     "thumb": "mock:al0",
+     "props": {
+      "year": "2008",
+      "thumb.fallback": "script.plex/thumb_fallbacks/music.png"
+     }
+    },
+    {
+     "label": "Live Versions",
+     "thumb": "mock:al1",
+     "props": {
+      "year": "2014",
+      "thumb.fallback": "script.plex/thumb_fallbacks/music.png"
+     }
+    },
+    {
+     "label": "Deadbeat Summer",
+     "thumb": "mock:al2",
+     "props": {
+      "year": "2021",
+      "thumb.fallback": "script.plex/thumb_fallbacks/music.png"
+     }
+    }
+   ]
+  },
+  "401": {
+   "selected": 0,
+   "items": [
+    {
+     "label": "Pond",
+     "thumb": "mock:ar0",
+     "props": {}
+    },
+    {
+     "label": "Unknown Mortal Orchestra",
+     "thumb": "mock:ar1",
+     "props": {}
+    },
+    {
+     "label": "Glass Animals",
+     "thumb": "mock:ar2",
+     "props": {}
+    },
+    {
+     "label": "MGMT",
+     "thumb": "mock:ar3",
+     "props": {}
+    },
+    {
+     "label": "Khruangbin",
+     "thumb": "mock:ar0",
+     "props": {}
+    },
+    {
+     "label": "Mild High Club",
+     "thumb": "mock:ar1",
+     "props": {}
+    },
+    {
+     "label": "Temples",
+     "thumb": "mock:ar2",
+     "props": {}
+    },
+    {
+     "label": "Alt\u0131n G\u00fcn",
+     "thumb": "mock:ar3",
+     "props": {}
+    },
+    {
+     "label": "",
+     "thumb": "",
+     "props": {
+      "is.boundary": "1",
+      "right.boundary": "1"
+     }
+    }
+   ]
+  }
+ },
+ "images": {
+  "bg": {
+   "size": [
+    1920,
+    1080
+   ],
+   "colors": [
+    "#5a4a7a",
+    "#14111f"
+   ]
+  },
+  "portrait": {
+   "size": [
+    270,
+    270
+   ],
+   "colors": [
+    "#d9a066",
+    "#3a2a1a"
+   ],
+   "text": "TI"
+  },
+  "al0": {
+   "size": [
+    240,
+    240
+   ],
+   "colors": [
+    "#e0568a",
+    "#3a1a6e"
+   ],
+   "text": "A"
+  },
+  "al1": {
+   "size": [
+    240,
+    240
+   ],
+   "colors": [
+    "#56c0e0",
+    "#1a3a6e"
+   ],
+   "text": "B"
+  },
+  "al2": {
+   "size": [
+    240,
+    240
+   ],
+   "colors": [
+    "#e0c056",
+    "#6e3a1a"
+   ],
+   "text": "C"
+  },
+  "al3": {
+   "size": [
+    240,
+    240
+   ],
+   "colors": [
+    "#70e056",
+    "#1a6e3a"
+   ],
+   "text": "D"
+  },
+  "ar0": {
+   "size": [
+    240,
+    240
+   ],
+   "colors": [
+    "#8a56e0",
+    "#2a1a6e"
+   ],
+   "text": "P"
+  },
+  "ar1": {
+   "size": [
+    240,
+    240
+   ],
+   "colors": [
+    "#e05656",
+    "#6e1a1a"
+   ],
+   "text": "U"
+  },
+  "ar2": {
+   "size": [
+    240,
+    240
+   ],
+   "colors": [
+    "#56e0b0",
+    "#1a6e5a"
+   ],
+   "text": "G"
+  },
+  "ar3": {
+   "size": [
+    240,
+    240
+   ],
+   "colors": [
+    "#e0a056",
+    "#6e4a1a"
+   ],
+   "text": "M"
+  }
+ }
+}

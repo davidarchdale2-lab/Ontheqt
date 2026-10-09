@@ -10,6 +10,7 @@ from six.moves import range
 from plexnet import signalsmixin
 from lib import backgroundthread
 from lib import player
+from lib import plezy_music
 from lib import util
 from lib.util import T
 from . import busy
@@ -74,10 +75,12 @@ class PlaylistWindow(kodigui.ControlledWindow, windowutils.UtilMixin, signalsmix
     SHUFFLE_BUTTON_ID = 302
     OPTIONS_BUTTON_ID = 303
 
-    LI_AR16X9_THUMB_DIM = util.scaleResolution(178, 100)
-    LI_SQUARE_THUMB_DIM = util.scaleResolution(100, 100)
+    # Plezy's PlaylistItemCard thumbnails: 96px square for music, 171x96 for video
+    LI_AR16X9_THUMB_DIM = util.scaleResolution(171, 96)
+    LI_SQUARE_THUMB_DIM = util.scaleResolution(96, 96)
 
-    ALBUM_THUMB_DIM = util.scaleResolution(630, 630)
+    ALBUM_THUMB_DIM = util.scaleResolution(216, 216)  # the header's composite cover
+    OPTIONS_MENU_POS = (560, 372)  # under the more button of the action row
 
     PLAYLIST_LIST_ID = 101
 
@@ -293,7 +296,7 @@ class PlaylistWindow(kodigui.ControlledWindow, windowutils.UtilMixin, signalsmix
         if not options:
             return
 
-        choice = dropdown.showDropdown(options, (440, 1020), close_direction='down', pos_is_bottom=True, close_on_playback_ended=True)
+        choice = dropdown.showDropdown(options, self.OPTIONS_MENU_POS, close_direction='down', close_on_playback_ended=True)
         if not choice:
             return
 
@@ -308,12 +311,21 @@ class PlaylistWindow(kodigui.ControlledWindow, windowutils.UtilMixin, signalsmix
         self.setProperty('playlist.thumb', self.playlist.composite.asTranscodedImageURL(*self.ALBUM_THUMB_DIM))
         self.setProperty('playlist.title', self.playlist.title)
         self.setProperty('playlist.duration', util.durationToText(self.playlist.duration.asInt()))
+        try:
+            # Plezy's header line: 'N items • 2h 5m • Smart'
+            self.setProperty('playlist.meta', plezy_music.playlist_meta(
+                self.playlist.leafCount.asInt(), self.playlist.duration.asInt(), smart=self.playlist.smart.asBool(),
+                one=T(35242, u'{0} item'), many=T(35243, u'{0} items'), smart_label=T(35246, u'Smart')))
+            self.setProperty('playlist.type', self.playlist.playlistType or '')
+        except Exception:
+            util.ERROR()
 
     def updateListItem(self, idx, pi, mli=None):
         mli = mli or self.playlistListControl.getListItem(idx)
         mli.setLabel(pi.title)
         mli.setProperty('track.ID', pi.ratingKey)
         mli.setProperty('track.number', str(idx + 1))
+        mli.setProperty('index', str(idx))
         mli.dataSource = pi
 
         if pi.type == 'track':
@@ -329,7 +341,7 @@ class PlaylistWindow(kodigui.ControlledWindow, windowutils.UtilMixin, signalsmix
         return mli
 
     def createTrackListItem(self, mli, track):
-        mli.setLabel2(u'{0} / {1}'.format(track.grandparentTitle, track.parentTitle))
+        mli.setLabel2(plezy_music.artist_album(track.grandparentTitle, track.parentTitle))
         mli.setThumbnailImage(track.defaultThumb.asTranscodedImageURL(*self.LI_SQUARE_THUMB_DIM))
         mli.setProperty('track.duration', util.simplifiedTimeDisplay(track.duration.asInt()))
 
@@ -384,7 +396,10 @@ class PlaylistWindow(kodigui.ControlledWindow, windowutils.UtilMixin, signalsmix
         endoffirst = min(util.addonSettings.playlistMaxSize, PLAYLIST_PAGE_SIZE, total)
         items = [self.updateListItem(i, pi, kodigui.ManagedListItem()) for i, pi in enumerate(self.playlist.extend(0, endoffirst))]
 
-        items += [kodigui.ManagedListItem() for i in range(total - endoffirst)]
+        for i in range(total - endoffirst):
+            placeholder = kodigui.ManagedListItem()
+            placeholder.setProperty('index', str(endoffirst + i))
+            items.append(placeholder)
 
         self.playlistListControl.reset()
         self.playlistListControl.addItems(items)

@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 from kodi_six import xbmcgui
 
+from lib import plezy_profiles
 from lib import util
 from . import kodigui
 
@@ -108,11 +109,19 @@ class PinLoginWindow(kodigui.BaseWindow):
     width = 1920
     height = 1080
 
+    CANCEL_BUTTON_ID = 102
+
     def __init__(self, *args, **kwargs):
         self.abort = False
         kodigui.BaseWindow.__init__(self, *args, **kwargs)
 
     def setPin(self, pin):
+        # the characters first: pin.image.N doubles as the "code is shown" flag of the skin
+        try:
+            for idx, char in enumerate(plezy_profiles.pin_chars(pin)):
+                self.setProperty('pin.char.{0}'.format(idx), char)
+        except Exception:
+            util.ERROR()
         self.setProperty('pin.image.0', 'script.plex/sign_in/digits/{0}.png'.format(pin[0].upper()))
         self.setProperty('pin.image.1', 'script.plex/sign_in/digits/{0}.png'.format(pin[1].upper()))
         self.setProperty('pin.image.2', 'script.plex/sign_in/digits/{0}.png'.format(pin[2].upper()))
@@ -120,10 +129,14 @@ class PinLoginWindow(kodigui.BaseWindow):
 
     def setLinking(self):
         self.setProperty('linking', '1')
-        self.setProperty('pin.image.0', '')
-        self.setProperty('pin.image.1', '')
-        self.setProperty('pin.image.2', '')
-        self.setProperty('pin.image.3', '')
+        for idx in range(4):
+            self.setProperty('pin.image.{0}'.format(idx), '')
+        for idx in range(4):
+            self.setProperty('pin.char.{0}'.format(idx), '')
+
+    def onClick(self, controlID):
+        if controlID == self.CANCEL_BUTTON_ID:
+            self.abort = True
 
     def onAction(self, action):
         try:

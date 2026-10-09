@@ -1,0 +1,64 @@
+{
+ "focus": 100,
+ "backdrop": "mock:bd",
+ "props": {
+  "heading": "Subtitle"
+ },
+ "images": {
+  "bd": {
+   "size": [
+    1920,
+    1080
+   ],
+   "colors": [
+    "#8a9bb0",
+    "#2b3442"
+   ]
+  }
+ },
+ "lists": {
+  "100": {
+   "selected": 1,
+   "items": [
+    {
+     "label": "Off"
+    },
+    {
+     "label": "English",
+     "label2": "SubRip (SRT) - external",
+     "props": {
+      "selected": "1"
+     }
+    },
+    {
+     "label": "English - SDH",
+     "label2": "PGS"
+    },
+    {
+     "label": "Spanish",
+     "label2": "SubRip (SRT)"
+    },
+    {
+     "label": "French"
+    },
+    {
+     "label": "German",
+     "label2": "SRT"
+    },
+    {
+     "label": "Italian"
+    },
+    {
+     "label": "Japanese",
+     "label2": "ASS"
+    },
+    {
+     "label": "Korean"
+    },
+    {
+     "label": "Portuguese"
+    }
+   ]
+  }
+ }
+}

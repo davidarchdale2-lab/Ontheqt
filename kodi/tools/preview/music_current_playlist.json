@@ -1,0 +1,162 @@
+{
+ "focus": 101,
+ "time": "20:41",
+ "window_bg": "FF0E0F12",
+ "props": {
+  "np.background": "mock:bg",
+  "script.plezy.native.track.ID": "106"
+ },
+ "infolabels": {
+  "MusicPlayer.Album": "Currents",
+  "MusicPlayer.Year": "2015",
+  "MusicPlayer.Title": "The Less I Know the Better",
+  "MusicPlayer.Artist": "Tame Impala",
+  "MusicPlayer.Duration": "3:36",
+  "Player.Time": "1:12",
+  "Player.Progress": "33",
+  "Player.Art(thumb)": "mock:cover"
+ },
+ "bools": {
+  "MusicPlayer.HasPrevious": true,
+  "MusicPlayer.HasNext": true,
+  "Player.Playing": true
+ },
+ "lists": {
+  "101": {
+   "selected": 6,
+   "items": [
+    {
+     "label": "Let It Happen",
+     "label2": "Tame Impala",
+     "thumb": "",
+     "props": {
+      "track.duration": "7:47",
+      "track.ID": "100",
+      "index": "1",
+      "group.pos": "top",
+      "played": "1"
+     }
+    },
+    {
+     "label": "Nangs",
+     "label2": "Tame Impala",
+     "thumb": "",
+     "props": {
+      "track.duration": "1:49",
+      "track.ID": "101",
+      "index": "2",
+      "group.pos": "mid",
+      "played": "1"
+     }
+    },
+    {
+     "label": "The Moment",
+     "label2": "Tame Impala",
+     "thumb": "",
+     "props": {
+      "track.duration": "4:15",
+      "track.ID": "102",
+      "index": "3",
+      "group.pos": "mid",
+      "played": "1"
+     }
+    },
+    {
+     "label": "Yes I'm Changing",
+     "label2": "Tame Impala",
+     "thumb": "",
+     "props": {
+      "track.duration": "4:30",
+      "track.ID": "103",
+      "index": "4",
+      "group.pos": "mid",
+      "played": "1"
+     }
+    },
+    {
+     "label": "Eventually",
+     "label2": "Tame Impala",
+     "thumb": "",
+     "props": {
+      "track.duration": "5:19",
+      "track.ID": "104",
+      "index": "5",
+      "group.pos": "mid",
+      "played": "1"
+     }
+    },
+    {
+     "label": "Gossip",
+     "label2": "Tame Impala",
+     "thumb": "",
+     "props": {
+      "track.duration": "0:54",
+      "track.ID": "105",
+      "index": "6",
+      "group.pos": "mid",
+      "played": "1"
+     }
+    },
+    {
+     "label": "The Less I Know the Better",
+     "label2": "Tame Impala",
+     "thumb": "",
+     "props": {
+      "track.duration": "3:36",
+      "track.ID": "106",
+      "index": "7",
+      "group.pos": "mid",
+      "played": ""
+     }
+    },
+    {
+     "label": "Past Life",
+     "label2": "Tame Impala",
+     "thumb": "",
+     "props": {
+      "track.duration": "3:47",
+      "track.ID": "107",
+      "index": "8",
+      "group.pos": "mid",
+      "played": ""
+     }
+    },
+    {
+     "label": "Disciples",
+     "label2": "Tame Impala",
+     "thumb": "",
+     "props": {
+      "track.duration": "1:48",
+      "track.ID": "108",
+      "index": "9",
+      "group.pos": "bottom",
+      "played": ""
+     }
+    }
+   ]
+  }
+ },
+ "images": {
+  "bg": {
+   "size": [
+    1920,
+    1080
+   ],
+   "colors": [
+    "#3a2a5a",
+    "#0e0f12"
+   ]
+  },
+  "cover": {
+   "size": [
+    688,
+    688
+   ],
+   "colors": [
+    "#e0568a",
+    "#3a1a6e"
+   ],
+   "text": "CURRENTS"
+  }
+ }
+}

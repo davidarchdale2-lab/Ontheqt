@@ -7,6 +7,7 @@ from plexnet import playlist
 from lib import util
 from lib.util import T
 from lib import player
+from lib import plezy_music
 from . import busy
 from . import dropdown
 from . import kodigui
@@ -25,7 +26,7 @@ class AlbumWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
     height = 1080
 
     THUMB_AR16X9_DIM = util.scaleResolution(178, 100)
-    THUMB_SQUARE_DIM = util.scaleResolution(630, 630)
+    THUMB_SQUARE_DIM = util.scaleResolution(270, 270)  # Plezy's 270px cover
 
     TRACKS_LIST_ID = 101
     LIST_OPTIONS_BUTTON_ID = 111
@@ -39,6 +40,8 @@ class AlbumWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
     PLAY_BUTTON_ID = 301
     SHUFFLE_BUTTON_ID = 302
     OPTIONS_BUTTON_ID = 303
+
+    ARTIST_BUTTON_ID = 305  # the artist line under the title (Plezy's tappable artist link)
 
     def __init__(self, *args, **kwargs):
         kodigui.ControlledWindow.__init__(self, *args, **kwargs)
@@ -145,6 +148,8 @@ class AlbumWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
             self.shuffleButtonClicked()
         elif controlID == self.OPTIONS_BUTTON_ID:
             self.optionsButtonClicked()
+        elif controlID == self.ARTIST_BUTTON_ID:
+            self.artistButtonClicked()
         elif controlID == self.LIST_OPTIONS_BUTTON_ID:
             mli = self.trackListControl.getSelectedItem()
             if mli:
@@ -230,6 +235,10 @@ class AlbumWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
     def searchButtonClicked(self):
         self.processCommand(search.dialog(self, section_id=self.album.getLibrarySectionId() or None))
 
+    def artistButtonClicked(self):
+        # same target as the "Go to Artist" option; the request only happens on the click
+        self.processCommand(opener.open(self.album.parentRatingKey))
+
     def shuffleButtonClicked(self):
         self.playButtonClicked(shuffle=True)
 
@@ -257,19 +266,18 @@ class AlbumWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
             options.append({'key': 'to_artist', 'display': T(32301, 'Go to Artist')})
             options.append({'key': 'to_section', 'display': T(32302, u'Go to {0}').format(self.album.getLibrarySectionTitle())})
 
-        pos = (460, 1106)
-        bottom = True
+        # the album menu opens under the more button of the action row, a track's menu beside its more column
+        pos = plezy_music.ALBUM_BUTTON_MENU
         setDropdownProp = False
         if item:
-            viewPos = self.trackListControl.getViewPosition()
-            if viewPos > 6:
-                pos = (1490, 312 + (viewPos * 100))
-                bottom = True
-            else:
-                pos = (1490, 167 + (viewPos * 100))
-                bottom = False
+            try:
+                selectedIndex = plezy_music.to_int(item.getProperty('index'), -1)
+                pos = plezy_music.item_menu_pos(self.trackListControl.getViewPosition(), selectedIndex)
+            except Exception:
+                util.ERROR()
+                pos = (plezy_music.ALBUM_MENU_X, 432)
             setDropdownProp = True
-        choice = dropdown.showDropdown(options, pos, pos_is_bottom=bottom, close_direction='right', set_dropdown_prop=setDropdownProp)
+        choice = dropdown.showDropdown(options, pos, pos_is_bottom=False, close_direction='right', set_dropdown_prop=setDropdownProp)
         if not choice:
             return
 
@@ -325,6 +333,7 @@ class AlbumWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
         self.setProperty('album.thumb', self.album.thumb.asTranscodedImageURL(*self.THUMB_SQUARE_DIM))
         self.setProperty('artist.title', self.album.parentTitle or '')
         self.setProperty('album.title', self.album.title)
+        self.setProperty('album.meta', '')
 
     def createListItem(self, obj):
         mli = kodigui.ManagedListItem(obj.title, data_source=obj)
@@ -332,22 +341,45 @@ class AlbumWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
         mli.setProperty('track.duration', util.simplifiedTimeDisplay(obj.duration.asInt()))
         return mli
 
+    def setAlbumMeta(self, tracks):
+        """Plezy's header meta line: year, track count, total length (from the tracks already loaded)."""
+        try:
+            self.setProperty('album.meta', plezy_music.album_meta(
+                self.album.year, len(tracks), sum(t.duration.asInt() for t in tracks),
+                T(35244, u'{0} track'), T(35245, u'{0} tracks')))
+        except Exception:
+            util.ERROR()
+
+    @staticmethod
+    def setGroupPositions(items):
+        """M3E grouped rows: the first/last card of each disc's run of tracks gets the big outer corners."""
+        run = []
+        for mli in items + [None]:
+            if mli is not None and not mli.getProperty('is.header'):
+                run.append(mli)
+                continue
+            for item, pos in zip(run, plezy_music.group_positions(len(run))):
+                item.setProperty('group.pos', pos)
+            run = []
+
     #@busy.dialog()
     def fillTracks(self):
         items = []
         idx = 0
         multiDisc = 0
+        tracks = self.album.tracks()
+        discWord = T(32420, 'Disc')
 
-        for track in self.album.tracks():
+        for track in tracks:
             disc = track.parentIndex.asInt()
             if disc > 1:
                 if not multiDisc:
-                    items.insert(0, kodigui.ManagedListItem(u'{0} 1'.format(T(32420, 'Disc').upper()), properties={'is.header': '1'}))
+                    items.insert(0, kodigui.ManagedListItem(plezy_music.disc_label(discWord, 1), properties={'is.header': '1'}))
 
                 if disc != multiDisc:
                     items[-1].setProperty('is.footer', '1')
                     multiDisc = disc
-                    items.append(kodigui.ManagedListItem('{0} {1}'.format(T(32420, 'Disc').upper(), disc), properties={'is.header': '1'}))
+                    items.append(kodigui.ManagedListItem(plezy_music.disc_label(discWord, disc), properties={'is.header': '1'}))
 
             mli = self.createListItem(track)
             if mli:
@@ -357,10 +389,17 @@ class AlbumWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
                 mli.setProperty('disc', str(disc))
                 mli.setProperty('album', self.album.title)
                 mli.setProperty('number', '{0:0>2}'.format(track.index))
+                try:
+                    # compilations: the track's own artist under its title
+                    mli.setProperty('track.artist', plezy_music.track_artist(track.originalTitle, self.album.parentTitle))
+                except Exception:
+                    pass
                 items.append(mli)
                 idx += 1
 
         if items:
             items[-1].setProperty('is.footer', '1')
 
+        self.setGroupPositions(items)
+        self.setAlbumMeta(tracks)
         self.trackListControl.replaceItems(items)

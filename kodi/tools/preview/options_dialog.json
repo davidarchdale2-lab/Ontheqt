@@ -1,0 +1,26 @@
+{
+ "focus": 1001,
+ "backdrop": "mock:backdrop",
+ "props": {
+  "initialized": "1",
+  "header": "Really delete?",
+  "info": "Delete Movie: Arrival? This removes the file from your server and cannot be undone.",
+  "button.0": "Yes",
+  "button.1": "No"
+ },
+ "images": {
+  "backdrop": {
+   "size": [
+    1920,
+    1080
+   ],
+   "colors": [
+    "#4a5a78",
+    "#1c2230"
+   ],
+   "text": "BACKDROP",
+   "text_size": 160,
+   "text_y": 0.3
+  }
+ }
+}

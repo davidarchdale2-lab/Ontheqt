@@ -1,0 +1,173 @@
+{
+ "focus": 500,
+ "time": "20:41",
+ "window_bg": "FF0E0F12",
+ "props": {
+  "OSD": "1",
+  "photo": "mock:photo",
+  "photo.title": "Sunset at Lake Tahoe",
+  "photo.date": "14 February 2024",
+  "camera.model": "Sony ILCE-7M4",
+  "camera.lens": "FE 24-70mm F2.8 GM II",
+  "photo.dims": "7008 x 4672 \u2022 Mo",
+  "photo.container": "jpeg",
+  "camera.settings": "ISO 100 \u2022 f/8 \u2022 1/250",
+  "photo.summary": "Golden hour over the water, handheld with the 24-70 at the wide end.",
+  "pq.shuffled": "1",
+  "playing": "1",
+  "show.info": "",
+  "show.pqueue": "1",
+  "no.playlist": ""
+ },
+ "lists": {
+  "500": {
+   "selected": 7,
+   "items": [
+    {
+     "label": "",
+     "thumb": "mock:t0",
+     "props": {}
+    },
+    {
+     "label": "",
+     "thumb": "mock:t1",
+     "props": {}
+    },
+    {
+     "label": "",
+     "thumb": "mock:t2",
+     "props": {}
+    },
+    {
+     "label": "",
+     "thumb": "mock:t3",
+     "props": {}
+    },
+    {
+     "label": "",
+     "thumb": "mock:t4",
+     "props": {}
+    },
+    {
+     "label": "",
+     "thumb": "mock:t0",
+     "props": {}
+    },
+    {
+     "label": "",
+     "thumb": "mock:t1",
+     "props": {}
+    },
+    {
+     "label": "",
+     "thumb": "mock:t2",
+     "props": {}
+    },
+    {
+     "label": "",
+     "thumb": "mock:t3",
+     "props": {}
+    },
+    {
+     "label": "",
+     "thumb": "mock:t4",
+     "props": {}
+    },
+    {
+     "label": "",
+     "thumb": "mock:t0",
+     "props": {}
+    },
+    {
+     "label": "",
+     "thumb": "mock:t1",
+     "props": {}
+    },
+    {
+     "label": "",
+     "thumb": "mock:t2",
+     "props": {}
+    },
+    {
+     "label": "",
+     "thumb": "mock:t3",
+     "props": {}
+    },
+    {
+     "label": "",
+     "thumb": "mock:t4",
+     "props": {}
+    }
+   ]
+  }
+ },
+ "images": {
+  "photo": {
+   "size": [
+    1920,
+    1080
+   ],
+   "colors": [
+    "#e0a050",
+    "#1a2a4a"
+   ],
+   "text": "PHOTO",
+   "text_size": 120
+  },
+  "t0": {
+   "size": [
+    116,
+    116
+   ],
+   "colors": [
+    "#8a56e0",
+    "#2a1a6e"
+   ],
+   "text": "0"
+  },
+  "t1": {
+   "size": [
+    116,
+    116
+   ],
+   "colors": [
+    "#e05656",
+    "#6e1a1a"
+   ],
+   "text": "1"
+  },
+  "t2": {
+   "size": [
+    116,
+    116
+   ],
+   "colors": [
+    "#56e0b0",
+    "#1a6e5a"
+   ],
+   "text": "2"
+  },
+  "t3": {
+   "size": [
+    116,
+    116
+   ],
+   "colors": [
+    "#e0a056",
+    "#6e4a1a"
+   ],
+   "text": "3"
+  },
+  "t4": {
+   "size": [
+    116,
+    116
+   ],
+   "colors": [
+    "#56a0e0",
+    "#1a3a6e"
+   ],
+   "text": "4"
+  }
+ }
+}

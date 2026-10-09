@@ -18,6 +18,7 @@ import lib.cache
 from lib import util
 from lib import genres
 from lib import actions
+from lib import plezy_settings
 from lib.util import T
 from . import kodigui
 from . import windowutils
@@ -1254,8 +1255,7 @@ class SettingsWindow(kodigui.BaseWindow, windowutils.UtilMixin):
                 #     return
             elif action == xbmcgui.ACTION_MOVE_RIGHT:
                 if self.lastFocusID == self.SECTION_LIST_ID:
-                    if self.lastSection != 'about':
-                        self.setFocusId(self.SETTINGS_LIST_ID)
+                    self.openSection()
                     return
                 elif self.lastFocusID == self.SETTINGS_LIST_ID:
                     self.editSetting(from_right=True)
@@ -1267,8 +1267,7 @@ class SettingsWindow(kodigui.BaseWindow, windowutils.UtilMixin):
 
     def onClick(self, controlID):
         if controlID == self.SECTION_LIST_ID:
-            if self.lastSection != 'about':
-                self.setFocusId(self.SETTINGS_LIST_ID)
+            self.openSection()
         elif controlID == self.SETTINGS_LIST_ID:
             self.editSetting()
         elif controlID == self.OPTIONS_LIST_ID:
@@ -1292,17 +1291,57 @@ class SettingsWindow(kodigui.BaseWindow, windowutils.UtilMixin):
         self.lastSection = mli.dataSource
         self.showSettings(self.lastSection)
         self.setProperty('section.about', self.lastSection == 'about' and '1' or '')
+        # the subpage's app bar names the section (Plezy pushes a page titled like the tile that opened it)
+        self.setProperty('section.title', mli.label or '')
         util.DEBUG_LOG('Settings: Changed section ({0})', self.lastSection)
+
+    def openSection(self):
+        """Push the selected section's page (the About page too: its rows are read-only info rows)."""
+        self.checkSection()
+        if self.settingsList.size():
+            self.setFocusId(self.SETTINGS_LIST_ID)
+
+    def setItemValue(self, mli, setting, value):
+        """Show a changed value on a settings row: the label2 and the subtitle the Plezy template draws."""
+        mli.setLabel2(value)
+        try:
+            mli.setProperty('subtitle', plezy_settings.setting_subtitle(value, setting.desc))
+        except Exception:
+            util.ERROR()
 
     def showSections(self):
         items = []
         for sectionID in self.settings.SECTION_IDS:
             label = self.settings[sectionID][0]
             item = kodigui.ManagedListItem(label, data_source=sectionID)
+            try:
+                item.setProperty('icon', plezy_settings.section_icon(sectionID))
+                item.setProperty('subtitle', plezy_settings.section_subtitle(self.sectionSettingLabels(sectionID)))
+            except Exception:
+                util.ERROR()
             items.append(item)
         items[-1].setProperty('is.last', '1')
+        for i, item in enumerate(items):
+            first, last = plezy_settings.group_flags(i, len(items))
+            item.setBoolProperty('group.first', first)
+            item.setBoolProperty('group.last', last)
 
         self.sectionList.addItems(items)
+
+    def sectionSettingLabels(self, sectionID):
+        """Labels of the settings a section row will show, for its subtitle. No network: should_show() only reads
+        cached server preferences, and anything that fails just skips that setting."""
+        labels = []
+        for setting in self.settings[sectionID][1]:
+            try:
+                if setting is None or not setting.should_show():
+                    continue
+                labels.append(setting.label)
+            except Exception:
+                continue
+            if len(labels) >= 3:
+                break
+        return labels
 
     def showSettings(self, section):
         settings = self.settings[section][1]
@@ -1314,9 +1353,14 @@ class SettingsWindow(kodigui.BaseWindow, windowutils.UtilMixin):
             if setting is None or not setting.should_show():
                 continue
 
-            item = kodigui.ManagedListItem(setting.label, setting.type != 'BOOL' and setting.valueLabel() or '',
-                                           data_source=setting)
+            value = setting.type != 'BOOL' and setting.valueLabel() or ''
+            item = kodigui.ManagedListItem(setting.label, value, data_source=setting)
             item.setProperty('description', setting.desc)
+            try:
+                item.setProperty('type', (setting.type or '').lower())
+                item.setProperty('subtitle', plezy_settings.setting_subtitle(value, setting.desc))
+            except Exception:
+                util.ERROR()
             if setting.type == 'BOOL':
                 item.setProperty('checkbox', '1')
                 item.setProperty('checkbox.checked', setting.get() and '1' or '')
@@ -1327,6 +1371,12 @@ class SettingsWindow(kodigui.BaseWindow, windowutils.UtilMixin):
                 item.setProperty('useraware', '1')
 
             items.append(item)
+
+        # M3E grouped list: only the group's outer corners are rounded
+        for i, item in enumerate(items):
+            first, last = plezy_settings.group_flags(i, len(items))
+            item.setBoolProperty('group.first', first)
+            item.setBoolProperty('group.last', last)
 
         self.settingsList.reset()
         self.settingsList.addItems(items)
@@ -1367,10 +1417,10 @@ class SettingsWindow(kodigui.BaseWindow, windowutils.UtilMixin):
 
         if setting.type == 'LIST':
             setting.set(optionItem.pos())
-            mli.setLabel2(setting.valueLabel())
+            self.setItemValue(mli, setting, setting.valueLabel())
         elif setting.type == 'OPTIONS':
             setting.set(optionItem.dataSource)
-            mli.setLabel2(setting.valueLabel())
+            self.setItemValue(mli, setting, setting.valueLabel())
         elif setting.type == 'MULTI':
             values = setting.get()
             if optionItem.dataSource in values:
@@ -1380,7 +1430,7 @@ class SettingsWindow(kodigui.BaseWindow, windowutils.UtilMixin):
                 values.append(optionItem.dataSource)
                 optionItem.setProperty('checkbox.checked', '1')
             setting.set(values)
-            mli.setLabel2(setting.valueLabel(values=values))
+            self.setItemValue(mli, setting, setting.valueLabel(values=values))
 
         if setting.type != 'MULTI':
             self.setFocusId(self.SETTINGS_LIST_ID)
@@ -1398,14 +1448,20 @@ class SettingsWindow(kodigui.BaseWindow, windowutils.UtilMixin):
             for ID, label in setting.options:
                 items.append(kodigui.ManagedListItem(label, data_source=ID))
 
-        self.optionsList.reset()
-        self.optionsList.addItems(items)
+        multi = setting.type == 'MULTI'
         idx = setting.optionIndex()
         if isinstance(idx, int):
             idx = [idx]
+        # Plezy's selection dialog draws a radio button (the choice in use) or a checkbox (multi choice) per row
+        for item in items:
+            if multi:
+                item.setProperty('option.multi', '1')
         for _idx in idx:
-            if setting.type == 'MULTI':
-                self.optionsList[_idx].setProperty('checkbox.checked', '1')
+            if 0 <= _idx < len(items):
+                items[_idx].setProperty('checkbox.checked' if multi else 'selected', '1')
+
+        self.optionsList.reset()
+        self.optionsList.addItems(items)
         if idx:
             self.optionsList.selectItem(idx[-1])
         self.setFocusId(self.OPTIONS_LIST_ID)
@@ -1433,25 +1489,25 @@ class SettingsWindow(kodigui.BaseWindow, windowutils.UtilMixin):
             result = ''
 
         setting.set(result)
-        mli.setLabel2(result)
+        self.setItemValue(mli, setting, result)
 
     def editInteger(self, mli, setting):
         result = xbmcgui.Dialog().input(T(32417, 'Enter Port Number'), str(setting.get()), xbmcgui.INPUT_NUMERIC)
         if not result:
             return
         setting.set(int(result))
-        mli.setLabel2(result)
+        self.setItemValue(mli, setting, result)
 
     def editString(self, mli, setting, clear=False):
         if clear:
             setting.set(None)
-            mli.setLabel2(T(32447, "None"))
+            self.setItemValue(mli, setting, T(32447, "None"))
             return
         if hasattr(setting, "value_setter"):
             result = setting.value_setter()
             if result is not None:
                 setting.set(result.code)
-                mli.setLabel2(str(result))
+                self.setItemValue(mli, setting, str(result))
             return
         else:
             result = xbmcgui.Dialog().input(T(32417, 'Enter Port Number'), str(setting.get()), xbmcgui.INPUT_STRING)
@@ -1462,7 +1518,7 @@ class SettingsWindow(kodigui.BaseWindow, windowutils.UtilMixin):
             return
 
         setting.set(result)
-        mli.setLabel2(str(result))
+        self.setItemValue(mli, setting, str(result))
 
 
 class SchnorchelDialog(xbmcgui.WindowXMLDialog):

@@ -1,657 +1,299 @@
 {% extends "base.xml.tpl" %}
-{% block headers %}<defaultcontrol>300</defaultcontrol>{% endblock %}
+{# Plezy settings (edde746/plezy lib/screens/settings/settings_screen.dart, widgets/settings_section.dart, setting_tile.dart,
+   screens/settings/settings_utils.dart showSelectionDialog) on the TV layout at x1.5.
+   One page at a time, like Plezy's pushed pages: the ROOT page is list 75 (one M3E grouped list of the settings sections:
+   icon, title, a subtitle naming what is inside, chevron); a SUBPAGE is list 100 (the section's settings: title, value or
+   description as the subtitle, a switch for on/off settings, a chevron where a dialog opens); choosing a value from a list
+   opens list 125 as a modal selection dialog (radio rows, or checkbox rows for multi-select settings). The app bar shows
+   "Settings" on the root page and a back arrow with the section name on a subpage. The collapsed 72px rail on the left only
+   offers Home (button 201); the settings icon under it marks the current destination.
+   Python: lib/windows/settings.py (list ids 75 / 100 / 125, buttons 201 / 204; scrollbars 101 / 126 are kept hidden). #}
+{% block headers %}<defaultcontrol>75</defaultcontrol>{% endblock %}
 {% block controls %}
 <control type="image">
     <posx>0</posx>
     <posy>0</posy>
     <width>1920</width>
     <height>1080</height>
-    <texture>script.plex/home/background-fallback.png</texture>
+    <texture>script.plex/white-square.png</texture>
+    <colordiffuse>{{ core.plezy.bg }}</colordiffuse>
 </control>
 
-<control type="group">
-    <animation effect="slide" end="-582,0" time="200" tween="quadratic" easing="out" condition="Control.HasFocus(125)">Conditional</animation>
+<control type="group" id="50">
+    <animation effect="fade" start="0" end="100" time="200" tween="cubic" easing="out">WindowOpen</animation>
+    <defaultcontrol always="true">75</defaultcontrol>
     <posx>0</posx>
     <posy>0</posy>
+    <width>1920</width>
+    <height>1080</height>
+
+    <!-- ROOT PAGE: the settings sections ########################################## -->
+    <control type="list" id="75">
+        <visible allowhiddenfocus="true">!Control.HasFocus(100) + !Control.HasFocus(125)</visible>
+        <animation effect="fade" start="0" end="100" time="200" tween="cubic" easing="out">Visible</animation>
+        <animation effect="slide" start="-48,0" end="0,0" time="200" tween="cubic" easing="out">Visible</animation>
+        <animation effect="fade" start="100" end="0" time="150" tween="cubic" easing="in">Hidden</animation>
+        <posx>96</posx>
+        <posy>{{ vscale(96) }}</posy>
+        <width>1728</width>
+        <height>{{ vscale(957) }}</height>
+        <onleft>201</onleft>
+        <onright>noop</onright>
+        <onup>204</onup>
+        <scrolltime tween="cubic" easing="out">200</scrolltime>
+        <orientation>vertical</orientation>
+        <!-- ITEM LAYOUT ########################################## -->
+        <itemlayout height="{{ vscale(87) }}">
+            {% include "includes/plezy_group_row.xml.tpl" %}
+            {% include "includes/plezy_settings_section_row.xml.tpl" %}
+        </itemlayout>
+        <focusedlayout height="{{ vscale(87) }}">
+            {% include "includes/plezy_group_row.xml.tpl" with focus_cond = "Control.HasFocus(75)" %}
+            {% include "includes/plezy_settings_section_row.xml.tpl" with focused = True %}
+        </focusedlayout>
+    </control>
+
+    <!-- SUBPAGE: the settings of one section ########################################## -->
+    <control type="list" id="100">
+        <visible allowhiddenfocus="true">Control.HasFocus(100) | Control.HasFocus(125)</visible>
+        <animation effect="fade" start="0" end="100" time="200" tween="cubic" easing="out">Visible</animation>
+        <animation effect="slide" start="48,0" end="0,0" time="200" tween="cubic" easing="out">Visible</animation>
+        <animation effect="fade" start="100" end="0" time="150" tween="cubic" easing="in">Hidden</animation>
+        <posx>96</posx>
+        <posy>{{ vscale(96) }}</posy>
+        <width>1728</width>
+        <height>{{ vscale(957) }}</height>
+        <onleft>75</onleft>
+        <onright>noop</onright>
+        <scrolltime tween="cubic" easing="out">200</scrolltime>
+        <orientation>vertical</orientation>
+        <pagecontrol>101</pagecontrol>
+        <!-- ITEM LAYOUT ########################################## -->
+        <itemlayout height="{{ vscale(87) }}">
+            {% include "includes/plezy_group_row.xml.tpl" %}
+            {% include "includes/plezy_settings_row.xml.tpl" %}
+        </itemlayout>
+        <focusedlayout height="{{ vscale(87) }}">
+            {% include "includes/plezy_group_row.xml.tpl" with focus_cond = "Control.HasFocus(100) | Control.HasFocus(125)" %}
+            {% include "includes/plezy_settings_row.xml.tpl" with focused = True %}
+        </focusedlayout>
+    </control>
+
+    <!-- Plezy shows no scrollbars on TV: the ids stay (pagecontrol links, layout checks) but draw nothing -->
+    <control type="scrollbar" id="101">
+        <left>1830</left>
+        <top>{{ vscale(96) }}</top>
+        <width>6</width>
+        <height>{{ vscale(957) }}</height>
+        <visible>true</visible>
+        <texturesliderbackground>-</texturesliderbackground>
+        <texturesliderbar>-</texturesliderbar>
+        <texturesliderbarfocus>-</texturesliderbarfocus>
+        <textureslidernib>-</textureslidernib>
+        <textureslidernibfocus>-</textureslidernibfocus>
+        <pulseonselect>false</pulseonselect>
+        <orientation>vertical</orientation>
+        <showonepage>false</showonepage>
+        <onleft>100</onleft>
+    </control>
+
+    <!-- SELECTION DIALOG (list 125): Plezy's showSelectionDialog / showChecklistDialog, an AlertDialog over a black54
+         barrier. The card is content sized: one card per row count (1-10), picked by the number of items, with the list
+         slid to match. -->
+    <control type="image">
+        <visible>Control.HasFocus(125)</visible>
+        <animation effect="fade" start="0" end="100" time="150" tween="cubic" easing="out">Visible</animation>
+        <animation effect="fade" start="100" end="0" time="120" tween="cubic" easing="in">Hidden</animation>
+        <posx>0</posx>
+        <posy>0</posy>
+        <width>1920</width>
+        <height>1080</height>
+        <texture>script.plex/white-square.png</texture>
+        <colordiffuse>{{ core.plezy.dialog_scrim }}</colordiffuse>
+    </control>
+    {% for r in range(1, 11) %}
+    {% with ch = 138 + 60 * r %}
     <control type="group">
-        <control type="group">
-            <animation effect="slide" end="-297,0" time="200" tween="quadratic" easing="out" condition="Control.HasFocus(125)">Conditional</animation>
-            <control type="image">
-                <posx>843</posx>
-                <posy>135</posy>
-                <width>1077</width>
-                <height>945</height>
-                <texture>script.plex/white-square.png</texture>
-                <colordiffuse>32111111</colordiffuse>
-            </control>
-            <control type="image">
-                <posx>0</posx>
-                <posy>865</posy>
-                <width>1920</width>
-                <height>215</height>
-                <texture>script.plex/white-square.png</texture>
-                <colordiffuse>32000000</colordiffuse>
-            </control>
-        </control>
+        <visible>Control.HasFocus(125) + {% if r == 10 %}Integer.IsGreater(Container(125).NumItems,9){% else %}Integer.IsEqual(Container(125).NumItems,{{ r }}){% endif %}</visible>
+        <animation effect="fade" start="0" end="100" time="150" tween="cubic" easing="out">Visible</animation>
+        <animation effect="zoom" start="96" end="100" time="150" tween="cubic" easing="out" center="auto">Visible</animation>
+        <animation effect="fade" start="100" end="0" time="120" tween="cubic" easing="in">Hidden</animation>
+        <posx>540</posx>
+        <posy>{{ vperc(vscale(ch)) }}</posy>
+        <width>840</width>
+        <height>{{ ch|vscale }}</height>
         <control type="image">
-            <animation effect="slide" end="-297,0" time="200" tween="quadratic" easing="out" condition="Control.HasFocus(125)">Conditional</animation>
-            <posx>843</posx>
-            <posy>865</posy>
-            <width>1077</width>
-            <height>215</height>
-            <texture>script.plex/white-square.png</texture>
-            <colordiffuse>32111111</colordiffuse>
-        </control>
-        <control type="image">
-            <animation effect="slide" end="-297,0" time="200" tween="quadratic" easing="out" condition="Control.HasFocus(125)">Conditional</animation>
-            <posx>1920</posx>
-            <posy>135</posy>
-            <width>879</width>
-            <height>945</height>
-            <texture>script.plex/white-square.png</texture>
-            <colordiffuse>66111111</colordiffuse>
-        </control>
-    </control>
-
-    <control type="textbox">
-        <animation effect="slide" end="-277,0" time="200" tween="quadratic" easing="out" condition="Control.HasFocus(125)">Conditional</animation>
-        <visible>Control.HasFocus(100) | Control.HasFocus(125)</visible>
-        <posx>872</posx>
-        <posy>886.5</posy>
-        <width>1024</width>
-        <height>172</height>
-        <font>font10</font>
-        <textcolor>FFFFFFFF</textcolor>
-        <align>left</align>
-        <scrolltime>200</scrolltime>
-        <autoscroll delay="5000" time="4000" repeat="15000"></autoscroll>
-        <label>$INFO[Container(100).ListItem.Property(description)]</label>
-    </control>
-
-    <control type="group" id="50">
-        <posx>248</posx>
-        <posy>131.5</posy>
-        <defaultcontrol always="true">75</defaultcontrol>
-        <control type="list" id="75">
             <posx>0</posx>
             <posy>0</posy>
-            <width>590</width>
-            <height>741</height>
-            <onleft>201</onleft>
-            <onright>noop</onright>
-            <scrolltime>200</scrolltime>
-            <orientation>vertical</orientation>
-            <!-- ITEM LAYOUT ########################################## -->
-            <itemlayout height="{{ vscale(75) }}">
-                <control type="group">
-                    <posx>88</posx>
-                    <posy>{{ vscale(40) }}</posy>
-                    <control type="label">
-                        <posx>0</posx>
-                        <posy>0</posy>
-                        <width>414</width>
-                        <height>{{ vscale(75) }}</height>
-                        <font>font12</font>
-                        <align>left</align>
-                        <aligny>center</aligny>
-                        <textcolor>FFFFFFFF</textcolor>
-                        <label>$INFO[ListItem.Label]</label>
-                    </control>
-                    <control type="image">
-                        <visible>String.IsEmpty(ListItem.Property(is.last))</visible>
-                        <posx>0</posx>
-                        <posy>{{ vscale(75) }}</posy>
-                        <width>414</width>
-                        <height>{{ vscale(2) }}</height>
-                        <texture>script.plex/white-square.png</texture>
-                        <colordiffuse>6615171C</colordiffuse>
-                    </control>
-                </control>
-            </itemlayout>
-            <focusedlayout height="{{ vscale(75) }}">
-                <control type="group">
-                    <visible>ControlGroup(50).HasFocus(0)</visible>
-                    <control type="image">
-                        <posx>0</posx>
-                        <posy>0</posy>
-                        <width>590</width>
-                        <height>{{ vscale(155) }}</height>
-                        <texture border="42">script.plex/drop-shadow.png</texture>
-                    </control>
-                    <control type="image">
-                        <visible>Control.HasFocus(75)</visible>
-                        <posx>40</posx>
-                        <posy>{{ vscale(40) }}</posy>
-                        <width>510</width>
-                        <height>{{ vscale(75) }}</height>
-                        <texture colordiffuse="FFFFFFFF" border="10">script.plex/white-square-rounded.png</texture>
-                    </control>
-                    <control type="image">
-                        <visible>!Control.HasFocus(75)</visible>
-                        <posx>40</posx>
-                        <posy>{{ vscale(40) }}</posy>
-                        <width>510</width>
-                        <height>{{ vscale(75) }}</height>
-                        <texture colordiffuse="{{ core.plezy.text }}" border="10">script.plex/white-square-rounded.png</texture>
-                    </control>
-                    <control type="image">
-                        <visible>!Control.HasFocus(75)</visible>
-                        <posx>512</posx>
-                        <posy>{{ vscale(66) }}</posy>
-                        <width>16</width>
-                        <height>{{ vscale(23) }}</height>
-                        <texture>script.plex/settings/expanded.png</texture>
-                        <colordiffuse>FF000000</colordiffuse>
-                    </control>
-                    <control type="label">
-                        <posx>88</posx>
-                        <posy>{{ vscale(40) }}</posy>
-                        <width>414</width>
-                        <height>{{ vscale(75) }}</height>
-                        <font>font12</font>
-                        <align>left</align>
-                        <aligny>center</aligny>
-                        <textcolor>FF000000</textcolor>
-                        <label>$INFO[ListItem.Label]</label>
-                    </control>
-                </control>
-                <control type="label">
-                    <visible>!ControlGroup(50).HasFocus(0)</visible>
-                    <posx>88</posx>
-                    <posy>{{ vscale(40) }}</posy>
-                    <width>414</width>
-                    <height>{{ vscale(75) }}</height>
-                    <font>font12</font>
-                    <align>left</align>
-                    <aligny>center</aligny>
-                    <textcolor>FFFFFFFF</textcolor>
-                    <label>$INFO[ListItem.Label]</label>
-                </control>
-            </focusedlayout>
+            <width>840</width>
+            <height>{{ ch|vscale }}</height>
+            <texture border="28" colordiffuse="{{ core.plezy.surface }}">script.plex/plezy/r28.png</texture>
         </control>
-
-        <control type="list" id="100">
-            <visible>Integer.IsGreater(Container(100).NumItems,0)</visible>
-            <enable>String.IsEmpty(Window.Property(section.about))</enable>
-            <posx>604</posx>
-            <posy>0</posy>
-            <width>776</width>
-            <height>715</height>
-            <onleft>75</onleft>
-            <onright>noop</onright>
-            <scrolltime>200</scrolltime>
-            <orientation>vertical</orientation>
-            <pagecontrol>101</pagecontrol>
-            <!-- ITEM LAYOUT ########################################## -->
-            <itemlayout height="{{ vscale(75) }}">
-                <control type="group">
-                    <posx>88</posx>
-                    <posy>{{ vscale(40) }}</posy>
-                    <control type="label">
-                        <posx>0</posx>
-                        <posy>0</posy>
-                        <width>500</width>
-                        <height>{{ vscale(75) }}</height>
-                        <font>font12</font>
-                        <align>left</align>
-                        <aligny>center</aligny>
-                        <textcolor>FFFFFFFF</textcolor>
-                        <scroll>true</scroll>
-                        <label>$INFO[ListItem.Label]</label>
-                    </control>
-                    <control type="label">
-                        <posx>200</posx>
-                        <posy>0</posy>
-                        <width>400</width>
-                        <scroll>true</scroll>
-                        <scrollspeed>25</scrollspeed>
-                        <height>{{ vscale(75) }}</height>
-                        <font>font12</font>
-                        <align>right</align>
-                        <aligny>center</aligny>
-                        <textcolor>FFFFFFFF</textcolor>
-                        <label>$INFO[ListItem.Label2]</label>
-                    </control>
-                    <control type="image">
-                        <posx>0</posx>
-                        <posy>{{ vscale(75) }}</posy>
-                        <width>600</width>
-                        <height>{{ vscale(2) }}</height>
-                        <texture>script.plex/white-square.png</texture>
-                        <colordiffuse>6615171C</colordiffuse>
-                    </control>
-                </control>
-                <control type="group">
-                    <posx>643</posx>
-                    <posy>{{ vscale(55) }}</posy>
-                    <control type="image">
-                        <visible>!String.IsEmpty(ListItem.Property(checkbox))</visible>
-                        <posx>0</posx>
-                        <posy>0</posy>
-                        <width>45</width>
-                        <height>{{ vscale(45) }}</height>
-                        <texture colordiffuse="EE000000" border="10">script.plex/settings/checkbox.png</texture>
-                    </control>
-                    <control type="image">
-                        <visible>!String.IsEmpty(ListItem.Property(checkbox.checked))</visible>
-                        <posx>0</posx>
-                        <posy>0</posy>
-                        <width>45</width>
-                        <height>{{ vscale(45) }}</height>
-                        <texture>script.plex/settings/checkmark.png</texture>
-                    </control>
-                </control>
-            </itemlayout>
-            <focusedlayout height="{{ vscale(75) }}">
-                <control type="group">
-                    <visible>Control.HasFocus(100) | Control.HasFocus(125)</visible>
-                    <control type="image">
-                        <posx>0</posx>
-                        <posy>0</posy>
-                        <width>776</width>
-                        <height>{{ vscale(155) }}</height>
-                        <texture border="42">script.plex/drop-shadow.png</texture>
-                    </control>
-                    <control type="image">
-                        <visible>!Control.HasFocus(125)</visible>
-                        <posx>40</posx>
-                        <posy>{{ vscale(40) }}</posy>
-                        <width>696</width>
-                        <height>{{ vscale(75) }}</height>
-                        <texture colordiffuse="FFFFFFFF" border="10">script.plex/white-square-rounded.png</texture>
-                    </control>
-                    <control type="image">
-                        <visible>Control.HasFocus(125)</visible>
-                        <posx>40</posx>
-                        <posy>{{ vscale(40) }}</posy>
-                        <width>696</width>
-                        <height>{{ vscale(75) }}</height>
-                        <texture colordiffuse="{{ core.plezy.text }}" border="10">script.plex/white-square-rounded.png</texture>
-                    </control>
-                    <control type="image">
-                        <visible>Control.HasFocus(125)</visible>
-                        <posx>698</posx>
-                        <posy>{{ vscale(66) }}</posy>
-                        <width>16</width>
-                        <height>{{ vscale(23) }}</height>
-                        <texture>script.plex/settings/expanded.png</texture>
-                        <colordiffuse>FF000000</colordiffuse>
-                    </control>
-                    <control type="group">
-                        <posx>88</posx>
-                        <posy>{{ vscale(40) }}</posy>
-                        <control type="label">
-                            <posx>0</posx>
-                            <posy>0</posy>
-                            <width>500</width>
-                            <height>{{ vscale(75) }}</height>
-                            <font>font12</font>
-                            <align>left</align>
-                            <aligny>center</aligny>
-                            <textcolor>FF000000</textcolor>
-                            <scroll>true</scroll>
-                            <label>$INFO[ListItem.Label]</label>
-                        </control>
-                        <control type="label">
-                            <posx>200</posx>
-                            <posy>0</posy>
-                            <width>400</width>
-                            <height>{{ vscale(75) }}</height>
-                            <font>font12</font>
-                            <align>right</align>
-                            <aligny>center</aligny>
-                            <textcolor>FF000000</textcolor>
-                            <scroll>true</scroll>
-                            <label>$INFO[ListItem.Label2]</label>
-                        </control>
-                    </control>
-                </control>
-                <control type="group">
-                    <visible>!Control.HasFocus(100) + !Control.HasFocus(125)</visible>
-                    <posx>88</posx>
-                    <posy>{{ vscale(40) }}</posy>
-                    <control type="label">
-                        <posx>0</posx>
-                        <posy>0</posy>
-                        <width>400</width>
-                        <height>{{ vscale(75) }}</height>
-                        <font>font12</font>
-                        <align>left</align>
-                        <aligny>center</aligny>
-                        <textcolor>FFFFFFFF</textcolor>
-                        <scroll>true</scroll>
-                        <label>$INFO[ListItem.Label]</label>
-                    </control>
-                    <control type="label">
-                        <posx>200</posx>
-                        <posy>0</posy>
-                        <width>400</width>
-                        <height>{{ vscale(75) }}</height>
-                        <font>font12</font>
-                        <align>right</align>
-                        <aligny>center</aligny>
-                        <textcolor>FFFFFFFF</textcolor>
-                        <scroll>true</scroll>
-                        <label>$INFO[ListItem.Label2]</label>
-                    </control>
-                    <control type="image">
-                        <posx>0</posx>
-                        <posy>{{ vscale(75) }}</posy>
-                        <width>600</width>
-                        <height>{{ vscale(2) }}</height>
-                        <texture>script.plex/white-square.png</texture>
-                        <colordiffuse>6615171C</colordiffuse>
-                    </control>
-                </control>
-                <control type="group">
-                    <posx>643</posx>
-                    <posy>{{ vscale(55) }}</posy>
-                    <control type="image">
-                        <visible>!String.IsEmpty(ListItem.Property(checkbox))</visible>
-                        <posx>0</posx>
-                        <posy>0</posy>
-                        <width>45</width>
-                        <height>{{ vscale(45) }}</height>
-                        <texture colordiffuse="EE000000" border="10">script.plex/settings/checkbox.png</texture>
-                    </control>
-                    <control type="image">
-                        <visible>!String.IsEmpty(ListItem.Property(checkbox.checked))</visible>
-                        <posx>0</posx>
-                        <posy>0</posy>
-                        <width>45</width>
-                        <height>{{ vscale(45) }}</height>
-                        <texture>script.plex/settings/checkmark.png</texture>
-                    </control>
-                </control>
-            </focusedlayout>
+        <control type="label">
+            <posx>36</posx>
+            <posy>{{ vscale(36) }}</posy>
+            <width>768</width>
+            <height>{{ vscale(48) }}</height>
+            <font>font20_title</font>
+            <align>left</align>
+            <aligny>center</aligny>
+            <scroll>false</scroll>
+            <textcolor>{{ core.plezy.text }}</textcolor>
+            <label>$INFO[Container(100).ListItem.Label]</label>
         </control>
-
-        <control type="scrollbar" id="101">
-            <visible>Control.IsVisible(100) + !Control.IsVisible(125)</visible>
-            <left>1388</left>
-            <top>40</top>
-            <width>9</width>
-            <height>675</height>
-            <visible>true</visible>
-            <texturesliderbackground colordiffuse="66000000" border="4">script.plex/white-square-rounded-4r.png</texturesliderbackground>
-            <texturesliderbar colordiffuse="66FFFFFF" border="4">script.plex/white-square-rounded-4r.png</texturesliderbar>
-            <texturesliderbarfocus colordiffuse="FFFFFFFF" border="4">script.plex/white-square-rounded-4r.png</texturesliderbarfocus>
-            <textureslidernib>-</textureslidernib>
-            <textureslidernibfocus>-</textureslidernibfocus>
-            <pulseonselect>false</pulseonselect>
-            <orientation>vertical</orientation>
-            <showonepage>false</showonepage>
-            <onleft>151</onleft>
-        </control>
-
-        <control type="list" id="125">
-            <visible allowhiddenfocus="true">Control.HasFocus(125) + Integer.IsGreater(Container(100).NumItems,0)</visible>
-            <enable>Integer.IsGreater(Container(100).NumItems,0) + String.IsEmpty(Window.Property(section.about))</enable>
-
-            <posx>1383</posx>
-            <posy>0</posy>
-            <width>845</width>
-            <height>715</height>
-            <onleft>100</onleft>
-            <scrolltime>200</scrolltime>
-            <orientation>vertical</orientation>
-            <pagecontrol>126</pagecontrol>
-            <!-- ITEM LAYOUT ########################################## -->
-            <itemlayout height="{{ vscale(75) }}">
-                <control type="group">
-                    <posx>88</posx>
-                    <posy>{{ vscale(40) }}</posy>
-                    <control type="label">
-                        <posx>0</posx>
-                        <posy>0</posy>
-                        <width>594</width>
-                        <height>{{ vscale(75) }}</height>
-                        <font>font12</font>
-                        <align>left</align>
-                        <aligny>center</aligny>
-                        <textcolor>FFFFFFFF</textcolor>
-                        <label>$INFO[ListItem.Label]</label>
-                    </control>
-                    <control type="image">
-                        <posx>0</posx>
-                        <posy>{{ vscale(75) }}</posy>
-                        <width>594</width>
-                        <height>{{ vscale(2) }}</height>
-                        <texture>script.plex/white-square.png</texture>
-                        <colordiffuse>6615171C</colordiffuse>
-                    </control>
-                </control>
-                <control type="group">
-                    <posx>637</posx>
-                    <posy>{{ vscale(55) }}</posy>
-                    <control type="image">
-                        <visible>!String.IsEmpty(ListItem.Property(checkbox.checked))</visible>
-                        <posx>0</posx>
-                        <posy>0</posy>
-                        <width>45</width>
-                        <height>{{ vscale(45) }}</height>
-                        <texture>script.plex/settings/checkmark.png</texture>
-                    </control>
-                </control>
-            </itemlayout>
-            <focusedlayout height="{{ vscale(75) }}">
-                <control type="image">
-                    <posx>0</posx>
-                    <posy>0</posy>
-                    <width>610</width>
-                    <height>{{ vscale(155) }}</height>
-                    <texture border="42">script.plex/drop-shadow.png</texture>
-                </control>
-                <control type="image">
-                    <posx>40</posx>
-                    <posy>{{ vscale(40) }}</posy>
-                    <width>690</width>
-                    <height>{{ vscale(75) }}</height>
-                    <texture colordiffuse="FFFFFFFF" border="10">script.plex/white-square-rounded.png</texture>
-                </control>
-                <control type="group">
-                    <posx>88</posx>
-                    <posy>{{ vscale(40) }}</posy>
-                    <control type="label">
-                        <posx>0</posx>
-                        <posy>0</posy>
-                        <width>594</width>
-                        <height>{{ vscale(75) }}</height>
-                        <font>font12</font>
-                        <align>left</align>
-                        <aligny>center</aligny>
-                        <textcolor>FF000000</textcolor>
-                        <label>$INFO[ListItem.Label]</label>
-                    </control>
-                </control>
-                <control type="group">
-                    <posx>637</posx>
-                    <posy>{{ vscale(55) }}</posy>
-                    <control type="image">
-                        <visible>!String.IsEmpty(ListItem.Property(checkbox.checked))</visible>
-                        <posx>0</posx>
-                        <posy>0</posy>
-                        <width>45</width>
-                        <height>{{ vscale(45) }}</height>
-                        <texture>script.plex/settings/checkmark.png</texture>
-                    </control>
-                </control>
-            </focusedlayout>
-        </control>
-
-        <control type="scrollbar" id="126">
-            <visible>Control.IsVisible(125)</visible>
-            <left>2161</left>
-            <top>40</top>
-            <width>9</width>
-            <height>675</height>
-            <visible>true</visible>
-            <texturesliderbackground colordiffuse="66000000" border="4">script.plex/white-square-rounded-4r.png</texturesliderbackground>
-            <texturesliderbar colordiffuse="66FFFFFF" border="4">script.plex/white-square-rounded-4r.png</texturesliderbar>
-            <texturesliderbarfocus colordiffuse="FFFFFFFF" border="4">script.plex/white-square-rounded-4r.png</texturesliderbarfocus>
-            <textureslidernib>-</textureslidernib>
-            <textureslidernibfocus>-</textureslidernibfocus>
-            <pulseonselect>false</pulseonselect>
-            <orientation>vertical</orientation>
-            <showonepage>false</showonepage>
-            <onleft>151</onleft>
-        </control>
-
+    </control>
+    {% endwith %}
+    {% endfor %}
+    <control type="list" id="125">
+        <visible allowhiddenfocus="true">Control.HasFocus(125) + Integer.IsGreater(Container(100).NumItems,0)</visible>
+        <enable>Integer.IsGreater(Container(100).NumItems,0)</enable>
+        <animation effect="fade" start="0" end="100" time="150" tween="cubic" easing="out">Visible</animation>
+        <animation effect="zoom" start="96" end="100" time="150" tween="cubic" easing="out" center="960,540">Visible</animation>
+        <animation effect="fade" start="100" end="0" time="120" tween="cubic" easing="in">Hidden</animation>
+        {% for r in range(1, 10) %}
+        {% with sl = (10 - r) * 30 %}
+        <animation effect="slide" end="0,{{ sl|vscale }}" time="0" condition="Integer.IsEqual(Container(125).NumItems,{{ r }})">Conditional</animation>
+        {% endwith %}
+        {% endfor %}
+        <posx>540</posx>
+        <posy>{{ vperc(vscale(738)) + vscale(102) }}</posy>
+        <width>840</width>
+        <height>{{ vscale(600) }}</height>
+        <onleft>noop</onleft>
+        <onright>noop</onright>
+        <scrolltime tween="cubic" easing="out">160</scrolltime>
+        <orientation>vertical</orientation>
+        <pagecontrol>126</pagecontrol>
+        <!-- ITEM LAYOUT ########################################## -->
+        <itemlayout height="{{ vscale(60) }}">
+            {% include "includes/plezy_settings_option_row.xml.tpl" %}
+        </itemlayout>
+        <focusedlayout height="{{ vscale(60) }}">
+            <control type="image">
+                <posx>0</posx>
+                <posy>0</posy>
+                <width>840</width>
+                <height>{{ vscale(60) }}</height>
+                <texture colordiffuse="{{ core.plezy.focus_fill }}">script.plex/white-square.png</texture>
+            </control>
+            {% include "includes/plezy_settings_option_row.xml.tpl" with focused = True %}
+        </focusedlayout>
+    </control>
+    <control type="scrollbar" id="126">
+        <left>1386</left>
+        <top>{{ vperc(vscale(738)) + vscale(102) }}</top>
+        <width>6</width>
+        <height>{{ vscale(600) }}</height>
+        <visible>true</visible>
+        <texturesliderbackground>-</texturesliderbackground>
+        <texturesliderbar>-</texturesliderbar>
+        <texturesliderbarfocus>-</texturesliderbarfocus>
+        <textureslidernib>-</textureslidernib>
+        <textureslidernibfocus>-</textureslidernibfocus>
+        <pulseonselect>false</pulseonselect>
+        <orientation>vertical</orientation>
+        <showonepage>false</showonepage>
+        <onleft>125</onleft>
     </control>
 </control>
 
+<!-- APP BAR (pinned, 84 tall): title on the root page; back arrow and section name on a subpage -->
+<control type="group">
+    <visible>!Control.HasFocus(100) + !Control.HasFocus(125)</visible>
+    <animation effect="fade" start="0" end="100" time="150" tween="cubic" easing="out">Visible</animation>
+    <animation effect="fade" start="100" end="0" time="150" tween="cubic" easing="in">Hidden</animation>
+    <control type="label">
+        <posx>96</posx>
+        <posy>{{ vscale(9) }}</posy>
+        <width>1200</width>
+        <height>{{ vscale(66) }}</height>
+        <font>font20_title</font>
+        <align>left</align>
+        <aligny>center</aligny>
+        <scroll>false</scroll>
+        <textcolor>{{ core.plezy.text }}</textcolor>
+        <label>$INFO[Window.Property(heading)]</label>
+    </control>
+</control>
+<control type="group">
+    <visible>Control.HasFocus(100) | Control.HasFocus(125)</visible>
+    <animation effect="fade" start="0" end="100" time="150" tween="cubic" easing="out">Visible</animation>
+    <animation effect="fade" start="100" end="0" time="150" tween="cubic" easing="in">Hidden</animation>
+    <control type="image">
+        <posx>96</posx>
+        <posy>{{ vscale(24) }}</posy>
+        <width>36</width>
+        <height>{{ vscale(36) }}</height>
+        <texture colordiffuse="{{ core.plezy.text }}">script.plex/plezy/icons/arrow_back.png</texture>
+        <aspectratio>keep</aspectratio>
+    </control>
+    <control type="label">
+        <posx>156</posx>
+        <posy>{{ vscale(9) }}</posy>
+        <width>1140</width>
+        <height>{{ vscale(66) }}</height>
+        <font>font20_title</font>
+        <align>left</align>
+        <aligny>center</aligny>
+        <scroll>false</scroll>
+        <textcolor>{{ core.plezy.text }}</textcolor>
+        <label>$INFO[Window.Property(section.title)]</label>
+    </control>
+</control>
 
+<!-- RAIL + HEADER (group 200 as before: home button 201, now-playing chip 204, clock) -->
 <control type="group" id="200">
     <defaultcontrol always="true">201</defaultcontrol>
     <posx>0</posx>
     <posy>0</posy>
     <width>1920</width>
-    <height>135</height>
+    <height>{{ vscale(135) }}</height>
+    <control type="button" id="201">
+        <posx>8</posx>
+        <posy>{{ vscale(136) }}</posy>
+        <width>56</width>
+        <height>{{ vscale(48) }}</height>
+        <onright>75</onright>
+        <onleft>noop</onleft>
+        <onup>noop</onup>
+        <ondown>noop</ondown>
+        <font>font12</font>
+        <texturefocus border="24" colordiffuse="{{ core.plezy.focus_fill }}">script.plex/plezy/pill-48.png</texturefocus>
+        <texturenofocus>-</texturenofocus>
+        <label> </label>
+    </control>
     <control type="image">
-        <posx>0</posx>
-        <posy>0</posy>
-        <width>1920</width>
-        <height>135</height>
-        <texture>script.plex/white-square.png</texture>
-        <colordiffuse>C0000000</colordiffuse>
+        <visible>!Control.HasFocus(201)</visible>
+        <posx>20</posx>
+        <posy>{{ vscale(144) }}</posy>
+        <width>32</width>
+        <height>{{ vscale(32) }}</height>
+        <texture colordiffuse="{{ core.plezy.muted }}">script.plex/plezy/icons/home.png</texture>
+        <aspectratio>keep</aspectratio>
     </control>
-    <control type="grouplist">
-        <posx>60</posx>
-        <posy>{{ vscale(47.5) }}</posy>
-        <width>1000</width>
-        <height>{{ vscale(40) }}</height>
-        <align>left</align>
-        <itemgap>60</itemgap>
-        <orientation>horizontal</orientation>
-        <ondown>50</ondown>
-        <control type="group">
-            <width>40</width>
-            <height>{{ vscale(40) }}</height>
-            <control type="button" id="201">
-                <animation effect="zoom" start="100" end="144" time="100" center="20,{{ vscale(20) }}" reversible="false">Focus</animation>
-                <animation effect="zoom" start="144" end="100" time="100" center="20,{{ vscale(20) }}" reversible="false">UnFocus</animation>
-                <width>40</width>
-                <height>{{ vscale(40) }}</height>
-                <onright>204</onright>
-                <ondown>50</ondown>
-                <font>font12</font>
-                <focusedcolor>FF000000</focusedcolor>
-                <texturefocus colordiffuse="FFFFFFFF">script.plex/buttons/home-focus.png</texturefocus>
-                <texturenofocus colordiffuse="99FFFFFF">script.plex/buttons/home.png</texturenofocus>
-                <label> </label>
-            </control>
-        </control>
-        <control type="label">
-            <width max="500">auto</width>
-            <height>{{ vscale(40) }}</height>
-            <font>font12</font>
-            <align>left</align>
-            <aligny>center</aligny>
-            <textcolor>FFFFFFFF</textcolor>
-            <label>[UPPERCASE]$INFO[Window.Property(heading)][/UPPERCASE]</label>
-        </control>
+    <control type="image">
+        <visible>Control.HasFocus(201)</visible>
+        <posx>20</posx>
+        <posy>{{ vscale(144) }}</posy>
+        <width>32</width>
+        <height>{{ vscale(32) }}</height>
+        <texture colordiffuse="{{ core.plezy.text }}">script.plex/plezy/icons/home.png</texture>
+        <aspectratio>keep</aspectratio>
     </control>
-    <control type="group">
-        <visible>Player.HasAudio + String.IsEmpty(Window(10000).Property(script.plezy.native.theme_playing))</visible>
-        <posx>438</posx>
-        <posy>0</posy>
-        <control type="button" id="204">
-            <visible>Player.HasAudio + String.IsEmpty(Window(10000).Property(script.plezy.native.theme_playing))</visible>
-            <posx>-10</posx>
-            <posy>{{ vscale(38) }}</posy>
-            <width>260</width>
-            <height>{{ vscale(75) }}</height>
-            <onleft>201</onleft>
-            <ondown>50</ondown>
-            <font>font12</font>
-            <textcolor>FFFFFFFF</textcolor>
-            <focusedcolor>FF000000</focusedcolor>
-            <align>right</align>
-            <aligny>center</aligny>
-            <texturefocus colordiffuse="FFFFFFFF" border="10">script.plex/white-square-rounded.png</texturefocus>
-            <texturenofocus>-</texturenofocus>
-            <textoffsetx>100</textoffsetx>
-            <textoffsety>0</textoffsety>
-            <label> </label>
-        </control>
-        <control type="image">
-            <posx>0</posx>
-            <posy>{{ vscale(48) }}</posy>
-            <width>42</width>
-            <height>{{ vscale(42) }}</height>
-            <texture>$INFO[Player.Art(thumb)]</texture>
-        </control>
-
-        <control type="group">
-            <visible>!Control.HasFocus(204)</visible>
-            <control type="label">
-                <posx>53</posx>
-                <posy>{{ vscale(48) }}</posy>
-                <width>187</width>
-                <height>{{ vscale(20) }}</height>
-                <font>font10</font>
-                <align>left</align>
-                <aligny>center</aligny>
-                <textcolor>FFFFFFFF</textcolor>
-                <info>MusicPlayer.Artist</info>
-            </control>
-            <control type="label">
-                <posx>53</posx>
-                <posy>{{ vscale(72) }}</posy>
-                <width>187</width>
-                <height>{{ vscale(20) }}</height>
-                <font>font10</font>
-                <align>left</align>
-                <aligny>center</aligny>
-                <textcolor>FFFFFFFF</textcolor>
-                <info>MusicPlayer.Title</info>
-            </control>
-        </control>
-        <control type="group">
-            <visible>Control.HasFocus(204)</visible>
-            <control type="label">
-                <posx>53</posx>
-                <posy>{{ vscale(48) }}</posy>
-                <width>187</width>
-                <height>{{ vscale(20) }}</height>
-                <font>font10</font>
-                <align>left</align>
-                <aligny>center</aligny>
-                <textcolor>FF000000</textcolor>
-                <info>MusicPlayer.Artist</info>
-            </control>
-            <control type="label">
-                <posx>53</posx>
-                <posy>{{ vscale(72) }}</posy>
-                <width>187</width>
-                <height>{{ vscale(20) }}</height>
-                <font>font10</font>
-                <align>left</align>
-                <aligny>center</aligny>
-                <textcolor>FF000000</textcolor>
-                <info>MusicPlayer.Title</info>
-            </control>
-        </control>
-
-        <control type="progress">
-            <description>Progressbar</description>
-            <posx>0</posx>
-            <posy>{{ vscale(102) }}</posy>
-            <width>240</width>
-            <height>{{ vscale(1) }}</height>
-            <texturebg colordiffuse="9AFFFFFF">script.plex/white-square-1px.png</texturebg>
-            <lefttexture>-</lefttexture>
-            <midtexture colordiffuse="{{ core.plezy.text }}">script.plex/white-square-1px.png</midtexture>
-            <righttexture>-</righttexture>
-            <overlaytexture>-</overlaytexture>
-            <info>Player.Progress</info>
-        </control>
+    <control type="image">
+        <posx>20</posx>
+        <posy>{{ vscale(200) }}</posy>
+        <width>32</width>
+        <height>{{ vscale(32) }}</height>
+        <texture colordiffuse="{{ core.plezy.text }}">script.plex/plezy/icons/settings.png</texture>
+        <aspectratio>keep</aspectratio>
     </control>
+    {% include "includes/plezy_player_status.xml.tpl" with x = 1376 & onleft = 201 & ondown = 75 %}
     <control type="label">
         <right>60</right>
-        <posy>{{ vscale(35) }}</posy>
+        <posy>{{ vscale(9) }}</posy>
         <width>200</width>
-        <height>{{ vscale(65) }}</height>
+        <height>{{ vscale(66) }}</height>
         <font>font12</font>
         <align>right</align>
         <aligny>center</aligny>

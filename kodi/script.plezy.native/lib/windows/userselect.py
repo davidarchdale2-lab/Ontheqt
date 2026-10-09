@@ -6,6 +6,7 @@ from plexnet import plexapp
 from plexnet.exceptions import UserSwitchForbiddenException
 
 from lib import util
+from lib import plezy_profiles
 from lib.util import T
 from . import busy
 from . import dropdown
@@ -108,27 +109,55 @@ class UserSelectWindow(kodigui.BaseWindow):
     def onFocus(self, controlID):
         if controlID == self.USER_LIST_ID:
             item = self.userList.getSelectedItem()
-            item.setProperty('editing.pin', '')
+            if item:
+                item.setProperty('editing.pin', '')
+                item.setProperty('pin.len', '0')
+            self.setProperty('pin.error', '')
+
+    def profileMetaLabels(self):
+        return {
+            'active': T(35226, 'Active'),
+            'admin': T(35227, 'Administrator'),
+            'managed': T(35228, 'Managed user'),
+            'home': T(35229, 'Home user'),
+            'protected': T(35230, 'PIN protected'),
+        }
 
     def start(self, with_busy=True):
         if with_busy:
             self.setProperty('busy', '1')
         try:
             users = plexapp.ACCOUNT.homeUsers
+            positions = plezy_profiles.group_positions(len(users))
+            metaLabels = self.profileMetaLabels()
 
             items = []
             selectIndex = None
             for idx, user in enumerate(users):
                 thumb = plexapp.ACCOUNT.safeUserThumb(user.id, thumb=user.thumb)
-                mli = kodigui.ManagedListItem(user.title, user.title[0].upper(), thumbnailImage=thumb,
+                title = user.title or u''
+                mli = kodigui.ManagedListItem(title, plezy_profiles.initial_of(title), thumbnailImage=thumb,
                                               data_source=user)
                 mli.setProperty('back.image', user.id)
-                mli.setProperty('pin', user.title)
+                mli.setProperty('pin', title)
                 mli.setProperty('protected', user.isProtected and '1' or '')
                 mli.setProperty('admin', user.isAdmin and '1' or '')
+                mli.setProperty('pin.len', '0')
 
-                if plexapp.ACCOUNT.ID == user.id:
-                   selectIndex = idx
+                # Plezy profile tile: connected-group corner shape, avatar fallback colour, role line
+                isActive = plexapp.ACCOUNT.ID == user.id
+                try:
+                    mli.setProperty('group.pos', positions[idx])
+                    mli.setProperty('avatar.color', plezy_profiles.color_for_name(title))
+                    mli.setProperty('active', isActive and '1' or '')
+                    mli.setProperty('meta', plezy_profiles.profile_meta(
+                        metaLabels, active=isActive, admin=bool(user.isAdmin),
+                        managed=bool(getattr(user, 'isManaged', False)), protected=bool(user.isProtected)))
+                except Exception:
+                    util.ERROR()
+
+                if isActive:
+                    selectIndex = idx
 
                 items.append(mli)
 
@@ -162,7 +191,7 @@ class UserSelectWindow(kodigui.BaseWindow):
                 options.append({'key': 'reboot', 'display': T(32426, 'Reboot')})
 
         with self.propertyContext('dropdown'):
-            choice = dropdown.showDropdown(options, (60, 101))
+            choice = dropdown.showDropdown(options, (72, util.vscalei(104)))
             if not choice:
                 return
 
@@ -197,6 +226,10 @@ class UserSelectWindow(kodigui.BaseWindow):
         elif controlID == 211:
             pin = pin[:-1]
 
+        # a new entry clears the last wrong-PIN message (the dialog shakes again when the next one fails)
+        self.setProperty('pin.error', '')
+        item.setProperty('pin.len', str(len(pin)))
+
         if pin:
             item.setProperty('pin', ' '.join(list(u"\u2022" * len(pin))))
             item.setProperty('editing.pin', pin)
@@ -213,25 +246,43 @@ class UserSelectWindow(kodigui.BaseWindow):
         util.DEBUG_LOG('Home user selected: {0}', user)
 
         from lib import plex
-        with plex.CallbackEvent(plexapp.util.APP, 'account:response') as e:
-            try:
-                if plexapp.ACCOUNT.switchHomeUser(user.id, pin) and plexapp.ACCOUNT.switchUser:
-                    util.DEBUG_LOG('Waiting for user change...')
-                else:
-                    e.close()
-                    item.setProperty('pin', item.dataSource.title)
-                    item.setProperty('editing.pin', '')
-                    util.messageDialog(T(32427, 'Failed'), T(32926, 'Wrong pin entered!'))
+        # Plezy's ProfileSwitchingOverlay: shown at once (the busy dialog only appears after a delay) and kept up
+        # until the window closes on success
+        self.setProperty('switching', '1')
+        keepSwitching = False
+        try:
+            with plex.CallbackEvent(plexapp.util.APP, 'account:response') as e:
+                try:
+                    if plexapp.ACCOUNT.switchHomeUser(user.id, pin) and plexapp.ACCOUNT.switchUser:
+                        util.DEBUG_LOG('Waiting for user change...')
+                    else:
+                        e.close()
+                        item.setProperty('pin', item.dataSource.title)
+                        item.setProperty('editing.pin', '')
+                        item.setProperty('pin.len', '0')
+                        if pin:
+                            # Plezy PinEntryDialog: the dialog stays, shakes and shows the error under the keypad
+                            self.setProperty('pin.error', T(32926, 'Wrong pin entered!'))
+                            # the keypad cursor starts on '1' again, as in Plezy
+                            self.setFocusId(self.PIN_ENTRY_GROUP_ID)
+                        else:
+                            self.setProperty('switching', '')
+                            util.messageDialog(T(32427, 'Failed'), T(32926, 'Wrong pin entered!'))
+                        return
+                except UserSwitchForbiddenException:
+                    # re-fetch users
+                    plexapp.ACCOUNT.updateHomeUsers()
+                    self.selected = 'retry'
+                    keepSwitching = True
+                    self.doClose()
                     return
-            except UserSwitchForbiddenException:
-                # re-fetch users
-                plexapp.ACCOUNT.updateHomeUsers()
-                self.selected = 'retry'
-                self.doClose()
-                return
 
-        self.selected = True
-        self.doClose()
+            keepSwitching = True
+            self.selected = True
+            self.doClose()
+        finally:
+            if not keepSwitching:
+                self.setProperty('switching', '')
 
     def finished(self):
         if self.task:

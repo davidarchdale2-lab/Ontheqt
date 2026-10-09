@@ -1,0 +1,255 @@
+{
+ "focus": 125,
+ "images": {
+  "bd": {
+   "size": [
+    1920,
+    1080
+   ],
+   "colors": [
+    "#8a9bb0",
+    "#2b3442"
+   ]
+  }
+ },
+ "props": {
+  "heading": "Settings",
+  "section.title": "Main"
+ },
+ "infolabels": {
+  "System.Time": "20:41"
+ },
+ "lists": {
+  "75": {
+   "selected": 0,
+   "items": [
+    {
+     "label": "Main",
+     "props": {
+      "icon": "script.plex/plezy/icons/settings.png",
+      "subtitle": "Start Plex On Kodi Startup \u00b7 Start Delay \u00b7 Automatically Sign In",
+      "group.first": "1"
+     }
+    },
+    {
+     "label": "Video",
+     "props": {
+      "icon": "script.plex/plezy/icons/play_circle.png",
+      "subtitle": "Local Quality \u00b7 Remote Quality \u00b7 Online Quality"
+     }
+    },
+    {
+     "label": "Audio/Subtitles",
+     "props": {
+      "icon": "script.plex/plezy/icons/subtitles.png",
+      "subtitle": "Never exceed original audio codec \u00b7 Use Kodi audio channels \u00b7 Audio Channels"
+     }
+    },
+    {
+     "label": "User Interface",
+     "props": {
+      "icon": "script.plex/plezy/icons/palette.png",
+      "subtitle": "Theme \u00b7 Show Watched Indicators \u00b7 Hub count"
+     }
+    },
+    {
+     "label": "Player",
+     "props": {
+      "icon": "script.plex/plezy/icons/smart_display.png",
+      "subtitle": "Resume seek behind \u00b7 Skip intro \u00b7 Auto play next"
+     }
+    },
+    {
+     "label": "Player (user specific)",
+     "props": {
+      "icon": "script.plex/plezy/icons/manage_accounts.png",
+      "subtitle": "Show Intro Skip \u00b7 Show Credits Skip \u00b7 Auto skip"
+     }
+    },
+    {
+     "label": "Network",
+     "props": {
+      "icon": "script.plex/plezy/icons/lan.png",
+      "subtitle": "Allow insecure connections \u00b7 Bandwidth limit \u00b7 Cache size"
+     }
+    },
+    {
+     "label": "System",
+     "props": {
+      "icon": "script.plex/plezy/icons/tune.png",
+      "subtitle": "Debug Logging \u00b7 Path mapping \u00b7 Clear cache"
+     }
+    },
+    {
+     "label": "About",
+     "props": {
+      "icon": "script.plex/plezy/icons/info.png",
+      "subtitle": "Addon Version \u00b7 Kodi Version \u00b7 Platform Version",
+      "group.last": "1",
+      "is.last": "1"
+     }
+    }
+   ]
+  },
+  "100": {
+   "selected": 1,
+   "items": [
+    {
+     "label": "Start Plex On Kodi Startup",
+     "label2": "",
+     "props": {
+      "type": "bool",
+      "description": "",
+      "subtitle": "",
+      "checkbox": "1",
+      "group.first": "1"
+     }
+    },
+    {
+     "label": "Start Delay",
+     "label2": "3 s",
+     "props": {
+      "type": "options",
+      "description": "",
+      "subtitle": "3 s"
+     }
+    },
+    {
+     "label": "Automatically Sign In",
+     "label2": "",
+     "props": {
+      "type": "bool",
+      "description": "Skip user selection and pin entry on startup.",
+      "subtitle": "Skip user selection and pin entry on startup.",
+      "checkbox": "1",
+      "checkbox.checked": "1"
+     }
+    },
+    {
+     "label": "Ensure Kodi Addon position",
+     "label2": "",
+     "props": {
+      "type": "bool",
+      "description": "When not run from the Program addons section, our lastused value will not be updated. Make sure it does when the addon exits.",
+      "subtitle": "When not run from the Program addons section, our lastused value will not be updated. Make sure it does when the addon exits.",
+      "checkbox": "1",
+      "checkbox.checked": "1"
+     }
+    },
+    {
+     "label": "Use Kodi keyboard for searching",
+     "label2": "",
+     "props": {
+      "type": "bool",
+      "description": "",
+      "subtitle": "",
+      "checkbox": "1"
+     }
+    },
+    {
+     "label": "Theme music",
+     "label2": "50 %",
+     "props": {
+      "type": "list",
+      "description": "",
+      "subtitle": "50 %"
+     }
+    },
+    {
+     "label": "Loop theme music",
+     "label2": "",
+     "props": {
+      "type": "bool",
+      "description": "",
+      "subtitle": "",
+      "checkbox": "1"
+     }
+    },
+    {
+     "label": "Video played threshold",
+     "label2": "90 %",
+     "props": {
+      "type": "list",
+      "description": "",
+      "subtitle": "90 %"
+     }
+    },
+    {
+     "label": "Resume playback by default",
+     "label2": "",
+     "props": {
+      "type": "bool",
+      "description": "When playback of an in-progress media is requested, resume it by default.",
+      "subtitle": "When playback of an in-progress media is requested, resume it by default.",
+      "checkbox": "1",
+      "checkbox.checked": "1",
+      "group.last": "1"
+     }
+    }
+   ]
+  },
+  "125": {
+   "selected": 2,
+   "items": [
+    {
+     "label": "Never",
+     "props": {}
+    },
+    {
+     "label": "1 s",
+     "props": {}
+    },
+    {
+     "label": "2 s",
+     "props": {
+      "selected": "1"
+     }
+    },
+    {
+     "label": "3 s",
+     "props": {}
+    },
+    {
+     "label": "4 s",
+     "props": {}
+    },
+    {
+     "label": "5 s",
+     "props": {}
+    },
+    {
+     "label": "6 s",
+     "props": {}
+    },
+    {
+     "label": "7 s",
+     "props": {}
+    },
+    {
+     "label": "8 s",
+     "props": {}
+    },
+    {
+     "label": "9 s",
+     "props": {}
+    },
+    {
+     "label": "10 s",
+     "props": {}
+    },
+    {
+     "label": "11 s",
+     "props": {}
+    },
+    {
+     "label": "12 s",
+     "props": {}
+    },
+    {
+     "label": "13 s",
+     "props": {}
+    }
+   ]
+  }
+ }
+}

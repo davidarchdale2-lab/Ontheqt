@@ -5,6 +5,7 @@ from kodi_six import xbmcgui
 
 from lib import kodijsonrpc
 from lib import player
+from lib import plezy_music
 from lib import util
 from lib.util import T
 from . import busy
@@ -51,14 +52,22 @@ class CurrentPlaylistWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
     OPTIONS_BUTTON_ID = 411
     STOP_BUTTON_ID = 407
 
-    SEEK_IMAGE_WIDTH = 819
+    # Seek bar geometry, mirrored from includes/music_seek.xml.tpl (the queue window: x 894, w 990, pill top y 200).
+    # The selection image and the time bubble sit in a group at BAR_X, so setPosition's x is relative to the bar.
+    SEEK_IMAGE_WIDTH = 990
     SELECTION_BOX_WIDTH = 101
-    SELECTION_INDICATOR_Y = 896
+    SELECTION_INDICATOR_Y = util.vscalei(168)
 
-    BAR_X = 0
-    BAR_Y = 921
-    BAR_RIGHT = 819
-    BAR_BOTTOM = 969
+    BAR_X = 894
+    BAR_Y = util.vscalei(200)
+    BAR_RIGHT = 1884
+    BAR_BOTTOM = util.vscalei(278)
+    SEEK_STEP = 10000  # Plezy seeks by 10 seconds
+
+    NP_BACKGROUND_BLUR = 60      # Plezy: ImageFilter.blur sigma 60
+    NP_BACKGROUND_OPACITY = 22   # ... at 22%
+
+    OPTIONS_MENU_POS = plezy_music.QUEUE_MENU_POS
 
     def __init__(self, *args, **kwargs):
         kodigui.ControlledWindow.__init__(self, *args, **kwargs)
@@ -88,7 +97,7 @@ class CurrentPlaylistWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
         player.PLAYER.off('changed.audio', self.onAudioChanged)
 
     def onFirstInit(self):
-        self.playlistListControl = kodigui.ManagedControlList(self, self.PLAYLIST_LIST_ID, 9)
+        self.playlistListControl = kodigui.ManagedControlList(self, self.PLAYLIST_LIST_ID, 6)  # ~6.5 queue rows are visible
         self.setupSeekbar()
 
         self.fillPlaylist()
@@ -96,6 +105,7 @@ class CurrentPlaylistWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
         self.setFocusId(self.PLAYLIST_LIST_ID)
         self.commonInit()
         self.updateProperties()
+        self.setNowPlayingBackground()
         if player.PLAYER.handler.playQueue and player.PLAYER.handler.playQueue.isRemote:
             player.PLAYER.handler.playQueue.on('change', self.updateProperties)
         player.PLAYER.on('playlist.changed', self.playQueueCallback)
@@ -161,6 +171,8 @@ class CurrentPlaylistWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
         self.selectedOffset = 0
         self.duration = None
         self.setDuration()
+        self.setNowPlayingBackground()
+        self.updatePlayed()
 
     def onAudioChanged(self, *args, **kwargs):
         util.setGlobalProperty('ignore_spinner', '')
@@ -197,7 +209,8 @@ class CurrentPlaylistWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
 
         xbmc.executebuiltin('PlayerControl(Next)')
 
-    def optionsButtonClicked(self, pos=(670, 1060)):
+    def optionsButtonClicked(self, pos=None):
+        pos = pos or self.OPTIONS_MENU_POS
         track = player.PLAYER.currentTrack()
         if not track:
             return
@@ -208,7 +221,7 @@ class CurrentPlaylistWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
         options.append({'key': 'to_artist', 'display': T(32301, 'Go to Artist')})
         options.append({'key': 'to_section', 'display': T(32302, u'Go to {0}').format(track.getLibrarySectionTitle())})
 
-        choice = dropdown.showDropdown(options, pos, pos_is_bottom=True, close_on_playback_ended=True)
+        choice = dropdown.showDropdown(options, pos, pos_is_bottom=False, close_on_playback_ended=True)
         if not choice:
             return
 
@@ -266,7 +279,9 @@ class CurrentPlaylistWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
         player.PLAYER.playselected(mli.pos())
 
     def createListItem(self, pi, idx):
-        label2 = '{0} / {1}'.format(pi['artist'][0], pi['album'])
+        # Plezy's queue rows name only the artist under the title
+        artists = pi['artist']
+        label2 = artists[0] if artists else ''
         plexInfo = pi['comment']
         mli = kodigui.ManagedListItem(pi['title'], label2, thumbnailImage=pi['thumbnail'], data_source=pi)
         mli.setProperty('track.duration', util.simplifiedTimeDisplay(pi['duration'] * 1000))
@@ -294,8 +309,58 @@ class CurrentPlaylistWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
                 items.append(mli)
                 idx += 1
 
+        # M3E grouped rows: big outer corners on the first and last card
+        for mli, pos in zip(items, plezy_music.group_positions(len(items))):
+            mli.setProperty('group.pos', pos)
+
         self.playlistListControl.reset()
         self.playlistListControl.addItems(items)
+        self.updatePlayed()
+
+    def playingPosition(self):
+        """List position of the track Kodi is playing (the last match, as selectPlayingItem), or None."""
+        comment = xbmc.getInfoLabel('MusicPlayer.Comment') or ''
+        if not comment:
+            return None
+        for mli in reversed(self.playlistListControl):
+            try:
+                prefix = mli.dataSource['comment'].split(':', 1)[0]
+            except Exception:
+                continue
+            if prefix and comment.startswith(prefix):
+                return mli.pos()
+        return None
+
+    def updatePlayed(self):
+        """Mark the rows before the playing one as played (Plezy draws the queue's history muted). Local loop."""
+        if not getattr(self, 'playlistListControl', None):  # the now-playing window has no queue list
+            return
+        try:
+            flags = plezy_music.played_flags(self.playlistListControl.size(), self.playingPosition())
+            for mli, flag in zip(self.playlistListControl, flags):
+                if mli.getProperty('played') != flag:
+                    mli.setProperty('played', flag)
+        except Exception:
+            util.ERROR()
+
+    def setNowPlayingBackground(self):
+        """The cover blurred by the Plex transcoder at 22% over the dark background (Plezy blurs it in-app). Builds a
+        URL only: Kodi fetches the image once per track. Without it the template falls back to the plain cover."""
+        try:
+            track = player.PLAYER.currentTrack()
+            art = track and (track.defaultThumb or track.parentThumb)
+            if not art:
+                return
+            url = art.asTranscodedImageURL(
+                self.width, self.height,
+                blur=max(util.addonSettings.backgroundArtBlurAmount2, self.NP_BACKGROUND_BLUR),
+                opacity=self.NP_BACKGROUND_OPACITY,
+                background='0E0F12'
+            )
+            if url:
+                self.setProperty('np.background', url)
+        except Exception:
+            util.ERROR()
 
     def setupSeekbar(self):
         self.seekbarControl = self.getControl(self.SEEK_IMAGE_ID)
@@ -311,10 +376,10 @@ class CurrentPlaylistWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
                 self.seekMouse(action)
                 return True
             elif action in (xbmcgui.ACTION_MOVE_RIGHT, xbmcgui.ACTION_NEXT_ITEM):
-                self.seekForward(3000)
+                self.seekForward(self.SEEK_STEP)
                 return True
             elif action in (xbmcgui.ACTION_MOVE_LEFT, xbmcgui.ACTION_PREV_ITEM):
-                self.seekBack(3000)
+                self.seekBack(self.SEEK_STEP)
                 return True
             # elif action == xbmcgui.ACTION_MOVE_UP:
             #     self.seekForward(60000)

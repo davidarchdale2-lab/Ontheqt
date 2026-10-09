@@ -1,0 +1,83 @@
+{
+ "focus": 100,
+ "images": {
+  "bd": {
+   "size": [
+    1920,
+    1080
+   ],
+   "colors": [
+    "#9fb4c7",
+    "#2c3a4a"
+   ]
+  }
+ },
+ "backdrop": "mock:bd",
+ "props": {
+  "heading": "Settings",
+  "via.OSD": "1"
+ },
+ "lists": {
+  "100": {
+   "selected": 2,
+   "items": [
+    {
+     "label": "Audio",
+     "label2": "English \u2022 1 More",
+     "props": {
+      "icon": "script.plex/plezy/icons/audiotrack.png"
+     }
+    },
+    {
+     "label": "Subtitles",
+     "label2": "None \u2022 3 Available",
+     "props": {
+      "icon": "script.plex/plezy/icons/subtitles.png"
+     }
+    },
+    {
+     "label": "Quality",
+     "label2": "8.2 Mbps 1080p (Original)",
+     "props": {
+      "icon": "script.plex/plezy/icons/high_quality.png"
+     }
+    },
+    {
+     "label": "Download subtitles",
+     "label2": "",
+     "props": {
+      "icon": "script.plex/plezy/icons/download.png"
+     }
+    },
+    {
+     "label": "Kodi Video Settings",
+     "label2": "",
+     "props": {
+      "icon": "script.plex/plezy/icons/tv.png"
+     }
+    },
+    {
+     "label": "Kodi Audio Settings",
+     "label2": "",
+     "props": {
+      "icon": "script.plex/plezy/icons/volume_up.png"
+     }
+    },
+    {
+     "label": "Kodi Subtitle Settings",
+     "label2": "",
+     "props": {
+      "icon": "script.plex/plezy/icons/closed_caption.png"
+     }
+    },
+    {
+     "label": "Show Stream Info",
+     "label2": "",
+     "props": {
+      "icon": "script.plex/plezy/icons/info.png"
+     }
+    }
+   ]
+  }
+ }
+}

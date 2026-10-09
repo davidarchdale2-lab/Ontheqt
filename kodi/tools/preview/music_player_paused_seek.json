@@ -1,0 +1,60 @@
+{
+ "focus": 500,
+ "time": "20:41",
+ "window_bg": "FF0E0F12",
+ "props": {
+  "np.background": "mock:bg",
+  "time.selection": "1:52"
+ },
+ "infolabels": {
+  "MusicPlayer.Album": "Currents",
+  "MusicPlayer.Year": "2015",
+  "MusicPlayer.Title": "The Less I Know the Better",
+  "MusicPlayer.Artist": "Tame Impala",
+  "MusicPlayer.Duration": "3:36",
+  "Player.Time": "1:12",
+  "Player.Progress": "33",
+  "Player.Art(thumb)": "mock:cover"
+ },
+ "bools": {
+  "MusicPlayer.HasPrevious": true,
+  "MusicPlayer.HasNext": true,
+  "Playlist.IsRandom": true,
+  "Player.Paused": true
+ },
+ "images": {
+  "bg": {
+   "size": [
+    1920,
+    1080
+   ],
+   "colors": [
+    "#3a2a5a",
+    "#0e0f12"
+   ]
+  },
+  "cover": {
+   "size": [
+    600,
+    600
+   ],
+   "colors": [
+    "#e0568a",
+    "#3a1a6e"
+   ],
+   "text": "CURRENTS"
+  }
+ },
+ "overrides": {
+  "200": {
+   "width": 520
+  },
+  "202": {
+   "posx": 520,
+   "posy": 486
+  },
+  "203": {
+   "posx": -50
+  }
+ }
+}

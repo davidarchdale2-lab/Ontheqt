@@ -1,0 +1,158 @@
+{
+ "focus": 301,
+ "time": "20:41",
+ "window_bg": "FF0E0F12",
+ "addon_strings": {
+  "32333": "Playlists",
+  "32048": "Audio",
+  "32053": "Video"
+ },
+ "props": {
+  "dynamic_backgrounds": "1",
+  "background": "mock:bg",
+  "background_static": "mock:bg"
+ },
+ "lists": {
+  "101": {
+   "selected": 0,
+   "items": []
+  },
+  "301": {
+   "selected": 0,
+   "items": [
+    {
+     "label": "Movie Night",
+     "label2": "12 items \u2022 24h 10m",
+     "thumb": "mock:vi0",
+     "props": {
+      "thumb.fallback": "script.plex/thumb_fallbacks/movie.png"
+     }
+    },
+    {
+     "label": "Comfort Shows",
+     "label2": "48 items \u2022 31h 2m",
+     "thumb": "mock:vi1",
+     "props": {
+      "thumb.fallback": "script.plex/thumb_fallbacks/movie.png"
+     }
+    },
+    {
+     "label": "Documentaries",
+     "label2": "9 items \u2022 12h 5m",
+     "thumb": "mock:vi2",
+     "props": {
+      "thumb.fallback": "script.plex/thumb_fallbacks/movie.png"
+     }
+    },
+    {
+     "label": "Watch Soon",
+     "label2": "23 items \u2022 40h 18m",
+     "thumb": "mock:vi0",
+     "props": {
+      "thumb.fallback": "script.plex/thumb_fallbacks/movie.png"
+     }
+    },
+    {
+     "label": "Kids",
+     "label2": "15 items \u2022 11h 3m",
+     "thumb": "mock:vi1",
+     "props": {
+      "thumb.fallback": "script.plex/thumb_fallbacks/movie.png"
+     }
+    }
+   ]
+  }
+ },
+ "images": {
+  "bg": {
+   "size": [
+    1920,
+    1080
+   ],
+   "colors": [
+    "#4a5a7a",
+    "#14111f"
+   ]
+  },
+  "au0": {
+   "size": [
+    240,
+    240
+   ],
+   "colors": [
+    "#e0568a",
+    "#3a1a6e"
+   ],
+   "text": "RT"
+  },
+  "au1": {
+   "size": [
+    240,
+    240
+   ],
+   "colors": [
+    "#56c0e0",
+    "#1a3a6e"
+   ],
+   "text": "FO"
+  },
+  "au2": {
+   "size": [
+    240,
+    240
+   ],
+   "colors": [
+    "#e0c056",
+    "#6e3a1a"
+   ],
+   "text": "SM"
+  },
+  "au3": {
+   "size": [
+    240,
+    240
+   ],
+   "colors": [
+    "#70e056",
+    "#1a6e3a"
+   ],
+   "text": "WO"
+  },
+  "vi0": {
+   "size": [
+    400,
+    225
+   ],
+   "colors": [
+    "#8a56e0",
+    "#2a1a6e"
+   ],
+   "text": "MOVIE",
+   "text_size": 60
+  },
+  "vi1": {
+   "size": [
+    400,
+    225
+   ],
+   "colors": [
+    "#e05656",
+    "#6e1a1a"
+   ],
+   "text": "SHOWS",
+   "text_size": 60
+  },
+  "vi2": {
+   "size": [
+    400,
+    225
+   ],
+   "colors": [
+    "#56e0b0",
+    "#1a6e5a"
+   ],
+   "text": "DOCS",
+   "text_size": 60
+  }
+ }
+}

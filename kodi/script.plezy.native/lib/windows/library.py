@@ -20,6 +20,7 @@ from six.moves import range
 
 from lib import backgroundthread
 from lib import player
+from lib import plezy_music
 from lib import util
 from lib import shuffle
 from lib.util import T
@@ -1845,6 +1846,8 @@ class LibraryWindow(PlaybackBtnMixin, kodigui.MultiWindow, windowutils.UtilMixin
                         else:
                             subtitle = ' - ' + obj.originallyAvailableAt.asDatetime('%m/%d/%y')
                         mli.setLabel((obj.defaultTitle or ''))# + subtitle)
+                        # list views: Plezy's metadata line ('S1 • E2', or the air date for specials)
+                        mli.setProperty('meta', plezy_music.list_meta('', '', mli.getProperty('subtitle') or subtitle.replace(' - ', '', 1)))
 
                         mli.setThumbnailImage(obj.defaultThumb.asTranscodedImageURL(*thumbDim))
 
@@ -1879,6 +1882,7 @@ class LibraryWindow(PlaybackBtnMixin, kodigui.MultiWindow, windowutils.UtilMixin
                         mli.setProperty('summary', obj.summary)
 
                         mli.setLabel2(obj.year)
+                        mli.setProperty('meta', plezy_music.clean(obj.year))
                     else:
                         mli.clear()
                         if obj is False:
@@ -1947,6 +1951,8 @@ class LibraryWindow(PlaybackBtnMixin, kodigui.MultiWindow, windowutils.UtilMixin
                                 mli.setBoolProperty('watched', '1')
                             mli.setProperty('initialized', '1')
 
+                        # list views: 'year • duration' (Plezy's metadata line); Label2 holds the duration by now
+                        mli.setProperty('meta', plezy_music.list_meta(sub_title, mli.getLabel2()))
                         mli.setProperty('progress', util.getProgressImage(obj))
                     else:
                         mli.clear()

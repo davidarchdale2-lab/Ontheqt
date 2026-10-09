@@ -1,0 +1,6 @@
+{
+  "focus": 100,
+  "window_bg": "FF0E0F12",
+  "addon_strings": {"35050": "Plezy", "32997": "OK"},
+  "props": {"message": "Sign-in failed. Could not connect to plex.tv. Check your internet connection and try again."}
+}

@@ -1,0 +1,24 @@
+{
+ "focus": 152,
+ "images": {
+  "bg": {
+   "size": [
+    1920,
+    1080
+   ],
+   "colors": [
+    "#7a8fb3",
+    "#26324a"
+   ]
+  }
+ },
+ "props": {
+  "title.main": "Arrival",
+  "title.sub": "2016 \u00b7 1h 56m \u00b7 PG-13 \u00b7 Drama / Science Fiction",
+  "info": "A linguist works with the military to communicate with alien lifeforms after twelve mysterious spacecraft appear around the world. As global tensions rise, she races against time to decipher their intentions before humanity takes the first strike.[CR][CR][CR][CR]Media[CR]File: Arrival.2016.2160p.UHD.BluRay.REMUX.HDR.HEVC.Atmos-EPSiLON.mkv[CR]Mapped via: /mnt/media/movies[CR]Added: Oct 02, 2026 18:22[CR]Duration: 1:56:11, Size: 58.2 GB[CR]Video: 3840x1606, HEVC HEVC/10bit/4:2:0/bt2020@59440 kBit, 23.976 fps[CR]Audio: eng (default), TRUEHD/8ch@5121 kBit, 48000 Hz[CR]Audio: fra, AC3/6ch@640 kBit, 48000 Hz[CR]Subtitles: eng (PGS), eng (SRT), fra (PGS), spa (PGS), deu (PGS) (+4)[CR]Chapters: Opening, Louise, The Visitors, Heptapod, Language (+14)[CR]Markers: credits, intro",
+  "background": "mock:bg"
+ },
+ "infolabels": {
+  "System.Time": "20:41"
+ }
+}

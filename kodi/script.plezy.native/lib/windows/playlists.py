@@ -4,7 +4,9 @@ from kodi_six import xbmc
 from kodi_six import xbmcgui
 from plexnet import plexapp
 
+from lib import plezy_music
 from lib import util
+from lib.util import T
 from . import busy
 from . import kodigui
 from . import playlist
@@ -90,6 +92,16 @@ class PlaylistsWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
 
         self.openWindow(playlist.PlaylistWindow, playlist=mli.dataSource)
 
+    @staticmethod
+    def captionFor(obj):
+        """Plezy's playlist caption under a card: 'N items • 2h 5m' (+ Smart), from the list data already fetched."""
+        try:
+            return plezy_music.playlist_caption(
+                obj.leafCount.asInt(), obj.duration.asInt(), smart=obj.smart.asBool(),
+                one=T(35242, u'{0} item'), many=T(35243, u'{0} items'), smart_label=T(35246, u'Smart'))
+        except Exception:
+            return util.durationToText(obj.duration.asInt())
+
     def createListItem(self, obj):
         dimensions = self.THUMB_DIMS.get(obj.playlistType)
 
@@ -105,7 +117,7 @@ class PlaylistsWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
 
         mli = kodigui.ManagedListItem(
             obj.title or '',
-            util.durationToText(obj.duration.asInt()),
+            self.captionFor(obj),
             # thumbnailImage=obj.composite.asTranscodedImageURL(*self.THUMB_DIMS[obj.playlistType]['item.thumb']),
             thumbnailImage=thumb,
             data_source=obj

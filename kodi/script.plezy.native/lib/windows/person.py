@@ -7,6 +7,7 @@ from kodi_six import xbmc
 from kodi_six import xbmcgui
 
 from lib import backgroundthread
+from lib import plezy_music
 from lib import util
 from lib.util import T
 from plexnet import util as plexnetUtil
@@ -145,8 +146,9 @@ class PersonWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
     width = 1920
     height = 1080
 
-    THUMB_DIM = util.scaleResolution(300, 300)
-    POSTER_DIM = util.scaleResolution(244, 361)
+    THUMB_DIM = util.scaleResolution(240, 240)   # Plezy's 120px avatar, at 2x for the circular mask
+    POSTER_DIM = util.scaleResolution(200, 300)
+    FILTER_MENU_POS = (380, 444)  # under the filter chip of the filmography header
 
     FILMOGRAPHY_LIST_ID = 400
     DISCOVER_LIST_BASE_ID = 401
@@ -199,6 +201,8 @@ class PersonWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
 
         self.setProperty('person.name', self.role.tag or '')
         self.setProperty('person.type_label', T(self.TYPE_LABEL_ID, self.PRIMARY_TYPE.title()))
+        self.updatePersonMeta()
+        self.setProperty('filmography.header', T(35240, u'Filmography'))
         self.setProperty('filmography.filter', T(32345, 'All'))
         if self.role.thumb:
             self.setProperty('person.thumb', self.role.thumb.asTranscodedImageURL(*self.THUMB_DIM))
@@ -324,7 +328,7 @@ class PersonWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
             self.filmographyListControl.addItems(newListItems[1:])
 
         self.filmographyListControl.selectItem(endPos)
-        self.setProperty('filmography.count', str(len(self.filmographyItems)))
+        self.setFilmographyCount()
 
     def onPersonDetails(self, details):
         if not details:
@@ -349,6 +353,8 @@ class PersonWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
             self.setProperty('person.deathDate', self.formatDate(deathDate))
             self.setProperty('person.deceased', '1')
 
+        self.updatePersonMeta()
+
         thumb = details.get('thumb', '')
         if thumb:
             self.setProperty('person.thumb', self.role.server.getImageTranscodeURL(thumb, *self.THUMB_DIM))
@@ -357,6 +363,25 @@ class PersonWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
         if tag_key and not getattr(self.role, 'tagKey', None):
             self.role.tagKey = tag_key
             self.fetchDiscoverCredits()
+
+    def updatePersonMeta(self):
+        """Plezy's header line: 'Actor • 3 May 1970 (54) • Place' (from the details already fetched)."""
+        try:
+            self.setProperty('person.meta', plezy_music.person_meta(
+                self.getProperty('person.type_label'), self.getProperty('person.birthDate'),
+                self.getProperty('person.age'), self.getProperty('person.birthPlace'),
+                self.getProperty('person.deathDate')))
+        except Exception:
+            util.ERROR()
+
+    def setFilmographyCount(self):
+        count = len(self.filmographyItems)
+        self.setProperty('filmography.count', str(count))
+        try:
+            self.setProperty('filmography.total', plezy_music.filmography_count(
+                count, T(35241, u'{0} title'), T(35247, u'{0} titles')))
+        except Exception:
+            util.ERROR()
 
     def fetchDiscoverCredits(self):
         if not hasattr(self.role, 'tagKey') or not self.role.tagKey:
@@ -500,7 +525,7 @@ class PersonWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
 
         self.filmographyListControl.reset()
         self.filmographyListControl.addItems(listItems)
-        self.setProperty('filmography.count', str(len(self.filmographyItems)))
+        self.setFilmographyCount()
 
     def filterButtonClicked(self):
         options = [
@@ -510,7 +535,7 @@ class PersonWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
         ]
         choice = dropdown.showDropdown(
             options=options,
-            pos=(560, 515),
+            pos=self.FILTER_MENU_POS,
             close_direction='none',
             set_dropdown_prop=False,
             align_items='left'

@@ -4,6 +4,7 @@ from kodi_six import xbmc
 from kodi_six import xbmcgui
 
 from lib import player
+from lib import plezy_music
 from lib import util
 from . import currentplaylist
 from . import kodigui
@@ -39,9 +40,16 @@ class MusicPlayerWindow(currentplaylist.CurrentPlaylistWindow):
     SKIP_NEXT_BUTTON_ID = 409
     STOP_BUTTON_ID = 407
 
-    SEEK_IMAGE_WIDTH = 1920
+    # Seek bar geometry, mirrored from includes/music_seek.xml.tpl (now playing: x 903, w 933, pill top y 518)
+    SEEK_IMAGE_WIDTH = 933
+    SELECTION_INDICATOR_Y = util.vscalei(486)
 
-    BAR_RIGHT = 1920
+    BAR_X = 903
+    BAR_Y = util.vscalei(518)
+    BAR_RIGHT = 1836
+    BAR_BOTTOM = util.vscalei(596)
+
+    OPTIONS_MENU_POS = plezy_music.NOW_PLAYING_MENU_POS
 
     def __init__(self, *args, **kwargs):
         kodigui.ControlledWindow.__init__(self, *args, **kwargs)
@@ -66,6 +74,7 @@ class MusicPlayerWindow(currentplaylist.CurrentPlaylistWindow):
 
         self.commonInit()
         self.updateProperties()
+        self.setNowPlayingBackground()
         self.play()
         self.setFocusId(406)
 
@@ -114,7 +123,7 @@ class MusicPlayerWindow(currentplaylist.CurrentPlaylistWindow):
         elif controlID == self.SKIP_NEXT_BUTTON_ID:
             self.skipNextButtonClicked()
         elif controlID == self.OPTIONS_BUTTON_ID:
-            self.optionsButtonClicked((1240, 1060))
+            self.optionsButtonClicked()
         elif controlID == self.STOP_BUTTON_ID:
             self.stopButtonClicked()
 

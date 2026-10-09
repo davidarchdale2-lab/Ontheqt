@@ -1,0 +1,193 @@
+{
+ "focus": 101,
+ "time": "20:41",
+ "window_bg": "FF0E0F12",
+ "addon_strings": {
+  "208": "Play"
+ },
+ "props": {
+  "dynamic_backgrounds": "1",
+  "background": "mock:bg",
+  "background_static": "mock:bg",
+  "playlist.thumb": "mock:cover",
+  "playlist.title": "Watch Soon",
+  "playlist.meta": "4 items \u2022 5h 33m",
+  "script.plezy.native.track.ID": "200"
+ },
+ "infolabels": {
+  "Player.HasAudio": "1"
+ },
+ "bools": {
+  "Player.HasAudio": true,
+  "Player.Playing": true
+ },
+ "lists": {
+  "101": {
+   "selected": 0,
+   "items": [
+    {
+     "label": "Severance",
+     "label2": "Severance \u2022 S2 \u2022 E4",
+     "thumb": "mock:v0",
+     "props": {
+      "video": "1",
+      "track.duration": "47m",
+      "track.ID": "200",
+      "track.number": "1",
+      "index": "0",
+      "progress": "script.plex/progress/40.png"
+     }
+    },
+    {
+     "label": "Arrival",
+     "label2": "2016",
+     "thumb": "mock:v1",
+     "props": {
+      "video": "1",
+      "track.duration": "1h 56m",
+      "track.ID": "201",
+      "track.number": "2",
+      "index": "1",
+      "watched": "1"
+     }
+    },
+    {
+     "label": "Andor",
+     "label2": "Andor \u2022 S1 \u2022 E10",
+     "thumb": "mock:v2",
+     "props": {
+      "video": "1",
+      "track.duration": "44m",
+      "track.ID": "202",
+      "track.number": "3",
+      "index": "2",
+      "unwatched": "1"
+     }
+    },
+    {
+     "label": "Dune: Part Two",
+     "label2": "2024",
+     "thumb": "mock:v3",
+     "props": {
+      "video": "1",
+      "track.duration": "2h 46m",
+      "track.ID": "203",
+      "track.number": "4",
+      "index": "3"
+     }
+    }
+   ]
+  }
+ },
+ "images": {
+  "bg": {
+   "size": [
+    1920,
+    1080
+   ],
+   "colors": [
+    "#4a5a7a",
+    "#14111f"
+   ]
+  },
+  "cover": {
+   "size": [
+    216,
+    216
+   ],
+   "colors": [
+    "#e0568a",
+    "#3a1a6e"
+   ],
+   "text": "MIX"
+  },
+  "m0": {
+   "size": [
+    96,
+    96
+   ],
+   "colors": [
+    "#e0568a",
+    "#3a1a6e"
+   ],
+   "text": "A"
+  },
+  "m1": {
+   "size": [
+    96,
+    96
+   ],
+   "colors": [
+    "#56c0e0",
+    "#1a3a6e"
+   ],
+   "text": "B"
+  },
+  "m2": {
+   "size": [
+    96,
+    96
+   ],
+   "colors": [
+    "#e0c056",
+    "#6e3a1a"
+   ],
+   "text": "C"
+  },
+  "m3": {
+   "size": [
+    96,
+    96
+   ],
+   "colors": [
+    "#70e056",
+    "#1a6e3a"
+   ],
+   "text": "D"
+  },
+  "v0": {
+   "size": [
+    171,
+    96
+   ],
+   "colors": [
+    "#8a56e0",
+    "#2a1a6e"
+   ],
+   "text": "S"
+  },
+  "v1": {
+   "size": [
+    171,
+    96
+   ],
+   "colors": [
+    "#e05656",
+    "#6e1a1a"
+   ],
+   "text": "A"
+  },
+  "v2": {
+   "size": [
+    171,
+    96
+   ],
+   "colors": [
+    "#56e0b0",
+    "#1a6e5a"
+   ],
+   "text": "N"
+  },
+  "v3": {
+   "size": [
+    171,
+    96
+   ],
+   "colors": [
+    "#e0a056",
+    "#6e4a1a"
+   ],
+   "text": "D"
+  }
+ }
+}

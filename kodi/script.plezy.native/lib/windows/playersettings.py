@@ -5,6 +5,7 @@ from kodi_six import xbmc
 from kodi_six import xbmcgui
 
 from lib import metadata
+from lib import plezy_settings
 from lib import util
 from lib.util import T
 from lib.language_util import getNativeLanguages
@@ -143,16 +144,15 @@ class VideoSettingsDialog(kodigui.BaseDialog, util.CronReceiver, PlexSubtitleDow
         items = []
         for o in options:
             item = kodigui.ManagedListItem(o[1], o[2], data_source=o[0])
+            icon = plezy_settings.player_setting_icon(o[0])
+            if icon:
+                item.setProperty('icon', icon)
             items.append(item)
         if init:
             self.settingsList.reset()
             self.settingsList.addItems(items)
         else:
             self.settingsList.replaceItems(items)
-
-        if self.nonPlayback:
-            # we don't have enough items for a scrollbar, increase width
-            self.settingsList.setWidth(1000)
 
         self.setFocusId(self.SETTINGS_LIST_ID)
 

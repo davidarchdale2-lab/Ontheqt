@@ -99,6 +99,10 @@ class SelectDialog(kodigui.BaseDialog, util.CronReceiver):
                                            data_source=ds)
             items.append(item)
 
+        # the row in use gets Plezy's trailing check
+        if self.selectedIdx is not None and 0 <= self.selectedIdx < len(items):
+            items[self.selectedIdx].setProperty('selected', '1')
+
         self.optionsList.reset()
         self.optionsList.addItems(items)
 

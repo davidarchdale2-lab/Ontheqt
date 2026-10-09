@@ -1,0 +1,62 @@
+{
+ "focus": 250,
+ "backdrop": "mock:bd",
+ "images": {
+  "bd": {
+   "size": [
+    1920,
+    1080
+   ],
+   "colors": [
+    "#8a9bb0",
+    "#2b3442"
+   ]
+  }
+ },
+ "props": {
+  "show": "1",
+  "header": "Choose version"
+ },
+ "lists": {
+  "250": {
+   "selected": 0,
+   "items": [
+    {
+     "label": "1080p H.264 - 8.2 Mbps",
+     "props": {
+      "with.indicator": "1",
+      "has.submenu": "",
+      "align": "left",
+      "selected": "1",
+      "slots": "1",
+      "first": "1"
+     },
+     "thumb": "script.plex/home/device/check.png"
+    },
+    {
+     "label": "2160p HEVC HDR - 24 Mbps",
+     "props": {
+      "with.indicator": "1",
+      "has.submenu": "",
+      "align": "left",
+      "selected": "",
+      "slots": "0",
+      "last": "1"
+     }
+    }
+   ]
+  }
+ },
+ "overrides": {
+  "100": {
+   "posx": "660",
+   "posy": "810"
+  },
+  "111": {
+   "height": "224"
+  },
+  "250": {
+   "height": "132"
+  }
+ }
+}

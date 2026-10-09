@@ -46,6 +46,8 @@ TEMPLATE_CONTEXTS = {
             "player_tooltip": "99000000",
             "player_skip": "E6FFFFFF",   # skip-marker button fill (white 90%)
             "active": "FFFFC107",        # active player toggles (Plezy's amber)
+            "brand": "FFFF7E57",         # Plezy coral, sign-in marks
+            "accent": "FFE5A00D",        # setup spinner accent
             # TV layout (1080p)
             "rail_collapsed": 72,
             "rail_expanded": 300,

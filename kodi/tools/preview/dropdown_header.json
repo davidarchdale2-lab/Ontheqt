@@ -1,0 +1,96 @@
+{
+ "focus": 250,
+ "backdrop": "mock:bd",
+ "images": {
+  "bd": {
+   "size": [
+    1920,
+    1080
+   ],
+   "colors": [
+    "#8a9bb0",
+    "#2b3442"
+   ]
+  }
+ },
+ "props": {
+  "show": "1",
+  "header": "Manage hubs: Movies",
+  "scroll": ""
+ },
+ "lists": {
+  "250": {
+   "selected": 1,
+   "items": [
+    {
+     "label": "Continue Watching",
+     "props": {
+      "with.indicator": "1",
+      "has.submenu": "1",
+      "align": "left",
+      "selected": "1",
+      "slots": "2",
+      "first": "1"
+     },
+     "thumb": "script.plex/indicators/circle-19.png"
+    },
+    {
+     "label": "Recently Added Movies",
+     "props": {
+      "with.indicator": "1",
+      "has.submenu": "1",
+      "align": "left",
+      "selected": "1",
+      "slots": "2",
+      "moving": "1"
+     },
+     "thumb": "script.plex/indicators/circle-19.png"
+    },
+    {
+     "label": "Recently Released Movies",
+     "props": {
+      "with.indicator": "1",
+      "has.submenu": "",
+      "align": "left",
+      "selected": "",
+      "slots": "0"
+     }
+    },
+    {
+     "label": "Top Rated",
+     "props": {
+      "with.indicator": "1",
+      "has.submenu": "1",
+      "align": "left",
+      "selected": "1",
+      "slots": "2"
+     },
+     "thumb": "script.plex/indicators/circle-19.png"
+    },
+    {
+     "label": "Genres",
+     "props": {
+      "with.indicator": "1",
+      "has.submenu": "",
+      "align": "left",
+      "selected": "",
+      "slots": "0",
+      "last": "1"
+     }
+    }
+   ]
+  }
+ },
+ "overrides": {
+  "100": {
+   "posx": "660",
+   "posy": "664"
+  },
+  "111": {
+   "height": "422"
+  },
+  "250": {
+   "height": "330"
+  }
+ }
+}

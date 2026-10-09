@@ -1,0 +1,198 @@
+{
+ "focus": 301,
+ "time": "20:41",
+ "window_bg": "FF0E0F12",
+ "props": {
+  "dynamic_backgrounds": "1",
+  "background": "mock:bg",
+  "background_static": "mock:bg",
+  "album.thumb": "mock:cover",
+  "album.title": "Currents",
+  "artist.title": "Tame Impala",
+  "album.meta": "2015 \u2022 13 tracks \u2022 51m",
+  "script.plezy.native.track.ID": "102"
+ },
+ "infolabels": {
+  "Player.Playing": "1"
+ },
+ "bools": {
+  "Player.Playing": true
+ },
+ "lists": {
+  "101": {
+   "selected": 0,
+   "items": [
+    {
+     "label": "Let It Happen",
+     "thumb": "",
+     "props": {
+      "track.number": "1",
+      "track.duration": "7:47",
+      "track.ID": "100",
+      "index": "0",
+      "group.pos": "top"
+     }
+    },
+    {
+     "label": "Nangs",
+     "thumb": "",
+     "props": {
+      "track.number": "2",
+      "track.duration": "1:49",
+      "track.ID": "101",
+      "index": "1",
+      "group.pos": "mid"
+     }
+    },
+    {
+     "label": "The Moment",
+     "thumb": "",
+     "props": {
+      "track.number": "3",
+      "track.duration": "4:15",
+      "track.ID": "102",
+      "index": "2",
+      "group.pos": "mid"
+     }
+    },
+    {
+     "label": "Yes I'm Changing",
+     "thumb": "",
+     "props": {
+      "track.number": "4",
+      "track.duration": "4:30",
+      "track.ID": "103",
+      "index": "3",
+      "group.pos": "mid"
+     }
+    },
+    {
+     "label": "Eventually",
+     "thumb": "",
+     "props": {
+      "track.number": "5",
+      "track.duration": "5:19",
+      "track.ID": "104",
+      "index": "4",
+      "group.pos": "mid"
+     }
+    },
+    {
+     "label": "Gossip",
+     "thumb": "",
+     "props": {
+      "track.number": "6",
+      "track.duration": "0:54",
+      "track.ID": "105",
+      "index": "5",
+      "group.pos": "mid"
+     }
+    },
+    {
+     "label": "The Less I Know the Better",
+     "thumb": "",
+     "props": {
+      "track.number": "7",
+      "track.duration": "3:36",
+      "track.ID": "106",
+      "index": "6",
+      "group.pos": "mid",
+      "track.artist": "Tame Impala & Friends"
+     }
+    },
+    {
+     "label": "Past Life",
+     "thumb": "",
+     "props": {
+      "track.number": "8",
+      "track.duration": "3:47",
+      "track.ID": "107",
+      "index": "7",
+      "group.pos": "mid"
+     }
+    },
+    {
+     "label": "Disciples",
+     "thumb": "",
+     "props": {
+      "track.number": "9",
+      "track.duration": "1:48",
+      "track.ID": "108",
+      "index": "8",
+      "group.pos": "mid"
+     }
+    },
+    {
+     "label": "'Cause I'm a Man",
+     "thumb": "",
+     "props": {
+      "track.number": "10",
+      "track.duration": "4:01",
+      "track.ID": "109",
+      "index": "9",
+      "group.pos": "mid"
+     }
+    },
+    {
+     "label": "Reality in Motion",
+     "thumb": "",
+     "props": {
+      "track.number": "11",
+      "track.duration": "4:12",
+      "track.ID": "110",
+      "index": "10",
+      "group.pos": "mid"
+     }
+    },
+    {
+     "label": "Love/Paranoia",
+     "thumb": "",
+     "props": {
+      "track.number": "12",
+      "track.duration": "3:07",
+      "track.ID": "111",
+      "index": "11",
+      "group.pos": "mid"
+     }
+    },
+    {
+     "label": "New Person, Same Old Mistakes",
+     "thumb": "",
+     "props": {
+      "track.number": "13",
+      "track.duration": "6:03",
+      "track.ID": "112",
+      "index": "12",
+      "group.pos": "bottom"
+     }
+    }
+   ]
+  }
+ },
+ "images": {
+  "bg": {
+   "size": [
+    1920,
+    1080
+   ],
+   "colors": [
+    "#5a4a7a",
+    "#14111f"
+   ]
+  },
+  "cover": {
+   "size": [
+    270,
+    270
+   ],
+   "colors": [
+    "#e0568a",
+    "#3a1a6e"
+   ],
+   "text": "CURRENTS"
+  }
+ },
+ "addon_strings": {
+  "208": "Play"
+ }
+}

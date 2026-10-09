@@ -1,0 +1,27 @@
+{
+ "focus": 1002,
+ "backdrop": "mock:backdrop",
+ "props": {
+  "initialized": "1",
+  "header": "Confirm exit",
+  "info": "Are you ready to exit Plex?",
+  "button.0": "Exit Plex",
+  "button.1": "Minimize",
+  "button.2": "Cancel"
+ },
+ "images": {
+  "backdrop": {
+   "size": [
+    1920,
+    1080
+   ],
+   "colors": [
+    "#4a5a78",
+    "#1c2230"
+   ],
+   "text": "BACKDROP",
+   "text_size": 160,
+   "text_y": 0.3
+  }
+ }
+}

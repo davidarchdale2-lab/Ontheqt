@@ -1,0 +1,155 @@
+{
+ "focus": 125,
+ "images": {
+  "bd": {
+   "size": [
+    1920,
+    1080
+   ],
+   "colors": [
+    "#8a9bb0",
+    "#2b3442"
+   ]
+  }
+ },
+ "props": {
+  "heading": "Settings",
+  "section.title": "Video"
+ },
+ "infolabels": {
+  "System.Time": "20:41"
+ },
+ "lists": {
+  "75": {
+   "selected": 1,
+   "items": [
+    {
+     "label": "Main",
+     "props": {
+      "icon": "script.plex/plezy/icons/settings.png",
+      "subtitle": "Start Plex On Kodi Startup \u00b7 Start Delay \u00b7 Automatically Sign In",
+      "group.first": "1"
+     }
+    },
+    {
+     "label": "Video",
+     "props": {
+      "icon": "script.plex/plezy/icons/play_circle.png",
+      "subtitle": "Local Quality \u00b7 Remote Quality \u00b7 Online Quality"
+     }
+    },
+    {
+     "label": "Audio/Subtitles",
+     "props": {
+      "icon": "script.plex/plezy/icons/subtitles.png",
+      "subtitle": "Never exceed original audio codec \u00b7 Use Kodi audio channels \u00b7 Audio Channels"
+     }
+    },
+    {
+     "label": "User Interface",
+     "props": {
+      "icon": "script.plex/plezy/icons/palette.png",
+      "subtitle": "Theme \u00b7 Show Watched Indicators \u00b7 Hub count"
+     }
+    },
+    {
+     "label": "Player",
+     "props": {
+      "icon": "script.plex/plezy/icons/smart_display.png",
+      "subtitle": "Resume seek behind \u00b7 Skip intro \u00b7 Auto play next"
+     }
+    },
+    {
+     "label": "Player (user specific)",
+     "props": {
+      "icon": "script.plex/plezy/icons/manage_accounts.png",
+      "subtitle": "Show Intro Skip \u00b7 Show Credits Skip \u00b7 Auto skip"
+     }
+    },
+    {
+     "label": "Network",
+     "props": {
+      "icon": "script.plex/plezy/icons/lan.png",
+      "subtitle": "Allow insecure connections \u00b7 Bandwidth limit \u00b7 Cache size"
+     }
+    },
+    {
+     "label": "System",
+     "props": {
+      "icon": "script.plex/plezy/icons/tune.png",
+      "subtitle": "Debug Logging \u00b7 Path mapping \u00b7 Clear cache"
+     }
+    },
+    {
+     "label": "About",
+     "props": {
+      "icon": "script.plex/plezy/icons/info.png",
+      "subtitle": "Addon Version \u00b7 Kodi Version \u00b7 Platform Version",
+      "group.last": "1",
+      "is.last": "1"
+     }
+    }
+   ]
+  },
+  "100": {
+   "selected": 2,
+   "items": [
+    {
+     "label": "Video",
+     "label2": "",
+     "props": {
+      "type": "info",
+      "description": "",
+      "subtitle": "",
+      "group.first": "1"
+     }
+    },
+    {
+     "label": "Direct play",
+     "label2": "",
+     "props": {
+      "type": "bool",
+      "description": "",
+      "subtitle": "",
+      "checkbox": "1"
+     }
+    },
+    {
+     "label": "Allowed codecs",
+     "label2": "HEVC, VC-1",
+     "props": {
+      "type": "multi",
+      "description": "Select the codecs the client may play without transcoding.",
+      "subtitle": "HEVC, VC-1 \u00b7 Select the codecs the client may play without transcoding.",
+      "group.last": "1"
+     }
+    }
+   ]
+  },
+  "125": {
+   "selected": 1,
+   "items": [
+    {
+     "label": "HEVC",
+     "props": {
+      "option.multi": "1",
+      "checkbox.checked": "1"
+     }
+    },
+    {
+     "label": "VC-1",
+     "props": {
+      "option.multi": "1",
+      "checkbox.checked": "1"
+     }
+    },
+    {
+     "label": "AV1",
+     "props": {
+      "option.multi": "1"
+     }
+    }
+   ]
+  }
+ }
+}

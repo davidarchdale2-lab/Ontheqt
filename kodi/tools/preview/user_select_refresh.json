@@ -1,0 +1,118 @@
+{
+ "focus": 101,
+ "window_bg": "FF0E0F12",
+ "time": "20:41",
+ "addon_strings": {
+  "32342": "Switch User",
+  "32980": "Refresh Users",
+  "35225": "Switching profile\u2026",
+  "32926": "Wrong pin entered!"
+ },
+ "props": {
+  "initialized": "1"
+ },
+ "images": {
+  "av1": {
+   "size": [
+    200,
+    200
+   ],
+   "colors": [
+    "#c9a77a",
+    "#6b4a2b"
+   ],
+   "text": ""
+  },
+  "av2": {
+   "size": [
+    200,
+    200
+   ],
+   "colors": [
+    "#7aa0c9",
+    "#2b4a6b"
+   ],
+   "text": ""
+  }
+ },
+ "lists": {
+  "101": {
+   "selected": 5,
+   "items": [
+    {
+     "label": "Alex",
+     "label2": "A",
+     "thumb": "mock:av1",
+     "props": {
+      "group.pos": "first",
+      "avatar.color": "FF4527A0",
+      "active": "1",
+      "meta": "Active \u2022 Administrator",
+      "protected": "",
+      "pin.len": "0"
+     }
+    },
+    {
+     "label": "Maria",
+     "label2": "M",
+     "thumb": "mock:av2",
+     "props": {
+      "group.pos": "middle",
+      "avatar.color": "FF4527A0",
+      "active": "",
+      "meta": "Home user",
+      "protected": "",
+      "pin.len": "0"
+     }
+    },
+    {
+     "label": "Sam",
+     "label2": "S",
+     "thumb": "",
+     "props": {
+      "group.pos": "middle",
+      "avatar.color": "FFC62828",
+      "active": "",
+      "meta": "Home user \u2022 PIN protected",
+      "protected": "1",
+      "pin.len": "0"
+     }
+    },
+    {
+     "label": "Kids",
+     "label2": "K",
+     "thumb": "",
+     "props": {
+      "group.pos": "middle",
+      "avatar.color": "FFE65100",
+      "active": "",
+      "meta": "Managed user",
+      "protected": "",
+      "pin.len": "0"
+     }
+    },
+    {
+     "label": "Jordan with a really long profile name that keeps going and going to check ellipsis in the tile layout",
+     "label2": "J",
+     "thumb": "",
+     "props": {
+      "group.pos": "last",
+      "avatar.color": "FFAD1457",
+      "active": "",
+      "meta": "Managed user \u2022 PIN protected",
+      "protected": "1",
+      "pin.len": "0"
+     }
+    },
+    {
+     "label": "",
+     "label2": "",
+     "thumb": "",
+     "props": {
+      "empty": "1"
+     }
+    }
+   ]
+  }
+ }
+}

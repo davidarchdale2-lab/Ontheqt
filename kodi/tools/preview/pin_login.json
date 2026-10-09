@@ -1,0 +1,6 @@
+{
+  "focus": 102,
+  "window_bg": "FF0E0F12",
+  "addon_strings": {"35050": "Plezy", "35222": "Scan the QR code, or visit the address below and enter this code:", "35223": "Waiting for authentication…", "32914": "Loading", "32337": "Cancel"},
+  "props": {"pin.image.0": "x", "pin.image.1": "x", "pin.image.2": "x", "pin.image.3": "x", "pin.char.0": "K", "pin.char.1": "7", "pin.char.2": "W", "pin.char.3": "B"}
+}

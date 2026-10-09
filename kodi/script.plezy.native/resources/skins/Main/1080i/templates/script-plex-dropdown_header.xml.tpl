@@ -1,4 +1,8 @@
 {% extends "base.xml.tpl" %}
+{# Plezy menu sheet (edde746/plezy lib/widgets/app_menu.dart AppMenuSheet inside an OverlaySheet): a 50% sheet_scrim over
+   the screen and a radius-16 surface sheet holding a bold title and the menu rows (66px, no per-row background). Used for
+   every dropdown with a header (choose version, manage hubs, library actions, playback settings...). The Python
+   (lib/windows/dropdown.py DropdownHeaderDialog) positions group 100, sizes list 250, scrollbar 1152 and the sheet 111. #}
 {% block backgroundcolor %}{% endblock %}
 {% block headers %}
 <onload>SetProperty(dropdown,1)</onload>
@@ -6,25 +10,31 @@
 {% endblock %}
 {% block controls %}
 <control type="button" id="700">
-    <!-- dummy for clicks off list -->
+    <!-- dummy for clicks off list; its idle art is the sheet barrier -->
+    <animation effect="fade" start="0" end="100" time="250" tween="cubic" easing="out">WindowOpen</animation>
+    <animation effect="fade" start="100" end="0" time="200" tween="cubic" easing="in">WindowClose</animation>
     <posx>0</posx>
     <posy>0</posy>
     <width>1920</width>
     <height>1080</height>
-    <texturefocus>-</texturefocus>
-    <texturenofocus>-</texturenofocus>
+    <texturefocus colordiffuse="{{ core.plezy.sheet_scrim }}">script.plex/white-square.png</texturefocus>
+    <texturenofocus colordiffuse="{{ core.plezy.sheet_scrim }}">script.plex/white-square.png</texturenofocus>
 </control>
 <control type="group" id="100">
     <defaultcontrol>250</defaultcontrol>
     <visible>!String.IsEmpty(Window.Property(show))</visible>
+    <animation effect="slide" start="0,{{ vscale(60) }}" end="0,0" time="250" tween="cubic" easing="out">Visible</animation>
+    <animation effect="fade" start="0" end="100" time="200" tween="cubic" easing="out">Visible</animation>
+    <animation effect="slide" start="0,0" end="0,{{ vscale(60) }}" time="200" tween="cubic" easing="in">WindowClose</animation>
+    <animation effect="fade" start="100" end="0" time="200" tween="cubic" easing="in">WindowClose</animation>
     <posx>0</posx>
     <posy>0</posy>
     <control type="image" id="110">
         <posx>-60</posx>
-        <posy>{{ vperc(vscale(-106)) }}</posy>
+        <posy>{{ vscale(-106) }}</posy>
         <width>720</width>
         <height>{{ vscale(146) }}</height>
-        <texture border="42">script.plex/drop-shadow.png</texture>
+        <texture>-</texture>
     </control>
     <control type="group">
         <visible>!String.IsEmpty(Window.Property(header))</visible>
@@ -35,19 +45,19 @@
             <posy>0</posy>
             <width>640</width>
             <height>{{ vscale(132) }}</height>
-            <texture colordiffuse="D3111111" border="10">script.plex/white-square-rounded.png</texture>
+            <texture border="16" colordiffuse="{{ core.plezy.surface }}">script.plex/plezy/r16.png</texture>
         </control>
         <control type="label">
-            <posx>20</posx>
+            <posx>41</posx>
             <posy>0</posy>
-            <width>600</width>
+            <width>560</width>
             <height>{{ vscale(66) }}</height>
-            <font>font12</font>
-            <align>center</align>
+            <font>font13</font>
+            <align>left</align>
             <aligny>center</aligny>
-            <textcolor>FFEEEEEE</textcolor>
             <scroll>true</scroll>
-            <scrollspeed>15</scrollspeed>
+            <scrollspeed>40</scrollspeed>
+            <textcolor>{{ core.plezy.text }}</textcolor>
             <label>[B]$INFO[Window.Property(header)][/B]</label>
         </control>
     </control>
@@ -68,290 +78,22 @@
         <pagecontrol>1152</pagecontrol>
         <!-- ITEM LAYOUT ########################################## -->
         <itemlayout height="{{ vscale(66) }}">
-            <control type="image">
-                <visible>!String.IsEmpty(ListItem.Property(first))</visible>
-                <posx>0</posx>
-                <posy>0</posy>
-                <width>600</width>
-                <height>{{ vscale(66) }}</height>
-                <texture colordiffuse="99111111" border="10">script.plex/white-square-top-rounded.png</texture>
-            </control>
-            <control type="image">
-                <visible>String.IsEmpty(ListItem.Property(first)) + String.IsEmpty(ListItem.Property(last)) + String.IsEmpty(ListItem.Property(only))</visible>
-                <posx>0</posx>
-                <posy>0</posy>
-                <width>600</width>
-                <height>{{ vscale(66) }}</height>
-                <texture colordiffuse="99111111">script.plex/white-square.png</texture>
-            </control>
-            <control type="image">
-                <visible>!String.IsEmpty(ListItem.Property(last))</visible>
-                <posx>0</posx>
-                <posy>0</posy>
-                <width>600</width>
-                <height>{{ vscale(66) }}</height>
-                <texture flipy="true" colordiffuse="99111111" border="10">script.plex/white-square-top-rounded.png</texture>
-            </control>
-            <control type="image">
-                <visible>!String.IsEmpty(ListItem.Property(only))</visible>
-                <posx>0</posx>
-                <posy>0</posy>
-                <width>600</width>
-                <height>{{ vscale(66) }}</height>
-                <texture colordiffuse="99111111" border="10">script.plex/white-square-rounded.png</texture>
-            </control>
-            <control type="label">
-                <visible>String.IsEmpty(ListItem.Property(with.indicator)) + String.IsEqual(ListItem.Property(align),center)</visible>
-                <posx>0</posx>
-                <posy>0</posy>
-                <width>580</width>
-                <height>{{ vscale(66) }}</height>
-                <font>font12</font>
-                <align>center</align>
-                <aligny>center</aligny>
-                <textcolor>FFFFFFFF</textcolor>
-                <scroll>true</scroll>
-                <scrollspeed>20</scrollspeed>
-                <label>$INFO[ListItem.Label]</label>
-            </control>
-            <control type="label">
-                <visible>String.IsEmpty(ListItem.Property(with.indicator)) + String.IsEqual(ListItem.Property(align),left)</visible>
-                <posx>20</posx>
-                <posy>0</posy>
-                <width>580</width>
-                <height>{{ vscale(66) }}</height>
-                <font>font12</font>
-                <align>left</align>
-                <aligny>center</aligny>
-                <textcolor>FFFFFFFF</textcolor>
-                <scroll>true</scroll>
-                <scrollspeed>20</scrollspeed>
-                <label>$INFO[ListItem.Label]</label>
-            </control>
-            <control type="group">
-                <visible>!String.IsEmpty(ListItem.Property(with.indicator))</visible>
-                <!-- Label: narrow when submenu chevron is shown, full-width otherwise -->
-                <control type="label">
-                    <visible>String.IsEmpty(ListItem.Property(has.submenu))</visible>
-                    <posx>60</posx>
-                    <posy>0</posy>
-                    <width>520</width>
-                    <height>{{ vscale(66) }}</height>
-                    <font>font12</font>
-                    <align>left</align>
-                    <aligny>center</aligny>
-                    <textcolor>FFFFFFFF</textcolor>
-                    <scroll>true</scroll>
-                    <scrollspeed>20</scrollspeed>
-                    <label>$INFO[ListItem.Label]</label>
-                </control>
-                <control type="label">
-                    <visible>!String.IsEmpty(ListItem.Property(has.submenu))</visible>
-                    <posx>60</posx>
-                    <posy>0</posy>
-                    <width>490</width>
-                    <height>{{ vscale(66) }}</height>
-                    <font>font12</font>
-                    <align>left</align>
-                    <aligny>center</aligny>
-                    <textcolor>FFFFFFFF</textcolor>
-                    <scroll>true</scroll>
-                    <scrollspeed>20</scrollspeed>
-                    <label>$INFO[ListItem.Label]</label>
-                </control>
-                <!-- Submenu chevron -->
-                <control type="image">
-                    <visible>!String.IsEmpty(ListItem.Property(has.submenu))</visible>
-                    <posx>558</posx>
-                    <posy>{{ vscale(22) }}</posy>
-                    <width>18</width>
-                    <height>{{ vscale(22) }}</height>
-                    <texture colordiffuse="80FFFFFF">script.plex/indicators/chevron-white.png</texture>
-                    <aspectratio>keep</aspectratio>
-                </control>
-                <control type="image">
-                    <posx>20</posx>
-                    <posy>{{ vscale(20) }}</posy>
-                    <width>26</width>
-                    <height>{{ vscale(26) }}</height>
-                    <texture colordiffuse="FFFFFFFF">$INFO[ListItem.Thumb]</texture>
-                    <aspectratio>keep</aspectratio>
-                </control>
-            </control>
-            <control type="image">
-                <visible>!String.IsEmpty(ListItem.Property(separator))</visible>
-                <posx>0</posx>
-                <posy>{{ vscale(64) }}</posy>
-                <width>600</width>
-                <height>{{ vscale(2) }}</height>
-                <texture colordiffuse="FF000000">script.plex/white-square.png</texture>
-            </control>
+            {% include "includes/plezy_menu_row.xml.tpl" with w = 600 %}
         </itemlayout>
         <focusedlayout height="{{ vscale(66) }}">
-            <!-- Normal focused state (gold) - when not moving -->
-            <control type="image">
-                <visible>!String.IsEmpty(ListItem.Property(first)) + String.IsEmpty(ListItem.Property(moving))</visible>
-                <posx>0</posx>
-                <posy>0</posy>
-                <width>600</width>
-                <height>{{ vscale(66) }}</height>
-                <texture colordiffuse="{{ core.plezy.text }}" border="10">script.plex/white-square-top-rounded.png</texture>
-            </control>
-            <control type="image">
-                <visible>String.IsEmpty(ListItem.Property(first)) + String.IsEmpty(ListItem.Property(last)) + String.IsEmpty(ListItem.Property(only)) + String.IsEmpty(ListItem.Property(moving))</visible>
-                <posx>0</posx>
-                <posy>0</posy>
-                <width>600</width>
-                <height>{{ vscale(66) }}</height>
-                <texture colordiffuse="{{ core.plezy.text }}">script.plex/white-square.png</texture>
-            </control>
-            <control type="image">
-                <visible>!String.IsEmpty(ListItem.Property(last)) + String.IsEmpty(ListItem.Property(moving))</visible>
-                <posx>0</posx>
-                <posy>0</posy>
-                <width>600</width>
-                <height>{{ vscale(66) }}</height>
-                <texture flipy="true" colordiffuse="FFFFFFFF" border="10">script.plex/white-square-top-rounded.png</texture>
-            </control>
-            <control type="image">
-                <visible>!String.IsEmpty(ListItem.Property(only)) + String.IsEmpty(ListItem.Property(moving))</visible>
-                <posx>0</posx>
-                <posy>0</posy>
-                <width>600</width>
-                <height>{{ vscale(66) }}</height>
-                <texture colordiffuse="FFFFFFFF" border="10">script.plex/white-square-rounded.png</texture>
-            </control>
-            <!-- Moving state (muted gray, more opaque to prevent orange flash during move) -->
-            <control type="image">
-                <visible>!String.IsEmpty(ListItem.Property(first)) + !String.IsEmpty(ListItem.Property(moving))</visible>
-                <posx>0</posx>
-                <posy>0</posy>
-                <width>600</width>
-                <height>{{ vscale(66) }}</height>
-                <texture colordiffuse="CC555555" border="10">script.plex/white-square-top-rounded.png</texture>
-            </control>
-            <control type="image">
-                <visible>String.IsEmpty(ListItem.Property(first)) + String.IsEmpty(ListItem.Property(last)) + String.IsEmpty(ListItem.Property(only)) + !String.IsEmpty(ListItem.Property(moving))</visible>
-                <posx>0</posx>
-                <posy>0</posy>
-                <width>600</width>
-                <height>{{ vscale(66) }}</height>
-                <texture colordiffuse="CC555555">script.plex/white-square.png</texture>
-            </control>
-            <control type="image">
-                <visible>!String.IsEmpty(ListItem.Property(last)) + !String.IsEmpty(ListItem.Property(moving))</visible>
-                <posx>0</posx>
-                <posy>0</posy>
-                <width>600</width>
-                <height>{{ vscale(66) }}</height>
-                <texture flipy="true" colordiffuse="CC555555" border="10">script.plex/white-square-top-rounded.png</texture>
-            </control>
-            <control type="image">
-                <visible>!String.IsEmpty(ListItem.Property(only)) + !String.IsEmpty(ListItem.Property(moving))</visible>
-                <posx>0</posx>
-                <posy>0</posy>
-                <width>600</width>
-                <height>{{ vscale(66) }}</height>
-                <texture colordiffuse="CC555555" border="10">script.plex/white-square-rounded.png</texture>
-            </control>
-            <control type="label">
-                <visible>String.IsEmpty(ListItem.Property(with.indicator)) + String.IsEqual(ListItem.Property(align),center)</visible>
-                <posx>0</posx>
-                <posy>0</posy>
-                <width>580</width>
-                <height>{{ vscale(66) }}</height>
-                <font>font12</font>
-                <align>center</align>
-                <aligny>center</aligny>
-                <textcolor>FF000000</textcolor>
-                <scroll>true</scroll>
-                <scrollspeed>20</scrollspeed>
-                <label>$INFO[ListItem.Label]</label>
-            </control>
-            <control type="label">
-                <visible>String.IsEmpty(ListItem.Property(with.indicator)) + String.IsEqual(ListItem.Property(align),left)</visible>
-                <posx>20</posx>
-                <posy>0</posy>
-                <width>580</width>
-                <height>{{ vscale(66) }}</height>
-                <font>font12</font>
-                <align>left</align>
-                <aligny>center</aligny>
-                <textcolor>FF000000</textcolor>
-                <scroll>true</scroll>
-                <scrollspeed>20</scrollspeed>
-                <label>$INFO[ListItem.Label]</label>
-            </control>
-            <control type="group">
-                <visible>!String.IsEmpty(ListItem.Property(with.indicator))</visible>
-                <!-- Label: narrow when submenu chevron is shown, full-width otherwise -->
-                <control type="label">
-                    <visible>String.IsEmpty(ListItem.Property(has.submenu))</visible>
-                    <posx>60</posx>
-                    <posy>0</posy>
-                    <width>520</width>
-                    <height>{{ vscale(66) }}</height>
-                    <font>font12</font>
-                    <align>left</align>
-                    <aligny>center</aligny>
-                    <textcolor>FF000000</textcolor>
-                    <scroll>true</scroll>
-                    <scrollspeed>20</scrollspeed>
-                    <label>$INFO[ListItem.Label]</label>
-                </control>
-                <control type="label">
-                    <visible>!String.IsEmpty(ListItem.Property(has.submenu))</visible>
-                    <posx>60</posx>
-                    <posy>0</posy>
-                    <width>490</width>
-                    <height>{{ vscale(66) }}</height>
-                    <font>font12</font>
-                    <align>left</align>
-                    <aligny>center</aligny>
-                    <textcolor>FF000000</textcolor>
-                    <scroll>true</scroll>
-                    <scrollspeed>20</scrollspeed>
-                    <label>$INFO[ListItem.Label]</label>
-                </control>
-                <!-- Submenu chevron -->
-                <control type="image">
-                    <visible>!String.IsEmpty(ListItem.Property(has.submenu))</visible>
-                    <posx>558</posx>
-                    <posy>{{ vscale(22) }}</posy>
-                    <width>18</width>
-                    <height>{{ vscale(22) }}</height>
-                    <texture colordiffuse="80000000">script.plex/indicators/chevron-white.png</texture>
-                    <aspectratio>keep</aspectratio>
-                </control>
-                <control type="image">
-                    <posx>20</posx>
-                    <posy>{{ vscale(20) }}</posy>
-                    <width>26</width>
-                    <height>{{ vscale(26) }}</height>
-                    <texture colordiffuse="FF000000">$INFO[ListItem.Thumb]</texture>
-                    <aspectratio>keep</aspectratio>
-                </control>
-            </control>
-            <control type="image">
-                <visible>!String.IsEmpty(ListItem.Property(separator))</visible>
-                <posx>0</posx>
-                <posy>{{ vscale(64) }}</posy>
-                <width>600</width>
-                <height>{{ vscale(2) }}</height>
-                <texture colordiffuse="FF000000">script.plex/white-square.png</texture>
-            </control>
+            {% include "includes/plezy_menu_row.xml.tpl" with w = 600 & focused = True %}
         </focusedlayout>
     </control>
     <control type="scrollbar" id="1152">
         <hitrect x="600" y="0" w="50" h="{{ vscale(528) }}" />
         <left>604</left>
         <top>0</top>
-        <width>12</width>
+        <width>6</width>
         <height>{{ vscale(528) }}</height>
         <visible>true</visible>
-        <texturesliderbackground colordiffuse="40000000" border="5">script.plex/white-square-rounded.png</texturesliderbackground>
-        <texturesliderbar colordiffuse="77FFFFFF" border="5">script.plex/white-square-rounded.png</texturesliderbar>
-        <texturesliderbarfocus colordiffuse="FFFFFFFF" border="5">script.plex/white-square-rounded.png</texturesliderbarfocus>
+        <texturesliderbackground colordiffuse="{{ core.plezy.track }}" border="4">script.plex/white-square-rounded-4r.png</texturesliderbackground>
+        <texturesliderbar colordiffuse="{{ core.plezy.muted }}" border="4">script.plex/white-square-rounded-4r.png</texturesliderbar>
+        <texturesliderbarfocus colordiffuse="{{ core.plezy.text }}" border="4">script.plex/white-square-rounded-4r.png</texturesliderbarfocus>
         <textureslidernib>-</textureslidernib>
         <textureslidernibfocus>-</textureslidernibfocus>
         <pulseonselect>false</pulseonselect>

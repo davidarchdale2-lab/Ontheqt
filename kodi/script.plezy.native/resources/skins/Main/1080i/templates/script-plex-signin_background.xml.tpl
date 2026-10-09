@@ -1,18 +1,8 @@
 {% extends "base.xml.tpl" %}
+{# Sits behind the sign-in windows (lib/plex.py authorize) and only shows in the gaps between them; each of those windows is a full
+   window that draws the same brand panel. The window has no controls (the header names control 100 as before, which does not exist). #}
 {% block headers %}<defaultcontrol>100</defaultcontrol>{% endblock %}
+{% block backgroundcolor %}<backgroundcolor>0x{{ core.plezy.bg }}</backgroundcolor>{% endblock %}
 {% block controls %}
-<control type="image">
-    <posx>0</posx>
-    <posy>0</posy>
-    <width>1920</width>
-    <height>1080</height>
-    <texture background="true">script.plex/home/background-fallback_black.png</texture>
-</control>
-<control type="image">
-    <posx>0</posx>
-    <posy>{% if core.needs_scaling %}{{ vperc(vscale(1080)) }}{% else %}0{% endif %}</posy>
-    <width>1920</width>
-    <height>{{ vscale(1080) }}</height>
-    <texture>script.plex/sign_in/back.jpg</texture>
-</control>
+{% include "includes/plezy_auth_brand.xml.tpl" %}
 {% endblock %}
