@@ -1,6 +1,7 @@
 {% if plezy %}{# Plezy detail: the availability note in the action row's track-status slot (right-aligned, read-only).
-   params: x (default 1176), y (default 590), width (default 684), height (default 56) #}
-    {% with ax = x|default(1176) & ay = y|default(590) & aw = width|default(684) & ah = height|default(56) %}
+   params: x (default 600), y (default 590), width (default 1260), height (default 56); right-aligned, so the note
+   ends at x + width (1860) and only grows left as far as its text needs; bottom-weighted like the track status #}
+    {% with ax = x|default(600) & ay = y|default(590) & aw = width|default(1260) & ah = height|default(56) %}
     <control type="grouplist">
         <visible>!String.IsEmpty(Window.Property(wl_server_availability_verbose))</visible>
         <posx>{{ ax }}</posx>
@@ -12,8 +13,9 @@
         <orientation>horizontal</orientation>
         <usecontrolcoords>true</usecontrolcoords>
         <control type="label">
+            <posy>{{ vscale(12) }}</posy>
             <width max="{{ aw }}">auto</width>
-            <height>{{ ah|vscale }}</height>
+            <height>{{ (ah - 12)|vscale }}</height>
             <font>font10</font>
             <align>left</align>
             <aligny>center</aligny>
@@ -22,7 +24,7 @@
         </control>
         <control type="image">
             <posx>14</posx>
-            <posy>{{ ((ah - 24) / 2)|vscale }}</posy>
+            <posy>{{ ((ah - 24) / 2 + 6)|vscale }}</posy>
             <width>24</width>
             <height>{{ vscale(24) }}</height>
             <texture colordiffuse="{{ core.plezy.muted }}">script.plex/plezy/icons/dns.png</texture>
@@ -30,8 +32,9 @@
         </control>
         <control type="label">
             <posx>8</posx>
-            <width max="{{ aw - 220 }}">auto</width>
-            <height>{{ ah|vscale }}</height>
+            <posy>{{ vscale(12) }}</posy>
+            <width max="{{ aw - 300 }}">auto</width>
+            <height>{{ (ah - 12)|vscale }}</height>
             <font>font10</font>
             <align>left</align>
             <aligny>center</aligny>

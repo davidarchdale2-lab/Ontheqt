@@ -10,13 +10,25 @@
 {% block background %}
     {% include "includes/default_background.xml.tpl" with spotlight=True %}
     {% include "includes/plezy_scrims.xml.tpl" %}
+    {% if core.needs_scaling %}
+    <!-- non-16:9: the backdrop fills the whole window but the scrims end at vscale(1080); carry scrim-v's bg foot on
+         down so the rail rows that show below it stay on the background -->
+    <control type="image">
+        <posx>0</posx>
+        <posy>{{ vscale(1080) }}</posy>
+        <width>1920</width>
+        <height>1080</height>
+        <texture colordiffuse="{{ core.plezy.bg }}">script.plex/white-square.png</texture>
+    </control>
+    {% endif %}
 {% endblock %}
 {# Plezy's back button never leaves: the header stays put instead of sliding away over the rail #}
 {% block header_anim %}{% endblock %}
 {% block header_bgfade %}{% endblock %}
 {% block content %}
 <control type="group" id="50">
-    <defaultcontrol>304</defaultcontrol>
+    <!-- down from the header lands on the info block, as from Plezy's back button -->
+    <defaultcontrol always="true">304</defaultcontrol>
     <posx>0</posx>
     <posy>0</posy>
     <width>1920</width>
@@ -401,16 +413,18 @@
     {% endblock %}
 
     <!-- TRACK STATUS (playback_tracks_status.dart): a read-only footnote at the row's right end, bottom-weighted
-         like Plezy's bottomRight alignment. Kodi can't measure text, so each part has a share of the 684px slot
-         (176 + 24 + 30 + 220 + 24 + 30 + 180) and truncates within it; the subtitle part always stays -->
+         like Plezy's bottomRight alignment. Plezy's slot is the right 40% (x 1176-1860) and sheds parts to fit;
+         Kodi can't measure text and its fonts run larger, so the right-aligned line may grow left over the empty
+         end of the action row (which never passes x 600) and each part truncates within its own share
+         (300 + 24 + 30 + 400 + 24 + 30 + 300 = 1108 of 1260): the subtitle part always stays -->
     <control type="group">
         <visible>!String.IsEmpty(Window.Property(initialized))</visible>
         <animation effect="fade" start="0" end="100" time="160" tween="cubic" easing="out">Visible</animation>
         {% block streams %}
         <control type="grouplist">
-            <posx>1176</posx>
+            <posx>600</posx>
             <posy>{{ vscale(590) }}</posy>
-            <width>684</width>
+            <width>1260</width>
             <height>{{ vscale(56) }}</height>
             <align>right</align>
             <itemgap>0</itemgap>
@@ -419,7 +433,7 @@
             <control type="label">
                 <visible>!String.IsEmpty(Window.Property(tracks.video))</visible>
                 <posy>{{ vscale(12) }}</posy>
-                <width max="176">auto</width>
+                <width max="300">auto</width>
                 <height>{{ vscale(44) }}</height>
                 <font>font10</font>
                 <aligny>center</aligny>
@@ -449,7 +463,7 @@
                 <visible>!String.IsEmpty(Window.Property(tracks.audio))</visible>
                 <posx>6</posx>
                 <posy>{{ vscale(12) }}</posy>
-                <width max="220">auto</width>
+                <width max="400">auto</width>
                 <height>{{ vscale(44) }}</height>
                 <font>font10</font>
                 <aligny>center</aligny>
@@ -479,7 +493,7 @@
                 <visible>!String.IsEmpty(Window.Property(tracks.subtitles))</visible>
                 <posx>6</posx>
                 <posy>{{ vscale(12) }}</posy>
-                <width max="180">auto</width>
+                <width max="300">auto</width>
                 <height>{{ vscale(44) }}</height>
                 <font>font10</font>
                 <aligny>center</aligny>

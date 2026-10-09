@@ -15,7 +15,7 @@
 {% block header_anim %}{% endblock %}
 {% block header_bgfade %}{% endblock %}
 {% block content %}
-{% with hx = 60 & hw = 1092 & hero_bottom = 574 & action_y = 590 & rail_y = 656 %}
+{% with hx = 60 & hw = 1092 & hero_bottom = 574 & action_y = 590 & rail_y = 652 %}
 <control type="group" id="50">
     <defaultcontrol>300</defaultcontrol>
     <posx>0</posx>
