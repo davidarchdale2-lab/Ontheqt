@@ -20,7 +20,7 @@
     {% if onfocus %}<onfocus>{{ onfocus }}</onfocus>{% endif %}
     <posx>{{ posx|default(0) }}</posx>
     <posy>{{ posy|default(0)|vscale }}</posy>
-    {% if shape == "label" %}<width max="480">auto</width>{% elif shape == "pill" %}<width>72</width>{% elif shape == "split" %}<width>72</width>{% elif shape == "version" %}<width>42</width>{% else %}<width>{{ h }}</width>{% endif %}
+    {% if shape == "label" %}<width min="96" max="480">auto</width>{% elif shape == "pill" %}<width>72</width>{% elif shape == "split" %}<width>72</width>{% elif shape == "version" %}<width>42</width>{% else %}<width>{{ h }}</width>{% endif %}
     <height>{{ h|vscale }}</height>
     <font>font12</font>
     <textcolor>{{ core.plezy.text }}</textcolor>
@@ -29,14 +29,18 @@
     {% if shape == "label" %}
     <align>left</align>
     <aligny>center</aligny>
-    <textoffsetx>62</textoffsetx>
+    {# Kodi sizes an auto-width button as label + 2*offset (+ label2 + 2*offset + 10). A 62px offset to clear the glyph would
+       also pad the right side by 62, so the text goes in <label2> (right-aligned) with a 17px offset: width = text + 4*17 + 10,
+       text starts ~61px in (clear of the glyph) and ends 17px from the right edge, as in Plezy. #}
+    <textoffsetx>17</textoffsetx>
     <texturefocus border="64,28,28,28">script.plex/plezy/action/label-{{ icon }}-focus.png</texturefocus>
     <texturenofocus border="64,28,28,28">script.plex/plezy/action/label-{{ icon }}.png</texturenofocus>
     {% if alt_icon %}
     <alttexturefocus border="64,28,28,28">script.plex/plezy/action/label-{{ alt_icon }}-focus.png</alttexturefocus>
     <alttexturenofocus border="64,28,28,28">script.plex/plezy/action/label-{{ alt_icon }}.png</alttexturenofocus>
     {% endif %}
-    <label>[B]{{ label }}[/B]</label>
+    <label></label>
+    <label2>[B]{{ label }}[/B]</label2>
     {% else %}
     {% if shape == "pill" %}
     <texturefocus>script.plex/plezy/action/pill-{{ icon }}-focus.png</texturefocus>

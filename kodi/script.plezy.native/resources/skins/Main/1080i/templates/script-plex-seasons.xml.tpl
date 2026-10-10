@@ -27,8 +27,8 @@
          a control to its content, so one fill per combination of the optional lines (bottom fixed at the action row).
          The summary textbox is auto height (up to three lines), so its fill follows Python's line estimate
          (hero.summary.lines, 1-3); text is never vscaled (Kodi fonts are fixed), so its 34px lines are added unscaled -->
-    {% for has_line in range(2) %}{% for has_av in range(2) %}{% for has_sum in range(2) %}{% for n in range(has_sum * 2 + 1) %}
-    {% with rest_h = 36 + has_line * 38 + has_av * 36 & sum_h = has_sum * 10 + has_sum * (n + 1) * 34 %}
+    {% for has_line in range(2) %}{% for has_av in range(2) %}{% for has_sum in range(2) %}{% with n_variants = has_sum * 2 + 1 %}{% for n in range(n_variants) %}
+    {% with rest_h = 36 + has_line * 38 + has_av * 36 & sum_h = has_sum * 10 + has_sum * n * 34 + has_sum * 34 %}
     {% with top_y = (hero_bottom - rest_h - 8)|vscale %}
     {% with rest_fill = (rest_h + 14)|vscale %}
     <control type="image">
@@ -42,7 +42,7 @@
     {% endwith %}
     {% endwith %}
     {% endwith %}
-    {% endfor %}{% endfor %}{% endfor %}{% endfor %}
+    {% endfor %}{% endwith %}{% endfor %}{% endfor %}{% endfor %}
 
     <!-- HERO: bottom-aligned column (Plezy _buildTvDetailForeground); a vertical grouplist aligned to the bottom
          collapses the optional lines and grows upwards like Plezy's Column in Align(bottomLeft) -->

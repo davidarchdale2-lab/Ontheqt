@@ -72,7 +72,7 @@
                 <posx>12</posx>
                 <posy>{{ vscale(10) }}</posy>
                 <width>1092</width>
-                <height max="{{ vscale(112) }}">auto</height>
+                <height max="112">auto</height>
                 <font>font12</font>
                 <textcolor>00000000</textcolor>
                 <label>$INFO[Window.Property(summary)]</label>
@@ -116,7 +116,7 @@
             <control type="textbox">
                 <visible>String.IsEmpty(Window.Property(clear.logo))</visible>
                 <width>1092</width>
-                <height max="{{ vscale(128) }}">auto</height>
+                <height max="128">auto</height>
                 <font>font45</font>
                 <textcolor>{{ core.plezy.text }}</textcolor>
                 <shadowcolor>{{ core.plezy.shadow }}</shadowcolor>
@@ -263,7 +263,7 @@
                 <visible>!String.IsEmpty(Window.Property(summary))</visible>
                 <posy>{{ vscale(10) }}</posy>
                 <width>1092</width>
-                <height max="{{ vscale(112) }}">auto</height>
+                <height max="112">auto</height>
                 <font>font12</font>
                 <textcolor>{{ core.plezy.summary }}</textcolor>
                 <label>$INFO[Window.Property(summary)]</label>

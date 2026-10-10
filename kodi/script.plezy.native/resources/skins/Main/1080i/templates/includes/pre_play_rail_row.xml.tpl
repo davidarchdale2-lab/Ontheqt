@@ -20,10 +20,10 @@
         <height>{{ list_h|vscale }}</height>
         <onup>{% if n == 0 %}301{% else %}{{ list_id - 1 }}{% endif %}</onup>
         {% if n < 6 %}<ondown>{{ list_id + 1 }}</ondown>{% endif %}
-        {% if boundary %}
+        {# every row swallows Left/Right at its ends: with no target Kodi wraps the list around (GUIBaseContainer), and paginated rows must
+           stay put so the paginator can load the next page #}
         <onleft>noop</onleft>
         <onright>noop</onright>
-        {% endif %}
         <scrolltime tween="cubic" easing="out">160</scrolltime>
         <orientation>horizontal</orientation>
         <preloaditems>4</preloaditems>

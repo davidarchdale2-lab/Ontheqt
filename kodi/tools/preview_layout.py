@@ -522,17 +522,33 @@ def _draw_control_inner(el, canvas, st, ox, oy, pw, ph, alpha, clip, at=None):
     return h
 
 
+def _text_width(raw, fnt_name, st):
+    s = resolve(raw, st)
+    return ImageDraw.Draw(Image.new('RGBA', (1, 1))).textlength(
+        re.sub(r'\[/?(B|I|UPPERCASE|LOWERCASE|CAPITALIZE)\]', '', s), font=font(fnt_name or 'font13', '[B]' in s))
+
+
+def button_auto_width(c, st):
+    off = num(child(c, 'textoffsetx'), 0)
+    fn = child(c, 'font')
+    w = _text_width(child(c, 'label') or '', fn, st) + 2 * off
+    l2 = child(c, 'label2')
+    if l2 and resolve(l2, st).strip():
+        w += _text_width(l2, fn, st) + 2 * off + 10
+    we = c.find('width')
+    mx = num(we.get('max'), 0) if we is not None else 0
+    w = max(w, _max_attr_min(c, 'width'), 1)
+    return min(w, mx) if mx else w
+
+
 def auto_width(c, st):
     """Width of a control in a horizontal grouplist; buttons with <width>auto</width> fit their label."""
     cw, _ = ctl_size(c)
     if not cw and c.get('type') in ('label', 'fadelabel'):
         return measured_size(c, st)[0]
-    if cw or c.get('type') != 'button':
+    if cw or c.get('type') not in ('button', 'togglebutton'):
         return cw
-    raw = resolve(child(c, 'label'), st)
-    lab = re.sub(r'\[/?B\]', '', raw)
-    tw = ImageDraw.Draw(Image.new('RGBA', (1, 1))).textlength(lab, font=font(child(c, 'font') or 'font13', '[B]' in raw))
-    return max(tw + 2 * num(child(c, 'textoffsetx'), 0), _max_attr_min(c, 'width'))
+    return button_auto_width(c, st)
 
 
 def draw_grouplist(el, canvas, st, x, y, w, h, alpha, clip):
@@ -727,10 +743,8 @@ def draw_button(el, canvas, st, x, y, w, h, alpha, clip):
     if el.get('type') == 'togglebutton' and child(el, 'usealttexture') and cond(child(el, 'usealttexture'), st):
         alt = el.find('alttexturefocus' if focused else 'alttexturenofocus')
         tex = alt if alt is not None else tex
-    if w <= 0:  # auto width: measure the label
-        raw = resolve(child(el, 'label'), st)
-        lab = re.sub(r'\[/?B\]', '', raw)
-        w = max(ImageDraw.Draw(Image.new('RGBA', (1, 1))).textlength(lab, font=font(child(el, 'font') or 'font13', '[B]' in raw)) + 2 * num(child(el, 'textoffsetx'), 0), _max_attr_min(el, 'width'))
+    if w <= 0:  # auto width, Kodi's rule
+        w = button_auto_width(el, st)
     if tex is not None and tex.text and tex.text.strip() != '-':
         fake = ET.Element('control', type='image')
         t = ET.SubElement(fake, 'texture', dict(tex.attrib))
@@ -745,6 +759,14 @@ def draw_button(el, canvas, st, x, y, w, h, alpha, clip):
         if m:
             col = m.group(1)
     draw_label(el, canvas, st, x + off, y, w - 2 * off, h, alpha, clip, text=text, color=col)
+    l2 = child(el, 'label2')
+    if l2 and resolve(l2, st).strip():  # label2 is drawn right-aligned inside the button
+        shim = ET.Element('control', type='label')
+        for tag in ('font', 'aligny'):
+            if child(el, tag):
+                ET.SubElement(shim, tag).text = child(el, tag)
+        ET.SubElement(shim, 'align').text = 'right'
+        draw_label(shim, canvas, st, x + off, y, w - 2 * off, h, alpha, clip, text=l2, color=col)
     return w
 
 
