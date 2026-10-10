@@ -53,7 +53,7 @@ class OnDeckPaginator(pagination.MCLPaginator):
         mli.setProperty('watched', mli.dataSource.isFullyWatched and '1' or '')
 
         if data.type in 'episode':
-            mli.setLabel2(osd.join_meta((T(32310, 'S').format(data.parentIndex), T(32311, 'E').format(data.index))))
+            mli.setLabel2(osd.episode_code(data.parentIndex, data.index, T(32310, 'S{}'), T(32311, 'E{}'), u' \u00b7 '))
         else:
             mli.setLabel2(data.year)
 
@@ -607,8 +607,8 @@ class VideoPlayerWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RolesMi
             if self.next.type == "episode" and hide_spoilers:
                 if self.noTitles:
                     self.setProperty('info.title',
-                                     osd.join_meta((T(32310, 'S').format(self.next.parentIndex),
-                                                    T(32311, 'E').format(self.next.index))))
+                                     osd.episode_code(self.next.parentIndex, self.next.index,
+                                                      T(32310, 'S{}'), T(32311, 'E{}'), u' \u00b7 '))
                 else:
                     self.setProperty('info.title', self.next.title)
                 self.setProperty('info.summary', T(33008, ''))
@@ -639,15 +639,15 @@ class VideoPlayerWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RolesMi
                 self.setProperty('next.title', self.next.grandparentTitle)
                 self.setProperty(
                     'next.subtitle',
-                    osd.join_meta((T(32303, 'Season').format(self.next.parentIndex),
-                                   T(32304, 'Episode').format(self.next.index)))
+                    osd.episode_code(self.next.parentIndex, self.next.index,
+                                     T(32303, 'Season {}'), T(32304, 'Episode {}'), u' \u00b7 ')
                 )
             if self.prev:
                 self.setProperty('prev.thumb', self.prev.thumb.asTranscodedImageURL(*self.PREV_DIM))
                 self.setProperty('prev.title', self.prev.grandparentTitle)
                 self.setProperty(
-                    'prev.subtitle', osd.join_meta((T(32303, 'Season').format(self.prev.parentIndex),
-                                                    T(32304, 'Episode').format(self.prev.index)))
+                    'prev.subtitle', osd.episode_code(self.prev.parentIndex, self.prev.index,
+                                                      T(32303, 'Season {}'), T(32304, 'Episode {}'), u' \u00b7 ')
                 )
                 self.setProperty('prev.info.date', util.cleanLeadingZeros(self.prev.originallyAvailableAt.asDatetime('%B %d, %Y')))
         elif self.prev.type == 'movie':

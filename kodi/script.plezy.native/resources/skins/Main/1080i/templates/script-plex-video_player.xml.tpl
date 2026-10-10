@@ -26,7 +26,7 @@
             <texture background="true">$INFO[Window.Property(post.play.background)]</texture>
             {% include "includes/scale_background.xml.tpl" %}
         </control>
-        {% include "includes/plezy_scrims.xml.tpl" %}
+        {% include "includes/plezy_scrims.xml.tpl" with foot=True %}
     </control>
 
     <control type="group" id="50">

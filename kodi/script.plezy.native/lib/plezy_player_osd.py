@@ -156,3 +156,19 @@ def countdown_seconds(timeout, now):
 def join_meta(parts, sep=u' · '):
     """Plezy's toBulletedString: non-empty parts joined with a middle dot."""
     return sep.join(p for p in parts if p)
+
+
+def episode_code(parent_index, index, season_fmt=u'S{}', episode_fmt=u'E{}', sep=u''):
+    """
+    'S1E2' (sep u'') or 'S1 · E2' (sep u' · ') for an episode. '' unless BOTH numbers are present: plexnet returns
+    an empty PlexValue for a missing attribute, which would otherwise render as 'SE' or 'Season  · Episode '.
+    """
+    season, episode = u'{0}'.format(parent_index or u'').strip(), u'{0}'.format(index or u'').strip()
+    if not season or not episode:
+        return u''
+    return season_fmt.format(season) + sep + episode_fmt.format(episode)
+
+
+def queue_subtitle(show, parent_index, index, season_fmt=u'S{}', episode_fmt=u'E{}'):
+    """Plezy formatQueueItemSubtitle: 'Show · S1E2', or the show title alone when a number is missing."""
+    return join_meta((show, episode_code(parent_index, index, season_fmt, episode_fmt)))

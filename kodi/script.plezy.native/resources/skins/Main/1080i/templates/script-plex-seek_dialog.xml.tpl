@@ -159,7 +159,21 @@
             <align>right</align>
             <aligny>center</aligny>
             <textcolor>{{ core.plezy.player_fg }}</textcolor>
-            <label>$INFO[Player.TimeRemaining($INFO[Window.Property(time.fmt)])]$INFO[Window.Property(time.add)]</label>
+            <label>-$INFO[Player.TimeRemaining($INFO[Window.Property(time.fmt)])]</label>
+        </control>
+        <!-- multi-part direct play: the "(+1h 5m)" remaining-parts suffix gets its own label above the end of the
+             timeline, so it can grow without eating the 120px remaining-time label or covering the track -->
+        <control type="label">
+            <visible>!String.IsEmpty(Window.Property(direct.play)) + !String.IsEmpty(Window.Property(time.add)) + [String.IsEmpty(Window.Property(no.osd.hide_info)) | !String.IsEmpty(Window.Property(show.OSD))]</visible>
+            <posx>1584</posx>
+            <posy>-{{ vscale(30) }}</posy>
+            <width>300</width>
+            <height>{{ vscale(30) }}</height>
+            <font>font12</font>
+            <align>right</align>
+            <aligny>center</aligny>
+            <textcolor>{{ core.plezy.player_fg_muted }}</textcolor>
+            <label>$INFO[Window.Property(time.add)]</label>
         </control>
         <control type="label">
             <visible>String.IsEmpty(Window.Property(direct.play)) + [String.IsEmpty(Window.Property(no.osd.hide_info)) | !String.IsEmpty(Window.Property(show.OSD))]</visible>
@@ -171,7 +185,7 @@
             <align>right</align>
             <aligny>center</aligny>
             <textcolor>{{ core.plezy.player_fg }}</textcolor>
-            <label>$INFO[Window.Property(time.left)]</label>
+            <label>-$INFO[Window.Property(time.left)]</label>
         </control>
 
         <!-- slider: 12px pill track; Python sizes 206 (buffer), 201 (played) and 200 (seek span) -->
@@ -469,8 +483,11 @@
             {% include "includes/seek_osd_button.xml.tpl" with gid=4408 & bid=408 & asset="skip-forward" & size="small" & vis="!String.IsEmpty(Window.Property(nav.ffwdrwd))" & onleft=426 & onright=4409 %}
             {% include "includes/seek_osd_button.xml.tpl" with gid=4409 & bid=409 & asset="next" & vis="!String.IsEmpty(Window.Property(pq.hasnext)) + !String.IsEmpty(Window.Property(nav.prevnext))" & onleft=4408 & onright=441 %}
             {% include "includes/seek_osd_button.xml.tpl" with gid=4419 & bid=419 & asset="next" & disabled=True & vis="String.IsEmpty(Window.Property(pq.hasnext)) + !String.IsEmpty(Window.Property(nav.prevnext))" %}
+            <!-- The three labels below carry ids (4491-4493) on purpose: a grouplist wires each child's RIGHT to the
+                 next child's id, and an id-less (0) label would overwrite 4419's RIGHT with an empty action, so
+                 RIGHT from the transport cluster could never reach the 441 cluster through hidden/disabled wrappers. -->
             <!-- "Ends at 9:45 PM" (FinishTimeBuilder): white70, 8 -> 12px after the last control -->
-            <control type="label">
+            <control type="label" id="4491">
                 <visible>!String.IsEmpty(Window.Property(media.show_ends)) + !String.IsEmpty(Window.Property(direct.play))</visible>
                 <posx>12</posx>
                 <posy>0</posy>
@@ -481,7 +498,7 @@
                 <textcolor>{{ core.plezy.player_fg_muted }}</textcolor>
                 <label>$INFO[Window.Property(time.ends_label)] $INFO[Player.FinishTime($INFO[Window.Property(time.fmt.ends)])]</label>
             </control>
-            <control type="label">
+            <control type="label" id="4492">
                 <visible>!String.IsEmpty(Window.Property(media.show_ends)) + String.IsEmpty(Window.Property(direct.play))</visible>
                 <posx>12</posx>
                 <posy>0</posy>
@@ -492,7 +509,7 @@
                 <textcolor>{{ core.plezy.player_fg_muted }}</textcolor>
                 <label>$INFO[Window.Property(time.ends_label)] $INFO[Window.Property(time.end)]</label>
             </control>
-            <control type="label">
+            <control type="label" id="4493">
                 <visible>Player.IsTempo</visible>
                 <posx>16</posx>
                 <posy>0</posy>

@@ -29,7 +29,8 @@
          (hero.summary.lines, 1-3); text is never vscaled (Kodi fonts are fixed), so its 34px lines are added unscaled -->
     {% for has_line in range(2) %}{% for has_av in range(2) %}{% for has_sum in range(2) %}{% for n in range(has_sum * 2 + 1) %}
     {% with rest_h = 36 + has_line * 38 + has_av * 36 & sum_h = has_sum * 10 + has_sum * (n + 1) * 34 %}
-    {% with top_y = (hero_bottom - rest_h - 8)|vscale & rest_fill = (rest_h + 14)|vscale %}
+    {% with top_y = (hero_bottom - rest_h - 8)|vscale %}
+    {% with rest_fill = (rest_h + 14)|vscale %}
     <control type="image">
         <visible>Control.HasFocus(301) + {% if has_line %}!{% endif %}String.IsEmpty(Window.Property(hero.line)) + {% if has_av %}!{% endif %}String.IsEmpty(Window.Property(wl_server_availability_verbose)) + {% if has_sum %}String.IsEqual(Window.Property(hero.summary.lines),{{ n + 1 }}){% else %}String.IsEmpty(Window.Property(hero.summary.lines)){% endif %}</visible>
         <posx>{{ hx - 14 }}</posx>
@@ -38,6 +39,7 @@
         <height>{{ rest_fill + sum_h }}</height>
         <texture border="8" colordiffuse="{{ core.plezy.focus_bg }}">script.plex/plezy/r8.png</texture>
     </control>
+    {% endwith %}
     {% endwith %}
     {% endwith %}
     {% endfor %}{% endfor %}{% endfor %}{% endfor %}

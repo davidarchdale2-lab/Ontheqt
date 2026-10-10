@@ -2930,10 +2930,8 @@ class PlaylistDialog(kodigui.BaseDialog, SpoilersMixin):
 
     def createEpisodeListItem(self, episode):
         # Plezy's queue subtitle (formatQueueItemSubtitle): "Show · S1E2"
-        label2 = osd.join_meta((
-            episode.grandparentTitle,
-            u'{0}{1}'.format(T(32310, 'S').format(episode.parentIndex), T(32311, 'E').format(episode.index))
-        ))
+        label2 = osd.queue_subtitle(episode.grandparentTitle, episode.parentIndex, episode.index,
+                                    T(32310, 'S{}'), T(32311, 'E{}'))
         title = episode.title
         thumbnail_opts = {}
         no_spoilers = self.getNoSpoilers(episode)
