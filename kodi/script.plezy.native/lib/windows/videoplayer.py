@@ -12,6 +12,7 @@ from kodi_six import xbmcgui
 from lib import colors
 from lib import kodijsonrpc
 from lib import player
+from lib import plezy_ui
 from lib import util
 from lib import plezy_player_osd as osd
 from lib.util import T
@@ -454,9 +455,9 @@ class VideoPlayerWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RolesMi
         self.setProperties((
             'post.play.background',
             'info.title',
-            'info.duration',
+            'info.meta',
+            'prev.info.meta',
             'info.summary',
-            'info.date',
             'next.thumb',
             'next.title',
             'next.subtitle',
@@ -596,6 +597,9 @@ class VideoPlayerWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RolesMi
             self.setProperty('has.next', '1')
 
     def setInfo(self):
+        # the post-play "date · duration" meta lines (Plezy's short duration form, no stray separator when the date
+        # or the runtime is missing)
+        next_date = prev_date = u''
         hide_spoilers = False
         if self.next and self.next.type == "episode":
             hide_spoilers = self.hideSpoilers(self.next, fully_watched=False, watched=False, use_cache=False)
@@ -615,7 +619,6 @@ class VideoPlayerWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RolesMi
             else:
                 self.setProperty('info.title', self.next.title)
                 self.setProperty('info.summary', self.next.summary)
-            self.setProperty('info.duration', util.durationToText(self.next.duration.asInt()))
 
         if self.prev:
             self.setProperty(
@@ -623,7 +626,6 @@ class VideoPlayerWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RolesMi
                 util.backgroundFromArt(self.prev.art, width=self.width, height=self.height)
             )
             self.setProperty('prev.info.title', self.prev.title)
-            self.setProperty('prev.info.duration', util.durationToText(self.prev.duration.asInt()))
             self.setProperty('prev.info.summary', self.prev.summary)
 
         if self.prev.type == 'episode':
@@ -633,8 +635,7 @@ class VideoPlayerWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RolesMi
                 if hide_spoilers:
                     thumb_opts = self.getThumbnailOpts(self.next, hide_spoilers=hide_spoilers)
                 self.setProperty('next.thumb', self.next.thumb.asTranscodedImageURL(*self.NEXT_DIM, **thumb_opts))
-                self.setProperty('info.date',
-                                 util.cleanLeadingZeros(self.next.originallyAvailableAt.asDatetime('%B %d, %Y')))
+                next_date = util.cleanLeadingZeros(self.next.originallyAvailableAt.asDatetime('%B %d, %Y'))
 
                 self.setProperty('next.title', self.next.grandparentTitle)
                 self.setProperty(
@@ -649,12 +650,12 @@ class VideoPlayerWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RolesMi
                     'prev.subtitle', osd.episode_code(self.prev.parentIndex, self.prev.index,
                                                       T(32303, 'Season {}'), T(32304, 'Episode {}'), u' \u00b7 ')
                 )
-                self.setProperty('prev.info.date', util.cleanLeadingZeros(self.prev.originallyAvailableAt.asDatetime('%B %d, %Y')))
+                prev_date = util.cleanLeadingZeros(self.prev.originallyAvailableAt.asDatetime('%B %d, %Y'))
         elif self.prev.type == 'movie':
             self.setProperty('related.header', T(35164, 'Related movies'))
             if self.next:
                 self.setProperty('next.thumb', self.next.defaultArt.asTranscodedImageURL(*self.NEXT_DIM))
-                self.setProperty('info.date', self.next.year)
+                next_date = self.next.year
 
                 self.setProperty('next.title', self.next.title)
                 self.setProperty('next.subtitle', self.next.year)
@@ -662,7 +663,12 @@ class VideoPlayerWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RolesMi
                 self.setProperty('prev.thumb', self.prev.defaultArt.asTranscodedImageURL(*self.PREV_DIM))
                 self.setProperty('prev.title', self.prev.title)
                 self.setProperty('prev.subtitle', self.prev.year)
-                self.setProperty('prev.info.date', self.prev.year)
+                prev_date = self.prev.year
+
+        if self.next:
+            self.setProperty('info.meta', osd.join_meta((next_date, plezy_ui.duration_text(self.next.duration.asInt()))))
+        if self.prev:
+            self.setProperty('prev.info.meta', osd.join_meta((prev_date, plezy_ui.duration_text(self.prev.duration.asInt()))))
 
     def fillOnDeck(self):
         if not self.onDeckPaginator:

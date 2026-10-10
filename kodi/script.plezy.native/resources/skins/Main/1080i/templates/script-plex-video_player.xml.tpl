@@ -315,7 +315,7 @@
                     <align>left</align>
                     <aligny>center</aligny>
                     <textcolor>{{ core.plezy.muted }}</textcolor>
-                    <label>$INFO[Window.Property(info.date)]$INFO[Window.Property(info.duration), &#183; ]</label>
+                    <label>$INFO[Window.Property(info.meta)]</label>
                 </control>
                 <control type="textbox">
                     <autoscroll delay="2000" time="2000" repeat="10000"></autoscroll>
@@ -356,7 +356,7 @@
                     <align>left</align>
                     <aligny>center</aligny>
                     <textcolor>{{ core.plezy.muted }}</textcolor>
-                    <label>$INFO[Window.Property(prev.info.date)]$INFO[Window.Property(prev.info.duration), &#183; ]</label>
+                    <label>$INFO[Window.Property(prev.info.meta)]</label>
                 </control>
                 <control type="textbox">
                     <autoscroll delay="2000" time="2000" repeat="10000"></autoscroll>
