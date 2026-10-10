@@ -257,12 +257,7 @@ class ShowWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMixin, 
                 'meta': plezy_ui.detail_meta(self.mediaItem, hide_ratings=True),
                 'summary': self.mediaItem.summary or '',
             }
-            label, resume = plezy_show_detail.play_state(
-                self.mediaItem.onDeck,
-                lambda season, episode: plezy_ui.play_label(season, episode, T(32310, 'S{}'), T(32311, 'E{}')),
-                T(33020, 'Play'))
-            self.setProperty('play.label', label)
-            self.setBoolProperty('play.resume', resume)
+            self.updatePlayState()
         except Exception:
             util.ERROR()
             self._heroShow = {'line': '', 'meta': '', 'summary': self.mediaItem.summary or ''}
@@ -270,6 +265,17 @@ class ShowWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMixin, 
             self.setBoolProperty('play.resume', False)
         self._heroShown = None
         self.syncHero()
+
+    def updatePlayState(self):
+        """The Play pill: the on-deck episode, else the first episode of the default season (the seasons already
+        in the rail; none yet during setup, fill() runs this again once they are there)."""
+        seasons = [mli.dataSource for mli in self.subItemListControl if mli.dataSource]
+        label, resume = plezy_show_detail.play_state(
+            self.mediaItem.onDeck,
+            lambda season, episode: plezy_ui.play_label(season, episode, T(32310, 'S{}'), T(32311, 'E{}')),
+            T(33020, 'Play'), seasons)
+        self.setProperty('play.label', label)
+        self.setBoolProperty('play.resume', resume)
 
     def syncHero(self, controlID=None):
         """
@@ -287,10 +293,11 @@ class ShowWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMixin, 
                 if mli and mli.dataSource:
                     hero = plezy_show_detail.season_hero(mli.dataSource, self.mediaItem.summary or '',
                                                          T(35124, '{} episode'), T(35123, '{} episodes'))
-            shown = (hero['line'], hero['meta'], hero['summary'])
+            lines = plezy_show_detail.summary_lines(hero['summary'])
+            shown = (hero['line'], hero['meta'], hero['summary'], str(lines) if lines else '')
             if shown != self._heroShown:
                 self._heroShown = shown
-                self.setProperties(('hero.line', 'hero.meta', 'hero.summary'), list(shown))
+                self.setProperties(('hero.line', 'hero.meta', 'hero.summary', 'hero.summary.lines'), list(shown))
         except (SystemError, RuntimeError):
             pass
         except Exception:
@@ -717,9 +724,12 @@ class ShowWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMixin, 
     def optionsDropdownPos(self, options, from_item=False):
         """The More menu opens under the action row; a season's menu next to its card in the bottom rail (the
         dropdown shifts itself up/left when it would leave the screen)."""
+        # both are 1080p constants; the dropdown wants an absolute y, so scale it like the template does
         if from_item:
-            return plezy_show_detail.season_menu_pos(self.subItemListControl.getViewPosition())
-        return self.OPTIONS_DD_POS
+            pos = plezy_show_detail.season_menu_pos(self.subItemListControl.getViewPosition())
+        else:
+            pos = self.OPTIONS_DD_POS
+        return plezy_show_detail.scale_pos(pos, util.vscalei)
 
     def getRoleItemDDPosition(self, *args, **kwargs):
         y = 980
@@ -747,6 +757,11 @@ class ShowWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMixin, 
     def fill(self, update=False):
         self.fillSeasons(self.mediaItem, update=update, do_focus=not self.manuallySelectedSeason)
         self.setProperty('seasons.header', T(35120, 'Seasons'))
+        if self.HERO_FOLLOWS_SEASON:
+            try:
+                self.updatePlayState()
+            except Exception:
+                util.ERROR()
         self.syncHero()
 
     def _createListItem(self, mediaItem, obj):

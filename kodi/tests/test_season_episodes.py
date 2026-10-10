@@ -120,3 +120,18 @@ def test_menu_positions_follow_the_template_geometry():
     assert se.item_menu_pos(0) == (372, 710)
     assert se.item_menu_pos(1) == (692, 710)
     assert se.item_menu_pos(None) == (372, 710)
+
+
+def test_action_row_focus_covers_both_row_groups():
+    # one version shows group 300, several show 1300: the page / watched keys must work in either
+    cond = se.action_row_focused()
+    assert cond == u'[ControlGroup(300).HasFocus(0) | ControlGroup(1300).HasFocus(0)]'
+    assert u'ControlGroup(300).HasFocus(0)' in cond and u'ControlGroup(1300).HasFocus(0)' in cond
+
+
+def test_backdrop_returns_to_the_season_when_focus_leaves_related_shows():
+    assert se.backdrop_step(False, 404, 404) == u'related'
+    assert se.backdrop_step(True, 404, 404) == u'related'
+    assert se.backdrop_step(True, 403, 404) == u'restore'      # Up to Cast / Extras
+    assert se.backdrop_step(True, 301, 404) == u'restore'
+    assert se.backdrop_step(False, 403, 404) is None           # nothing was swapped: leave it alone

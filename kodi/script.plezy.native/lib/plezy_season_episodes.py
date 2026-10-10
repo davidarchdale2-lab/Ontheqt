@@ -156,3 +156,24 @@ def item_menu_pos(view_position):
     always at the top of the rail when it has focus)."""
     view_position = max(0, int(view_position or 0))
     return RAIL_LIST_X + CARD_INSET_X + view_position * WIDE_PITCH + WIDE_W + 16, CARD_Y
+
+
+# The action row is group 300 with one version and 1300 with several; the page keys and the watched key work on
+# either (the hidden twin is never focused).
+ACTION_ROW_GROUPS = (300, 1300)
+
+
+def action_row_focused():
+    """Kodi boolean condition: focus is inside whichever action row group is showing."""
+    return u'[{}]'.format(u' | '.join(u'ControlGroup({}).HasFocus(0)'.format(g) for g in ACTION_ROW_GROUPS))
+
+
+def backdrop_step(swapped, focused_id, related_id):
+    """What the window backdrop should do when `focused_id` takes focus. The related-shows row previews the focused
+    show's art, but Plezy keeps the season's own backdrop, so it goes back as soon as focus leaves that row.
+    Returns 'related' (preview the focused show), 'restore' (back to the season / show) or None (leave it)."""
+    if focused_id == related_id:
+        return u'related'
+    if swapped:
+        return u'restore'
+    return None

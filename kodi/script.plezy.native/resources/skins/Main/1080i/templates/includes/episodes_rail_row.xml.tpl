@@ -1,7 +1,7 @@
 {# One hub of the season screen's rail (Plezy TvBrowseRail, cards at tallPosterScale / widePosterScale .72):
    plezy_row_header over a plezy_hub_card row. Used by script-plex-episodes.xml.tpl inside grouplist 60.
-   params: n (row 0-4: group 500+n, list 400+n), title, icon, kind, cw, ch, mask, boundary (paginated rows swallow
-   left/right at the ends so the paginator can load the next page), placeholder_icon, selected_ring (see
+   params: n (row 0-4: group 500+n, list 400+n), title, icon, kind, cw, ch, mask, boundary (kept for the paginated rows; every row
+   swallows left/right at its ends, where a bare list would wrap), placeholder_icon, selected_ring (see
    plezy_hub_card).
    Row height = 44 header + card band (ch + 88) + 4 = ch + 136; the rail's slide for this row uses the same value.
    Rows above the active one leave the band, rows that aren't focused dim (Plezy tints inactive hubs), and the
@@ -33,10 +33,10 @@
         <onup>{{ list_id - 1 }}</onup>
         {% endif %}
         <ondown>{% if n < 4 %}{{ list_id + 1 }}{% else %}{{ list_id }}{% endif %}</ondown>
-        {% if boundary %}
+        {# a horizontal list without left/right wraps at its ends; Plezy's rail stops there (and the paginated rows
+           must stay inside the list for the paginator) #}
         <onleft>noop</onleft>
         <onright>noop</onright>
-        {% endif %}
         <scrolltime tween="cubic" easing="out">160</scrolltime>
         <orientation>horizontal</orientation>
         <preloaditems>4</preloaditems>

@@ -24,19 +24,23 @@
     <height>{{ vscale(1080) }}</height>
 
     <!-- HERO FOCUS: FocusableWrapper useBackgroundFocus (white @20%, radius 8) behind the info block; Kodi can't size
-         a control to its content, so one fill per combination of the optional lines (bottom fixed at the action row) -->
-    {% for has_line in range(2) %}{% for has_av in range(2) %}{% for has_sum in range(2) %}
-    {% with block_h = 36 + has_line * 38 + has_av * 36 + has_sum * 128 %}
+         a control to its content, so one fill per combination of the optional lines (bottom fixed at the action row).
+         The summary textbox is auto height (up to three lines), so its fill follows Python's line estimate
+         (hero.summary.lines, 1-3); text is never vscaled (Kodi fonts are fixed), so its 34px lines are added unscaled -->
+    {% for has_line in range(2) %}{% for has_av in range(2) %}{% for has_sum in range(2) %}{% for n in range(has_sum * 2 + 1) %}
+    {% with rest_h = 36 + has_line * 38 + has_av * 36 & sum_h = has_sum * 10 + has_sum * (n + 1) * 34 %}
+    {% with top_y = (hero_bottom - rest_h - 8)|vscale & rest_fill = (rest_h + 14)|vscale %}
     <control type="image">
-        <visible>Control.HasFocus(301) + {% if has_line %}!{% endif %}String.IsEmpty(Window.Property(hero.line)) + {% if has_av %}!{% endif %}String.IsEmpty(Window.Property(wl_server_availability_verbose)) + {% if has_sum %}!{% endif %}String.IsEmpty(Window.Property(hero.summary))</visible>
+        <visible>Control.HasFocus(301) + {% if has_line %}!{% endif %}String.IsEmpty(Window.Property(hero.line)) + {% if has_av %}!{% endif %}String.IsEmpty(Window.Property(wl_server_availability_verbose)) + {% if has_sum %}String.IsEqual(Window.Property(hero.summary.lines),{{ n + 1 }}){% else %}String.IsEmpty(Window.Property(hero.summary.lines)){% endif %}</visible>
         <posx>{{ hx - 14 }}</posx>
-        <posy>{{ (hero_bottom - block_h - 8)|vscale }}</posy>
+        <posy>{{ top_y - sum_h }}</posy>
         <width>{{ hw + 28 }}</width>
-        <height>{{ (block_h + 14)|vscale }}</height>
+        <height>{{ rest_fill + sum_h }}</height>
         <texture border="8" colordiffuse="{{ core.plezy.focus_bg }}">script.plex/plezy/r8.png</texture>
     </control>
     {% endwith %}
-    {% endfor %}{% endfor %}{% endfor %}
+    {% endwith %}
+    {% endfor %}{% endfor %}{% endfor %}{% endfor %}
 
     <!-- HERO: bottom-aligned column (Plezy _buildTvDetailForeground); a vertical grouplist aligned to the bottom
          collapses the optional lines and grows upwards like Plezy's Column in Align(bottomLeft) -->
@@ -173,22 +177,23 @@
             </control>
         </control>
 
-        <!-- summary: 10px gap, up to three lines at 78% -->
+        <!-- summary: 10px gap, then up to three lines at 78%, sized to its text. The box is a hair under three 34px
+             lines (font12 is 25px, ~34px a line) because Kodi draws every line that starts inside the box: a fourth
+             would otherwise show as a half-cut line above the action row -->
         <control type="group">
             <visible>!String.IsEmpty(Window.Property(hero.summary))</visible>
             <width>{{ hw }}</width>
-            <height>{{ vscale(128) }}</height>
-            <control type="textbox">
-                <posx>0</posx>
-                <posy>{{ vscale(10) }}</posy>
-                <width>{{ hw - 20 }}</width>
-                <height>{{ vscale(118) }}</height>
-                <font>font12</font>
-                <align>left</align>
-                <textcolor>{{ core.plezy.summary }}</textcolor>
-                <autoscroll>false</autoscroll>
-                <label>$INFO[Window.Property(hero.summary)]</label>
-            </control>
+            <height>{{ vscale(10) }}</height>
+        </control>
+        <control type="textbox">
+            <visible>!String.IsEmpty(Window.Property(hero.summary))</visible>
+            <width>{{ hw - 20 }}</width>
+            <height max="100">auto</height>
+            <font>font12</font>
+            <align>left</align>
+            <textcolor>{{ core.plezy.summary }}</textcolor>
+            <autoscroll>false</autoscroll>
+            <label>$INFO[Window.Property(hero.summary)]</label>
         </control>
     </control>
 

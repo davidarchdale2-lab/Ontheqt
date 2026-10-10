@@ -315,6 +315,7 @@ class EpisodesWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMix
         self.manuallySelected = False
         self.manuallySelectedSeason = False
         self.hadUserInteraction = False
+        self.relatedBackdrop = False
         self.currentItemLoaded = False
         self.lastItem = None
         self.lastFocusID = None
@@ -704,11 +705,11 @@ class EpisodesWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMix
             if not controlID and self.lastFocusID and not action == xbmcgui.ACTION_MOUSE_MOVE:
                 self.setCondFocusId(self.lastFocusID)
 
-            if action == xbmcgui.ACTION_LAST_PAGE and xbmc.getCondVisibility('ControlGroup(300).HasFocus(0)'):
+            if action == xbmcgui.ACTION_LAST_PAGE and xbmc.getCondVisibility(plezy_se.action_row_focused()):
                 next(self)
             elif action == xbmcgui.ACTION_NEXT_ITEM:
                 next(self)
-            elif action == xbmcgui.ACTION_FIRST_PAGE and xbmc.getCondVisibility('ControlGroup(300).HasFocus(0)'):
+            elif action == xbmcgui.ACTION_FIRST_PAGE and xbmc.getCondVisibility(plezy_se.action_row_focused()):
                 self.prev()
             elif action == xbmcgui.ACTION_PREV_ITEM:
                 self.prev()
@@ -743,7 +744,7 @@ class EpisodesWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMix
                 elif action in (xbmcgui.ACTION_MOVE_LEFT, xbmcgui.ACTION_MOVE_RIGHT):
                     self.updateBackgroundFrom(self.relatedListControl.getSelectedItem().dataSource)
 
-            elif self.isWatchedAction(action) and xbmc.getCondVisibility('ControlGroup({}).HasFocus(0)'.format(self.MAIN_BUTTON_GROUP_ID)):
+            elif self.isWatchedAction(action) and xbmc.getCondVisibility(plezy_se.action_row_focused()):
                 mli = self.episodeListControl.getSelectedItem()
                 if not mli or mli.getProperty("is.boundary"):
                     return
@@ -893,8 +894,14 @@ class EpisodesWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMix
 
         if 399 < controlID < 500:
             self.setProperty('hub.focus', str(controlID - 400))
-            if controlID == self.RELATED_LIST_ID:
-                self.updateBackgroundFrom(self.relatedListControl.getSelectedItem().dataSource)
+        step = plezy_se.backdrop_step(self.relatedBackdrop, controlID, self.RELATED_LIST_ID)
+        if step == 'related':
+            self.relatedBackdrop = True
+            self.updateBackgroundFrom(self.relatedListControl.getSelectedItem().dataSource)
+        elif step == 'restore':
+            self.relatedBackdrop = False
+            self.updateBackgroundFrom(self.season or self.show_)
+
         if xbmc.getCondVisibility('ControlGroup(50).HasFocus(0) + [ControlGroup(300).HasFocus(0) | ControlGroup(1300).HasFocus(0)]'):
             self.setProperty('on.extras', '')
         elif xbmc.getCondVisibility('ControlGroup(50).HasFocus(0) + !ControlGroup(300).HasFocus(0) + !ControlGroup(1300).HasFocus(0)'):

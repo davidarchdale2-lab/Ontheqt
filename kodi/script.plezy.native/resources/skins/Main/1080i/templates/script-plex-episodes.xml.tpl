@@ -131,7 +131,7 @@
                     <posx>12</posx>
                     <posy>{{ vscale(10) }}</posy>
                     <width>1092</width>
-                    <height max="{{ vscale(112) }}">auto</height>
+                    <height max="112">auto</height>
                     <font>font12</font>
                     <textcolor>00000000</textcolor>
                     <label>$INFO[Container(400).ListItem.Property(summary)]</label>
@@ -141,7 +141,7 @@
                     <posx>12</posx>
                     <posy>{{ vscale(10) }}</posy>
                     <width>1092</width>
-                    <height max="{{ vscale(112) }}">auto</height>
+                    <height max="112">auto</height>
                     <font>font12</font>
                     <textcolor>00000000</textcolor>
                     <label>$INFO[Window.Property(season.summary)]</label>
@@ -185,7 +185,7 @@
             <control type="textbox">
                 <visible>String.IsEmpty(Window.Property(clear.logo))</visible>
                 <width>1092</width>
-                <height max="{{ vscale(128) }}">auto</height>
+                <height max="128">auto</height>
                 <font>font45</font>
                 <textcolor>{{ core.plezy.text }}</textcolor>
                 <shadowcolor>{{ core.plezy.shadow }}</shadowcolor>
@@ -364,7 +364,7 @@
                 <visible>{{ ep }} + !String.IsEmpty(Container(400).ListItem.Property(summary))</visible>
                 <posy>{{ vscale(10) }}</posy>
                 <width>1092</width>
-                <height max="{{ vscale(112) }}">auto</height>
+                <height max="112">auto</height>
                 <font>font12</font>
                 <textcolor>{{ core.plezy.summary }}</textcolor>
                 <label>$INFO[Container(400).ListItem.Property(summary)]</label>
@@ -373,7 +373,7 @@
                 <visible>[{{ sm }} | String.IsEmpty(Container(400).ListItem.Property(summary))] + !String.IsEmpty(Window.Property(season.summary))</visible>
                 <posy>{{ vscale(10) }}</posy>
                 <width>1092</width>
-                <height max="{{ vscale(112) }}">auto</height>
+                <height max="112">auto</height>
                 <font>font12</font>
                 <textcolor>{{ core.plezy.summary }}</textcolor>
                 <label>$INFO[Window.Property(season.summary)]</label>
@@ -420,6 +420,9 @@
             <usecontrolcoords>true</usecontrolcoords>
             <onup>{{ base + 304 }}</onup>
             <ondown>400</ondown>
+            {# FocusableActionBar traps left/right at the ends; a grouplist without them wraps #}
+            <onleft>noop</onleft>
+            <onright>noop</onright>
             {% with nav_up = base + 304 & nav_down = 400 %}
             {# Play: icon-only stadium (the split's left segment with versions), play or resume glyph; its twin holds
                focus while the selected episode loads #}

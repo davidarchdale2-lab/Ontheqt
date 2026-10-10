@@ -58,6 +58,48 @@ def test_play_state_from_on_deck():
     assert sd.play_state([Item(index='3')], s1e3, u'Play') == (u'Play', False)
 
 
+def test_play_state_without_on_deck_offers_the_default_season_first_episode():
+    seasons = [Item(index='0', title='Specials'), Item(index='1'), Item(index='2')]
+    # Plezy defaultPlaybackSeason: the first real season, so 'S1E1' rather than a bare Play
+    assert sd.play_state([], s1e3, u'Play', seasons) == (u'S1 E1', False)
+    assert sd.play_state(Value(''), s1e3, u'Play', seasons) == (u'S1 E1', False)
+    # specials only: the first one; no seasons yet: the plain label
+    assert sd.play_state([], s1e3, u'Play', [Item(index='0')]) == (u'S0 E1', False)
+    assert sd.play_state([], s1e3, u'Play', []) == (u'Play', False)
+    assert sd.play_state([], s1e3, u'Play', None) == (u'Play', False)
+    # a season without an index cannot be labelled
+    assert sd.play_state([], s1e3, u'Play', [Item(title='?')]) == (u'Play', False)
+    # the on-deck episode still wins
+    assert sd.play_state([Item(parentIndex='2', index='4')], s1e3, u'Play', seasons) == (u'S2 E4', False)
+
+
+def test_default_play_season():
+    s0, s1 = Item(index='0'), Item(index='1')
+    assert sd.default_play_season([s0, s1]) is s1
+    assert sd.default_play_season([s0]) is s0
+    assert sd.default_play_season([]) is None
+    assert sd.default_play_season(Value('')) is None
+
+
+def test_summary_lines_estimates_the_wrapped_line_count():
+    assert sd.summary_lines(u'') == 0
+    assert sd.summary_lines(None) == 0
+    assert sd.summary_lines(u'   \n ') == 0
+    assert sd.summary_lines(u'One line.') == 1
+    assert sd.summary_lines(u'word ' * 20) == 2  # 99 characters wrap onto a second line
+    assert sd.summary_lines(u'word ' * 40) == 3
+    assert sd.summary_lines(u'word ' * 400) == sd.SUMMARY_MAX_LINES  # more than three: the box shows three
+    assert sd.summary_lines(u'First paragraph.\n\nSecond.') == 3  # the blank line takes a line
+    assert sd.summary_lines(u'x' * 100) == 2  # a very long word breaks mid-word
+    assert sd.summary_lines(u'a b', chars_per_line=1) == 2
+
+
+def test_scale_pos_scales_only_y():
+    assert sd.scale_pos((440, 656), lambda y: y) == (440, 656)
+    assert sd.scale_pos((440, 656), lambda y: round(y * 0.75)) == (440, 492)
+    assert sd.scale_pos(sd.season_menu_pos(0), lambda y: int(y * 0.75))[1] == 525
+
+
 def test_first_trailer():
     extras = [Item(title='Featurette', extraType='10'), Item(title='Teaser', extraType='1'),
               Item(title='Trailer 2', extraType='1')]
