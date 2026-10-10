@@ -4,7 +4,7 @@ import os
 
 from kodi_six import xbmc
 from kodi_six import xbmcgui
-from plexnet import plexplayer, media, plexobjects, util as pnUtil, plexapp, plexlibrary, playlist, playqueue
+from plexnet import plexplayer, media, plexobjects, plexstream, util as pnUtil, plexapp, plexlibrary, playlist, playqueue
 
 from lib import metadata
 from lib import plezy_movie_detail
@@ -832,7 +832,9 @@ class PrePlayWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RatingsMixi
 
         # Plezy's track status names only the tracks playback will use (the rest is in the settings dialog, 305)
         self.setProperty('tracks.audio', sas and sas.getTitle(metadata.apiTranslate) or '')
-        self.setProperty('tracks.subtitles', sss and sss.getTitle(metadata.apiTranslate) or T(32309, u'None'))
+        # ... and says 'Off' (not the dialog's 'None') when there are none; plexnet's NoneStream is a selected "track"
+        sub_title = u'' if not sss or isinstance(sss, plexstream.NoneStream) else sss.getTitle(metadata.apiTranslate)
+        self.setProperty('tracks.subtitles', plezy_movie_detail.tracks_subtitles(sub_title, T(32481, u'Off')))
 
     def createListItem(self, obj):
         mli = kodigui.ManagedListItem(obj.title or '', thumbnailImage=obj.thumb.asTranscodedImageURL(*self.EXTRA_DIM), data_source=obj)

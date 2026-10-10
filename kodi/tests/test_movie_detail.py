@@ -89,9 +89,25 @@ def test_tracks_video():
     assert detail.tracks_video('4K', 'HEVC', 'DV P8.1/HDR') == u'4K • HEVC • DV P8'
     assert detail.tracks_video('4K', 'HEVC', 'DV P5') == u'4K • HEVC • DV P5'
     assert detail.tracks_video('4K', 'HEVC', 'HDR') == u'4K • HEVC • HDR'
-    assert detail.tracks_video('1080p', 'H264', 'SDR') == u'1080p • H264'
+    assert detail.tracks_video('1080p', 'H264', 'SDR') == u'1080p • H.264'
+    assert detail.tracks_video('1080p', 'MPEG2VIDEO', '') == u'1080p • MPEG-2'
+    assert detail.tracks_video('480p', 'vc1', '') == u'480p • VC-1'
+    assert detail.tracks_video('720p', 'wmv3', '') == u'720p • WMV3'
     assert detail.tracks_video('', '', '') == u''
     assert detail.tracks_video(None, 'AV1', None) == u'AV1'
+
+
+def test_video_codec_names_match_plezy():
+    assert [detail.video_codec(c) for c in ('h264', 'AVC1', 'avc', 'hevc', 'H265', 'hev1')] == \
+        [u'H.264', u'H.264', u'H.264', u'HEVC', u'HEVC', u'HEVC']
+    assert [detail.video_codec(c) for c in ('av1', 'vp9', 'mpeg4', 'mpeg2', 'prores', '', None)] == \
+        [u'AV1', u'VP9', u'MPEG-4', u'MPEG-2', u'PRORES', u'', u'']
+
+
+def test_tracks_subtitles_says_off_without_a_track():
+    assert detail.tracks_subtitles(u'', u'Off') == u'Off'
+    assert detail.tracks_subtitles(None, u'Off') == u'Off'
+    assert detail.tracks_subtitles(u'English (SRT)', u'Off') == u'English (SRT)'
 
 
 def test_more_menu_x_follows_the_visible_actions():

@@ -429,7 +429,7 @@
                 <height>{{ vscale(44) }}</height>
                 <font>font10</font>
                 <aligny>center</aligny>
-                <textcolor>{{ core.plezy.muted }}</textcolor>
+                <textcolor>{{ core.plezy.text }}</textcolor>
                 <label>[B]$INFO[Window.Property(tracks.video)][/B]</label>
             </control>
             <control type="label">
@@ -440,7 +440,7 @@
                 <font>font10</font>
                 <align>center</align>
                 <aligny>center</aligny>
-                <textcolor>{{ core.plezy.muted }}</textcolor>
+                <textcolor>{{ core.plezy.text }}</textcolor>
                 <label>[B]&#8226;[/B]</label>
             </control>
             <control type="image">
@@ -448,7 +448,7 @@
                 <posy>{{ vscale(22) }}</posy>
                 <width>24</width>
                 <height>{{ vscale(24) }}</height>
-                <texture colordiffuse="{{ core.plezy.muted }}">script.plex/plezy/icons/volume_up.png</texture>
+                <texture colordiffuse="{{ core.plezy.text }}">script.plex/plezy/icons/volume_up.png</texture>
                 <aspectratio>keep</aspectratio>
             </control>
             <control type="label">
@@ -459,7 +459,7 @@
                 <height>{{ vscale(44) }}</height>
                 <font>font10</font>
                 <aligny>center</aligny>
-                <textcolor>{{ core.plezy.muted }}</textcolor>
+                <textcolor>{{ core.plezy.text }}</textcolor>
                 <label>[B]$INFO[Window.Property(tracks.audio)][/B]</label>
             </control>
             <control type="label">
@@ -470,7 +470,7 @@
                 <font>font10</font>
                 <align>center</align>
                 <aligny>center</aligny>
-                <textcolor>{{ core.plezy.muted }}</textcolor>
+                <textcolor>{{ core.plezy.text }}</textcolor>
                 <label>[B]&#8226;[/B]</label>
             </control>
             <control type="image">
@@ -478,7 +478,7 @@
                 <posy>{{ vscale(22) }}</posy>
                 <width>24</width>
                 <height>{{ vscale(24) }}</height>
-                <texture colordiffuse="{{ core.plezy.muted }}">script.plex/plezy/icons/subtitles.png</texture>
+                <texture colordiffuse="{{ core.plezy.text }}">script.plex/plezy/icons/subtitles.png</texture>
                 <aspectratio>keep</aspectratio>
             </control>
             <control type="label">
@@ -489,7 +489,7 @@
                 <height>{{ vscale(44) }}</height>
                 <font>font10</font>
                 <aligny>center</aligny>
-                <textcolor>{{ core.plezy.muted }}</textcolor>
+                <textcolor>{{ core.plezy.text }}</textcolor>
                 <label>[B]$INFO[Window.Property(tracks.subtitles)][/B]</label>
             </control>
         </control>
