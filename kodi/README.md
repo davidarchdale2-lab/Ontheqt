@@ -30,7 +30,7 @@ python3 -I kodi/tools/preview_layout.py kodi/script.plezy.native \
     /tmp/render_new/plezy/modern_2024/script-plex-home.xml kodi/tools/preview/home.json /tmp/home.png
 
 # build the ZIP
-python3 kodi/tools/build_zip.py kodi/script.plezy.native kodi/dist/Plezy-Native-preview-r2.zip
+python3 kodi/tools/build_zip.py kodi/script.plezy.native kodi/dist/Plezy-Native-preview-r3.zip
 ```
 
 Design tokens live in `script.plezy.native/lib/templating/context.py` (`core.plezy`); a `context_overrides.json`

@@ -3540,3 +3540,11 @@ msgstr ""
 msgctxt "#35248"
 msgid "Playing from {0}"
 msgstr ""
+
+msgctxt "#35260"
+msgid "Movie"
+msgstr ""
+
+msgctxt "#35261"
+msgid "TV Show"
+msgstr ""

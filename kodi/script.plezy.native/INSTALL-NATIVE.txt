@@ -9,7 +9,7 @@ preserved. Install it on your already working ROM; no reflashing is needed.
 INSTALL
 1. In the old Plezy device menu, select Open Kodi. A keyboard's F12 can open
    that menu if needed. This also leaves Kodi selected on subsequent boots.
-2. Copy Plezy-Native-preview-r2.zip to a USB stick or an accessible share.
+2. Copy Plezy-Native-preview-r3.zip to a USB stick or an accessible share.
 3. In Kodi, Settings > Add-ons > Install from zip file. Enable Unknown sources
    if prompted, then select the ZIP. Kodi can obtain the required Python
    modules from its existing CoreELEC repository; wait for installation.
@@ -21,10 +21,10 @@ If dependency installation fails, use the provided dependencies folder.
 Install these module ZIPs first, in this order: certifi, chardet, idna,
 urllib3, six, kodi-six, requests. Then install the preview ZIP again.
 
-UPDATING FROM REVISION 1
-Install the r2 ZIP over r1 the same way; login and preferences are kept. The
+UPDATING FROM REVISION 1 OR 2
+Install the r3 ZIP over r1 or r2 the same way; login and preferences are kept. The
 templates re-render once on the first start. If you never changed the theme,
-r2's "Plezy" theme is used; otherwise pick it under Settings > User Interface
+the "Plezy" theme is used; otherwise pick it under Settings > User Interface
 > Theme. Background art opacity now defaults to 100%; if you had changed that
 slider, set it back to 100 for the Plezy look.
 
@@ -72,4 +72,4 @@ https://github.com/pannal/plex-for-kodi
 Branch: develop_kodi21
 Commit: 2707bbe72a7ea829b69bdd7ebb753c700552b4d0
 Upstream version: 1.14.1-beta1
-Local identity: script.plezy.native, version 1.14.1+native.2
+Local identity: script.plezy.native, version 1.14.1+native.3

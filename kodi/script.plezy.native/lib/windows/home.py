@@ -2774,7 +2774,8 @@ class HomeWindow(kodigui.BaseWindow, util.CronReceiver, CommonMixin, SpoilersMix
                 fields.update(plezy_ui.spotlight_fields(
                     ds, season_fmt=T(32310, 'S{}'), episode_fmt=T(32311, 'E{}'),
                     hide_summary=bool(hide and self.noSummaries), hide_title=bool(hide and self.noTitles),
-                    hide_ratings=bool(hide and self.noRatings)))
+                    hide_ratings=bool(hide and self.noRatings),
+                    movie_label=T(35260, 'Movie'), show_label=T(35261, 'TV Show')))
                 fields['logo'] = util.clearLogoFrom(ds, *self.SPOTLIGHT_LOGO_DIM)
             except Exception:
                 util.ERROR("Home: couldn't build the spotlight for {0}".format(ds))

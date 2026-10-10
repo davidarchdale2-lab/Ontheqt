@@ -48,7 +48,7 @@ PROFILE = translatePath(ADDON.getAddonInfo('profile'))
 
 
 DEF_THEME = "plezy"
-THEME_VERSION = 100
+THEME_VERSION = 101
 
 UI_INTERVAL = 1 / float(addonSettings.uiWaitRate)
 

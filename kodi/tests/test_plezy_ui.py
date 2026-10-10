@@ -53,7 +53,7 @@ def test_movie_spotlight():
                  summary='A linguist works with the military.')
     f = plezy_ui.spotlight_fields(movie)
     assert f['title'] == 'Arrival'
-    assert f['meta'] == u'RT 94% • Audience 82% • 12A • 1h 56m • 2016'
+    assert f['meta'] == u'Movie • RT 94% • Audience 82% • 12A • 1h 56m • 2016'
     assert f['summary'] == 'A linguist works with the military.'
 
 
@@ -63,16 +63,16 @@ def test_episode_spotlight_and_spoilers():
               audienceRating='8.7', audienceRatingImage='imdb://image.rating', summary='Mark is promoted.')
     f = plezy_ui.spotlight_fields(ep)
     assert f['title'] == 'Severance'
-    assert f['meta'] == u'S1 \xb7 E1 \xb7 Pilot • IMDb 8.7 • TV-MA • 57m • February 18, 2022'
+    assert f['meta'] == u'S1 E1 • IMDb 8.7 • TV-MA • 57m • February 18, 2022'
     hidden = plezy_ui.spotlight_fields(ep, hide_summary=True, hide_title=True, hide_ratings=True)
     assert hidden['summary'] == ''
-    assert hidden['meta'] == u'S1 \xb7 E1 • TV-MA • 57m • February 18, 2022'
+    assert hidden['meta'] == u'S1 E1 • TV-MA • 57m • February 18, 2022'
 
 
 def test_show_season_and_music():
     show = Item(type='show', title='Severance', year='2022', duration=str(55 * 60000), contentRating='TV-MA')
-    assert plezy_ui.spotlight_fields(show)['meta'] == u'TV-MA • 55m • 2022'   # Plezy adds any runtime the item has
-    assert plezy_ui.spotlight_fields(Item(type='show', title='x', year='2022'))['meta'] == u'2022'
+    assert plezy_ui.spotlight_fields(show)['meta'] == u'TV Show • TV-MA • 55m • 2022'   # Plezy adds any runtime the item has
+    assert plezy_ui.spotlight_fields(Item(type='show', title='x', year='2022'))['meta'] == u'TV Show • 2022'
     season = Item(type='season', title='Season 2', parentTitle='Severance')
     f = plezy_ui.spotlight_fields(season)
     assert (f['title'], f['meta']) == ('Severance', 'Season 2')
@@ -87,7 +87,7 @@ def test_show_season_and_music():
 
 def test_localised_episode_labels_and_durations():
     ep = Item(type='episode', parentIndex='2', index='10', title='x')
-    assert plezy_ui.spotlight_fields(ep, season_fmt=u'St.{}', episode_fmt=u'F{}', hide_title=True)['meta'] == u'St.2 \xb7 F10'
+    assert plezy_ui.spotlight_fields(ep, season_fmt=u'St.{}', episode_fmt=u'F{}', hide_title=True)['meta'] == u'St.2 F10'
     assert plezy_ui.duration_text(0) == ''
     assert plezy_ui.duration_text(45 * 60000) == '45m'
     assert plezy_ui.duration_text(120 * 60000) == '2h'
@@ -130,3 +130,17 @@ def test_season_meta_play_label_and_dates():
     assert plezy_ui.episode_label('1', '3', u'St.{}', u'F{}') == u'St.1 F3'
     assert plezy_ui.abbreviated_date('2025-02-07') == 'Feb 7, 2025'
     assert plezy_ui.abbreviated_date('') == ''
+
+
+def test_spotlight_type_label_drops_before_content_rating():
+    movie = Item(type='movie', title='A', year='2016', duration=str(116 * 60000), contentRating='12A',
+                 audienceRating='8.2', audienceRatingImage='imdb://image.rating')
+    assert plezy_ui.spotlight_fields(movie, meta_budget=30)['meta'] == u'Movie • 12A • 1h 56m • 2016'
+    assert plezy_ui.spotlight_fields(movie, meta_budget=20)['meta'] == u'12A • 1h 56m • 2016'
+
+
+def test_spotlight_episode_title_only_replaces_hidden_summary():
+    ep = Item(type='episode', title='Pilot', grandparentTitle='X', parentIndex='2', index='4', summary='s')
+    assert plezy_ui.spotlight_fields(ep, hide_summary=True)['summary'] == 'Pilot'
+    assert plezy_ui.spotlight_fields(ep, hide_summary=True, hide_title=True)['summary'] == ''
+    assert plezy_ui.spotlight_fields(ep)['summary'] == 's'

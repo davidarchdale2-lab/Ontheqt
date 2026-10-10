@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="script.plezy.native"
        name="Plezy Native (preview)"
-       version="1.14.1+native.2"
+       version="1.14.1+native.3"
        provider-name="Local AM6B build; pannal and contributors">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
@@ -34,6 +34,8 @@
         <source>https://github.com/pannal/plex-for-kodi</source>
         <platform>all</platform>
         <news>
+- Every screen now follows the Plezy TV design: detail screens, player, search, settings, profiles, music and photos
+- Review fixes for 4:3 displays, navigation and focus; templates re-render on first start
 - Plezy-style home: collapsed icon rail that opens over the content, spotlight with logo, metadata and summary
 - Hub rows: Plezy cards with rounded artwork, white focus ring, row icons; the active row leads, others dim
 - Plezy palette everywhere, Material Symbols icons and a new default "Plezy" button theme

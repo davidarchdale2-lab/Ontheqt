@@ -1,5 +1,23 @@
 # Local preview changes
 
+## Revision 3 - 10 October 2026
+
+Ports every remaining screen to the Plezy TV design and runs three adversarial review passes over them. Playback,
+the stream-decision engine, codec and audio settings are still Kodi's and are unchanged.
+
+- Detail screens (pre-play, show, season, episodes): full-bleed backdrop with scrims, bottom-aligned hero column,
+  `includes/plezy_action_button.xml.tpl` action row, card rails. New helpers in `lib/plezy_*.py`.
+- Player, seek bar and playlist: Plezy control bar (x1.5 geometry), "plezy" button art, amber active toggles.
+- Search, settings and dialogs, user select and sign-in, music, photos and list views: Plezy surfaces, rows and pills.
+- Shared: `plezy_scrims` foot fill and `default_background` use the full 1080 height at 4:3; card artwork uses
+  `scalediffuse="false"`; new error icon; strings 35120-35261 added in the Plezy block.
+- Home: spotlight type label and "S2 E4" episode label as in Plezy; rail hitrect; vscaled row gap. Library filter
+  bars in sentence case with Plezy pills.
+- Classic theme: `buttongroup_1300.posy` is a number (fixed a 4:3 render failure).
+- THEME_VERSION is 101, so installed templates re-render on first start.
+- Verified by rendering 940 layouts at 1920x1080 and 1440x1080 and 167 unit tests. Physical Kodi installation,
+  interface speed and playback remain untested.
+
 ## Revision 2 — 9 October 2026
 
 Moves the interface closer to the official Plezy app (edde746/plezy, TV layout). Playback, the stream-decision
@@ -22,7 +40,7 @@ engine, codec and audio settings are still Kodi's and are unchanged.
 - Background art opacity defaults to 100% (was 20%). Home draws Plezy's gradient scrims instead of a flat dim;
   other screens keep their dim so text stays readable.
 - Icons: Material Symbols Rounded (Google, Apache-2.0), the set Plezy uses, rendered to PNG.
-- THEME_VERSION 99, so installed templates re-render on first start.
+- THEME_VERSION is bumped (see lib/util.py), so installed templates re-render on first start.
 
 Credits: layout values, colours, the hub-icon keyword table and the metadata ordering follow edde746/plezy
 (GPL-3.0); they were re-implemented here rather than copied. Detail screens keep PM4K's layout with the Plezy

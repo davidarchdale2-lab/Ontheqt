@@ -52,7 +52,7 @@
         {% with n = core.hub_count %}{% with grouplist_height = n * 456 + 100 %}
         <width>1816</width><height>{{ vscale(grouplist_height) }}</height>
         {% endwith %}{% endwith %}
-        <itemgap>10</itemgap><orientation>vertical</orientation><usecontrolcoords>true</usecontrolcoords>
+        <itemgap>{{ vscale(10) }}</itemgap><orientation>vertical</orientation><usecontrolcoords>true</usecontrolcoords>
         <scrolltime tween="cubic" easing="out">160</scrolltime>
         {% for i in range(1, core.hub_count) %}
         <animation type="Conditional" condition="Integer.IsGreater(Window.Property(hub.focus),{{ i - 1 }}) + Control.IsVisible({{ i + 499 }})" reversible="true">
@@ -158,6 +158,8 @@
         <width>300</width><height>{{ vscale(900) }}</height>
         <control type="list" id="101">
             <posx>0</posx><posy>0</posy><width>300</width><height>{{ vscale(900) }}</height>
+            <!-- only the collapsed 72px strip takes pointer input, the open panel overlaps the first cards -->
+            <hitrect x="0" y="0" w="72" h="{{ vscale(900) }}" />
             <onup>203</onup><ondown>101</ondown><onleft>101</onleft>
             {% for i in range(core.hub_count) %}
             <onright condition="Control.IsVisible({{ i + 400 }})">{{ i + 400 }}</onright>

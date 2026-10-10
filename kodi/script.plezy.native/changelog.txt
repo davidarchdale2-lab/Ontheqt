@@ -1,3 +1,14 @@
+[-1.14.1+native.3-]
+- Every remaining screen now follows the Plezy TV design: movie, show, season and episode details, the player and seek bar, search, settings and dialogs, profile and sign-in screens, music, photos and list views
+- Detail screens: backdrop with scrims, bottom-aligned hero column, Plezy action buttons ("S1E3" play label) and card rails
+- Player: Plezy control bar, amber active toggles, skip-marker button, Plezy-style OSD
+- Search: Plezy search field, chips and result shelves with error and empty states
+- Settings: grouped rows, dropdown sheets and sub menus
+- Home: spotlight shows Movie/TV Show and "S2 E4" labels like Plezy; rail no longer takes mouse hits over the first cards
+- Library filter bars use sentence case and Plezy pills
+- Layout fixes for 4:3 displays (heights, scrims, solid background)
+- 60+ review fixes in total; THEME_VERSION bumped so templates re-render on first start
+
 [-1.14.1+native.2-]
 - Home: Plezy TV layout - 72px icon rail that opens into a floating panel on focus, Search moved into the rail
 - Home: spotlight for the focused item (clear logo or title, metadata line, summary) over the full-strength backdrop

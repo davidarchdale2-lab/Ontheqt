@@ -116,7 +116,7 @@ def ratings_text(obj):
 # then the runtime; the episode label and the date/year always stay. Kodi can't measure text for us, so the budget
 # is in characters: about what the spotlight's 1300px bold line holds at Estuary's font13.
 META_BUDGET = 70
-DROP_ORDER = ('ratings', 'content_rating', 'duration')
+DROP_ORDER = ('ratings', 'type', 'content_rating', 'duration')
 
 
 def fit_meta(parts, budget=META_BUDGET):
@@ -130,10 +130,10 @@ def fit_meta(parts, budget=META_BUDGET):
 
 
 def spotlight_fields(obj, season_fmt=u'S{}', episode_fmt=u'E{}', hide_summary=False, hide_title=False,
-                     hide_ratings=False, meta_budget=META_BUDGET):
+                     hide_ratings=False, meta_budget=META_BUDGET, movie_label=u'Movie', show_label=u'TV Show'):
     """
     Title, metadata line and summary for the home spotlight, in Plezy's order:
-    S1 · E3 · title  •  ratings  •  content rating  •  duration  •  air date (episodes) / year
+    S1 E3 / Movie / TV Show  •  ratings  •  content rating  •  duration  •  air date (episodes) / year
     """
     kind = _text(obj, 'type')
     if kind == 'episode':
@@ -145,15 +145,13 @@ def spotlight_fields(obj, season_fmt=u'S{}', episode_fmt=u'E{}', hide_summary=Fa
 
     parts = []  # (kind, text)
     if kind == 'episode':
-        label = []
-        if _text(obj, 'parentIndex'):
-            label.append(season_fmt.format(_text(obj, 'parentIndex')))
-        if _text(obj, 'index'):
-            label.append(episode_fmt.format(_text(obj, 'index')))
-        if not hide_title and _text(obj, 'title'):
-            label.append(_text(obj, 'title'))
+        label = episode_label(_text(obj, 'parentIndex'), _text(obj, 'index'), season_fmt, episode_fmt)
         if label:
-            parts.append(('label', u' \xb7 '.join(label)))
+            parts.append(('label', label))
+    elif kind == 'movie' and movie_label:
+        parts.append(('type', movie_label))
+    elif kind == 'show' and show_label:
+        parts.append(('type', show_label))
     elif kind == 'season':
         parts.append(('label', _text(obj, 'title')))
     elif kind in ('album', 'track') and _text(obj, 'parentTitle'):
@@ -171,10 +169,14 @@ def spotlight_fields(obj, season_fmt=u'S{}', episode_fmt=u'E{}', hide_summary=Fa
     elif _text(obj, 'year'):
         parts.append(('date', _text(obj, 'year')))
 
+    # Plezy shows the episode title in place of a hidden summary
+    summary = _text(obj, 'summary')
+    if hide_summary:
+        summary = _text(obj, 'title') if kind == 'episode' and not hide_title else u''
     return {
         'title': title,
         'meta': fit_meta(parts, meta_budget),
-        'summary': u'' if hide_summary else _text(obj, 'summary'),
+        'summary': summary,
     }
 
 
