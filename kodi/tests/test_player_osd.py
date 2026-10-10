@@ -199,3 +199,54 @@ def test_seekdialog_uses_the_shared_geometry():
     # the old hard-coded 1920px bar and the grouplist offsets are gone
     assert 'setPosition(30, 0)' not in src
     assert '* 1920)' not in src
+
+
+def test_left_cluster_trailing_labels_keep_the_right_chain_alive():
+    # Kodi's grouplist wires each child's RIGHT to the next child's id; an id-less (0) child turns the previous
+    # control's RIGHT into an empty action, so RIGHT through hidden/disabled wrappers (4408 -> 4409 -> 4419) would
+    # dead-end instead of reaching the 441 cluster.
+    tpl = _read(TEMPLATES, 'script-plex-seek_dialog.xml.tpl')
+    left = re.search(r'<control type="grouplist" id="440">(.*?)<control type="grouplist" id="441">', tpl, re.S).group(1)
+    assert '<control type="label">' not in left
+    assert re.findall(r'<control type="label" id="(\d+)">', left) == ['4491', '4492', '4493']
+    assert '<onright>441</onright>' in left
+
+
+def test_remaining_time_is_negative_and_the_suffix_has_room():
+    tpl = _read(TEMPLATES, 'script-plex-seek_dialog.xml.tpl')
+    assert '<label>-$INFO[Player.TimeRemaining($INFO[Window.Property(time.fmt)])]</label>' in tpl
+    assert '<label>-$INFO[Window.Property(time.left)]</label>' in tpl
+    # the multi-part "(+1h 5m)" suffix is not squeezed into the 120px remaining-time label
+    assert 'Player.TimeRemaining($INFO[Window.Property(time.fmt)])]$INFO[Window.Property(time.add)]' not in tpl
+    assert '<label>$INFO[Window.Property(time.add)]</label>' in tpl
+
+
+def test_post_play_scrims_carry_the_foot_and_one_meta_line():
+    tpl = _read(TEMPLATES, 'script-plex-video_player.xml.tpl')
+    assert 'includes/plezy_scrims.xml.tpl" with foot=True' in tpl
+    assert 'Window.Property(info.meta)' in tpl and 'Window.Property(prev.info.meta)' in tpl
+    assert 'info.duration' not in tpl and 'info.date' not in tpl
+
+
+def test_episode_code_needs_both_numbers():
+    assert osd.episode_code('1', '2') == 'S1E2'
+    assert osd.episode_code('1', '2', sep=u' · ') == u'S1 · E2'
+    assert osd.episode_code('1', '2', u'Season {}', u'Episode {}', u' · ') == u'Season 1 · Episode 2'
+    assert osd.episode_code('0', '3') == 'S0E3'  # specials are season 0
+    assert osd.episode_code('', '') == ''
+    assert osd.episode_code('1', '') == ''
+    assert osd.episode_code(None, '2') == ''
+
+
+def test_queue_subtitle_falls_back_to_the_show_title():
+    assert osd.queue_subtitle('Andor', '1', '2') == u'Andor · S1E2'
+    assert osd.queue_subtitle('Andor', '', '') == 'Andor'
+    assert osd.queue_subtitle('', '', '') == ''
+
+
+def test_marker_reaches_end():
+    # handleFinalMarker only advances when the marker ends within 3s of the end
+    assert osd.marker_reaches_end(3597000, 3600000)
+    assert osd.marker_reaches_end(3600000, 3600000)
+    assert not osd.marker_reaches_end(3500000, 3600000)
+    assert not osd.marker_reaches_end(3596999, 3600000)

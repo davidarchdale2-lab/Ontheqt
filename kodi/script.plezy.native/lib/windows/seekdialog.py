@@ -2708,6 +2708,9 @@ class SeekDialog(kodigui.BaseDialog, windowutils.GoHomeMixin, PlexSubtitleDownlo
         try:
             isNext = bool(markerDef["marker_type"] == "credits" and getattr(markerDef["marker"], "final", False) and
                           not (markerAutoSkip and not markerAutoSkipped) and
+                          # a final marker that ends early (post-credits scene) only seeks, see handleFinalMarker
+                          osd.marker_reaches_end(markerDef["marker"].endTimeOffset, self.duration,
+                                                 FINAL_MARKER_NEGOFF) and
                           self.handler.playlist and self.handler.playlist.hasNext() and
                           (self.bingeMode or self.skipPostPlay))
         except Exception:

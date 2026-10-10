@@ -172,3 +172,9 @@ def episode_code(parent_index, index, season_fmt=u'S{}', episode_fmt=u'E{}', sep
 def queue_subtitle(show, parent_index, index, season_fmt=u'S{}', episode_fmt=u'E{}'):
     """Plezy formatQueueItemSubtitle: 'Show · S1E2', or the show title alone when a number is missing."""
     return join_meta((show, episode_code(parent_index, index, season_fmt, episode_fmt)))
+
+
+def marker_reaches_end(end_offset, duration, negoff=3000):
+    """True when a (final) marker runs to the end of the video, i.e. skipping it leaves the video (seekdialog.
+    handleFinalMarker only seeks past a final marker that ends more than negoff ms before the end)."""
+    return end_offset >= duration - negoff
