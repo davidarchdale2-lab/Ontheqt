@@ -145,6 +145,8 @@ class CurrentPlaylistWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
             self.optionsButtonClicked()
         elif controlID == self.STOP_BUTTON_ID:
             self.stopButtonClicked()
+        elif controlID == self.PLAYLIST_BUTTON_ID:
+            self.doClose()
 
     def onFocus(self, controlID):
         if controlID == self.SEEK_BUTTON_ID:
@@ -211,6 +213,7 @@ class CurrentPlaylistWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
 
     def optionsButtonClicked(self, pos=None):
         pos = pos or self.OPTIONS_MENU_POS
+        pos = (pos[0], util.vscalei(pos[1]))
         track = player.PLAYER.currentTrack()
         if not track:
             return
@@ -346,6 +349,12 @@ class CurrentPlaylistWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
     def setNowPlayingBackground(self):
         """The cover blurred by the Plex transcoder at 22% over the dark background (Plezy blurs it in-app). Builds a
         URL only: Kodi fetches the image once per track. Without it the template falls back to the plain cover."""
+        try:
+            self.setProperty('np.from', plezy_music.playing_from(
+                xbmc.getInfoLabel('MusicPlayer.Album'), xbmc.getInfoLabel('MusicPlayer.Year'),
+                T(35248, u'Playing from {0}')))
+        except Exception:
+            util.ERROR()
         try:
             track = player.PLAYER.currentTrack()
             art = track and (track.defaultThumb or track.parentThumb)

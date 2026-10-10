@@ -169,3 +169,36 @@ def test_dropdown_positions_match_the_layouts():
     assert pm.NOW_PLAYING_MENU_POS[0] == pm.QUEUE_MENU_POS[0] == pm.ALBUM_MENU_X
     # album menu: under the More button of the action row (row 364-420)
     assert pm.ALBUM_BUTTON_MENU[1] == 364 + 56 + 8
+
+
+def _read(*parts):
+    with open(os.path.join(ADDON, *parts), encoding='utf-8') as f:
+        return f.read()
+
+
+def test_playing_from():
+    assert pm.playing_from(u'Currents', u'2015') == u'Playing from Currents' + BULLET + u'2015'
+    assert pm.playing_from(u'Currents', u'') == u'Playing from Currents'
+    assert pm.playing_from(u'', u'2015') == u''  # no leading bullet for a track without an album
+
+
+def test_queue_close_chevron_is_handled_in_python():
+    queue = _read('resources', 'skins', 'Main', '1080i', 'templates', 'script-plex-music_current_playlist.xml.tpl')
+    player = _read('resources', 'skins', 'Main', '1080i', 'templates', 'script-plex-music_player.xml.tpl')
+    assert '<onclick>Close</onclick>' not in queue and 'onclick="Close"' not in player  # Close is not a Kodi builtin
+    assert re.search(r'elif controlID == self\.PLAYLIST_BUTTON_ID:\s+self\.doClose\(\)', _read('lib', 'windows', 'currentplaylist.py'))
+
+
+def test_hub_focus_cleared_off_the_rows():
+    assert re.search(r"else:\s+#[^\n]*\n\s+self\.setProperty\('hub\.focus', '0'\)", _read('lib', 'windows', 'person.py'))
+    assert re.search(r"class ArtistWindow.*?def onFocus.*?setProperty\('hub\.focus', '0'\)", _read('lib', 'windows', 'subitems.py'), re.S)
+
+
+def test_person_date_has_no_zero_padded_day():
+    src = _read('lib', 'windows', 'person.py')
+    assert "strftime('%B %d, %Y')" not in src and 'd.day' in src
+
+
+def test_dropdown_anchors_are_vscaled():
+    for name in ('tracks', 'currentplaylist', 'playlist', 'person'):
+        assert 'vscalei' in _read('lib', 'windows', name + '.py')

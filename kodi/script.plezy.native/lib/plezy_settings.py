@@ -111,3 +111,9 @@ def bottom_anchored_dropdown_y(count, option_height, max_rows=14, pad=80):
     """Top of a dropdown that grows upwards from a bottom edge: never more than `max_rows` rows are drawn (the list
     scrolls past that), so the offset stays bounded and the top cannot be pushed off the screen."""
     return min(count, max_rows) * option_height + pad
+
+
+def focus_just_changed(now, focus_time, window=0.15):
+    """True when focus moved within `window` seconds before `now`: Kodi runs onFocus and then onAction for the same key
+    press, so a RIGHT that has just landed on a list must not also be handled as a press on that list."""
+    return focus_time is not None and 0 <= now - focus_time < window

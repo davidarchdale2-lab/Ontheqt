@@ -21,6 +21,7 @@ class DropdownDialog(kodigui.BaseDialog):
     optionHeight = util.vscalei(66)
     separatorHeight = util.vscalei(2)
     dropWidth = 360
+    subMenuOffset = 360  # x offset of the card's right edge, where a sub menu starts (no shadow border in the Plezy skin)
     borderOff = -20
 
     GROUP_ID = 100
@@ -83,10 +84,13 @@ class DropdownDialog(kodigui.BaseDialog):
         ol_height = height - util.vscalei(86)
         y = self.y
 
-        if isinstance(y, int) and y + height > self.height:
+        if isinstance(y, int) and y + height > self.height and not (self.header and self.posIsBottom):
+            # (bottom-anchored header sheets are meant to run to the screen edge and are not shifted up)
             while y + height > self.height and y > 0:
                 y -= self.optionHeight
             y = max(0, y)
+        elif isinstance(y, int) and self.header and self.posIsBottom:
+            y = max(util.vscalei(66), y)  # keep the sheet's top (y - 66) on screen
 
         shadowControl = self.getControl(110)
         if self.header:
@@ -364,7 +368,7 @@ class DropdownDialog(kodigui.BaseDialog):
                 except (ValueError, TypeError):
                     visual_row = self.optionsList.getSelectedPos()
                 list_y = self._adjustedY if self._adjustedY is not None else int(self.y)
-                sub_x = self.x + self.dropWidth - 40  # between content edge and shadow edge of main list
+                sub_x = self.x + self.subMenuOffset
                 sub_y = list_y + visual_row * self.optionHeight
 
                 # disable scrollbar temporarily
@@ -502,6 +506,7 @@ class DropdownDialog(kodigui.BaseDialog):
 class DropdownHeaderDialog(DropdownDialog):
     xmlFile = 'script-plex-dropdown_header.xml'
     dropWidth = 660
+    subMenuOffset = 620  # sheet spans x-20..x+620
 
 
 def showDropdown(
@@ -528,8 +533,8 @@ def showDropdown(
     if header:
         if pos is None:
             # Plezy shows TV menus as a sheet at the bottom of the screen; callers that pass a position keep it.
-            # y 1074: the list's top is y - (rows * 66 + 80), so the 86px of header and padding end on the screen edge
-            pos = (660, 1074)
+            # y 1140: the list's top is y - (rows * 66 + 80); the sheet (list + 26px) then ends just past the screen edge
+            pos = (660, 1140)
             pos_is_bottom = True
         w = DropdownHeaderDialog.open(
             options=options, pos=pos,

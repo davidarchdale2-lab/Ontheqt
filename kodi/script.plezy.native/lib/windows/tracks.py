@@ -277,6 +277,7 @@ class AlbumWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
                 util.ERROR()
                 pos = (plezy_music.ALBUM_MENU_X, 432)
             setDropdownProp = True
+        pos = (pos[0], util.vscalei(pos[1]))
         choice = dropdown.showDropdown(options, pos, pos_is_bottom=False, close_direction='right', set_dropdown_prop=setDropdownProp)
         if not choice:
             return

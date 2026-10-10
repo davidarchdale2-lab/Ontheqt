@@ -135,6 +135,12 @@ def filmography_count(count, one=u'{0} title', many=u'{0} titles'):
     return count_text(count, one, many) if count else u''
 
 
+def playing_from(album, year, fmt=u'Playing from {0}'):
+    """Now-playing source line (Plezy playingFrom): 'Playing from Currents • 2015'. Empty without an album."""
+    album = clean(album)
+    return fmt.format(join_meta(album, year)) if album else u''
+
+
 def list_meta(year, duration_text=u'', subtitle=u''):
     """Library list-row metadata (MediaCardList): episodes 'S1 • E2', everything else 'year • duration'."""
     subtitle = clean(subtitle)

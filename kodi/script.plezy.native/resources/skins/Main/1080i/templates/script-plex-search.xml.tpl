@@ -61,10 +61,16 @@
         <posx>120</posx>
         <posy>{{ vscale(128) }}</posy>
         <width>520</width>
-        <height>{{ vscale(64) }}</height>
+        <height>64</height>
         <align>left</align>
         <aligny>center</aligny>
         <ondown condition="String.IsEmpty(Window.Property(hide.kbd))">1001</ondown>
+        {# Kodi keyboard mode: no on-screen keys below, so DOWN goes to the active chip / the first shelf (Plezy) #}
+        {% for sec in ["all", "movie", "show", "artist", "photo", "people"] %}{% with n = loop.index %}
+        <ondown condition="!String.IsEmpty(Window.Property(hide.kbd)) + Control.IsVisible(900) + String.IsEqual(Window.Property(search.section),{{ sec }})">{{ n + 901 }}</ondown>
+        {% endwith %}{% endfor %}
+        <ondown condition="!String.IsEmpty(Window.Property(hide.kbd)) + !Control.IsVisible(900) + !String.IsEmpty(Window.Property(show.history))">2050</ondown>
+        <ondown condition="!String.IsEmpty(Window.Property(hide.kbd)) + !Control.IsVisible(900) + String.IsEmpty(Window.Property(show.history))">3000</ondown>
         <onright condition="!String.IsEmpty(Window.Property(search.has.query))">999</onright>
         <onright condition="String.IsEmpty(Window.Property(search.has.query)) + !String.IsEmpty(Window.Property(show.history))">2050</onright>
         <onright condition="String.IsEmpty(Window.Property(search.has.query)) + String.IsEmpty(Window.Property(show.history))">3000</onright>
@@ -80,18 +86,18 @@
     <control type="image">
         <visible>!Control.HasFocus(650)</visible>
         <posx>140</posx>
-        <posy>{{ vscale(144) }}</posy>
+        <posy>{% with p = vscale(128) %}{{ p + 16 }}{% endwith %}</posy>
         <width>32</width>
-        <height>{{ vscale(32) }}</height>
+        <height>32</height>
         <texture colordiffuse="{{ core.plezy.muted }}">script.plex/plezy/icons/search.png</texture>
         <aspectratio>keep</aspectratio>
     </control>
     <control type="image">
         <visible>Control.HasFocus(650)</visible>
         <posx>140</posx>
-        <posy>{{ vscale(144) }}</posy>
+        <posy>{% with p = vscale(128) %}{{ p + 16 }}{% endwith %}</posy>
         <width>32</width>
-        <height>{{ vscale(32) }}</height>
+        <height>32</height>
         <texture colordiffuse="{{ core.plezy.text }}">script.plex/plezy/icons/search.png</texture>
         <aspectratio>keep</aspectratio>
     </control>
@@ -100,7 +106,7 @@
         <posx>202</posx>
         <posy>{{ vscale(128) }}</posy>
         <width>430</width>
-        <height>{{ vscale(64) }}</height>
+        <height>64</height>
         <font>font12</font>
         <align>left</align>
         <aligny>center</aligny>
@@ -113,7 +119,7 @@
         <posx>188</posx>
         <posy>{{ vscale(128) }}</posy>
         <width>388</width>
-        <height>{{ vscale(64) }}</height>
+        <height>64</height>
         <align>left</align>
         <aligny>center</aligny>
         <textcolor>{{ core.plezy.text }}</textcolor>
@@ -124,9 +130,9 @@
     <control type="button" id="999">
         <visible>!String.IsEmpty(Window.Property(search.has.query))</visible>
         <posx>576</posx>
-        <posy>{{ vscale(132) }}</posy>
+        <posy>{% with p = vscale(128) %}{{ p + 4 }}{% endwith %}</posy>
         <width>56</width>
-        <height>{{ vscale(56) }}</height>
+        <height>56</height>
         <onleft>650</onleft>
         {% for sec in ["all", "movie", "show", "artist", "photo", "people"] %}{% with n = loop.index %}
         <onright condition="Control.IsVisible(900) + String.IsEqual(Window.Property(search.section),{{ sec }})">{{ n + 901 }}</onright>
@@ -142,18 +148,18 @@
     <control type="image">
         <visible>!String.IsEmpty(Window.Property(search.has.query)) + !Control.HasFocus(999)</visible>
         <posx>588</posx>
-        <posy>{{ vscale(144) }}</posy>
+        <posy>{% with p = vscale(128) %}{{ p + 16 }}{% endwith %}</posy>
         <width>32</width>
-        <height>{{ vscale(32) }}</height>
+        <height>32</height>
         <texture colordiffuse="{{ core.plezy.muted }}">script.plex/plezy/icons/close.png</texture>
         <aspectratio>keep</aspectratio>
     </control>
     <control type="image">
         <visible>!String.IsEmpty(Window.Property(search.has.query)) + Control.HasFocus(999)</visible>
         <posx>588</posx>
-        <posy>{{ vscale(144) }}</posy>
+        <posy>{% with p = vscale(128) %}{{ p + 16 }}{% endwith %}</posy>
         <width>32</width>
-        <height>{{ vscale(32) }}</height>
+        <height>32</height>
         <texture colordiffuse="{{ core.plezy.on_primary }}">script.plex/plezy/icons/close.png</texture>
         <aspectratio>keep</aspectratio>
     </control>
@@ -218,7 +224,7 @@
         <posx>120</posx>
         <posy>{{ vscale(744) }}</posy>
         <width>520</width>
-        <height>{{ vscale(64) }}</height>
+        <height>64</height>
         {% include "includes/search_key.xml.tpl" with id=951 & x=0 & icon="script.plex/plezy/icons/backspace.png" & onleft=954 & onright=952 & onup=1031 %}
         {% include "includes/search_key.xml.tpl" with id=952 & x=132 & icon="script.plex/plezy/icons/space_bar.png" & isize=44 & onleft=951 & onright=953 & onup=1033 %}
         {% include "includes/search_key.xml.tpl" with id=953 & x=264 & icon="script.plex/plezy/icons/clear_all.png" & onleft=952 & onright=954 & onup=1034 %}
@@ -233,7 +239,7 @@
     <posx>704</posx>
     <posy>{{ vscale(136) }}</posy>
     <width>1200</width>
-    <height>{{ vscale(48) }}</height>
+    <height>48</height>
     <itemgap>12</itemgap>
     <orientation>horizontal</orientation>
     <onleft>999</onleft>
@@ -397,6 +403,6 @@
 <!-- STATES (StateMessageWidget), centred in the results column -->
 {% include "includes/plezy_state_message.xml.tpl" with icon="script.plex/plezy/icons/search.png" & title="$ADDON[script.plezy.native 35181]" & subtitle="$ADDON[script.plezy.native 35182]" & x=704 & y=512 & w=1216 & visible="String.IsEmpty(Window.Property(search.has.query)) + String.IsEmpty(Window.Property(show.history))" %}
 {% include "includes/plezy_state_message.xml.tpl" with icon="script.plex/plezy/icons/search_off.png" & title="$ADDON[script.plezy.native 35183]" & subtitle="$ADDON[script.plezy.native 35184]" & x=704 & y=512 & w=1216 & visible="!String.IsEmpty(Window.Property(no.results)) + String.IsEmpty(Window.Property(searching))" %}
-{% include "includes/plezy_state_message.xml.tpl" with icon="script.plex/plezy/icons/search_off.png" & title="$ADDON[script.plezy.native 35186]" & x=704 & y=512 & w=1216 & visible="!String.IsEmpty(Window.Property(search.error)) + String.IsEmpty(Window.Property(searching))" %}
+{% include "includes/plezy_state_message.xml.tpl" with icon="script.plex/plezy/icons/error.png" & title="$ADDON[script.plezy.native 35186]" & x=704 & y=512 & w=1216 & visible="!String.IsEmpty(Window.Property(search.error)) + String.IsEmpty(Window.Property(searching))" %}
 {% include "includes/plezy_spinner.xml.tpl" with x=1284 & y=616 & size=56 & visible="!String.IsEmpty(Window.Property(searching))" %}
 {% endblock %}

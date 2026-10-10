@@ -87,10 +87,10 @@
         <itemgap>0</itemgap>
         <orientation>horizontal</orientation>
         <scrolltime tween="quadratic" easing="out">200</scrolltime>
-        {% include "includes/mini_player_button.xml.tpl" with bid = 404 & asset = "next" & flip = True & enable = "MusicPlayer.HasPrevious" & onclick = "PlayerControl(Previous)" %}
-        {% include "includes/mini_player_button.xml.tpl" with bid = 406 & asset = "pause" & alt_asset = "play" & alt_cond = "Player.Paused | Player.Forwarding | Player.Rewinding" & onclick = "PlayerControl(Play)" %}
-        {% include "includes/mini_player_button.xml.tpl" with bid = 409 & asset = "next" & enable = "MusicPlayer.HasNext" & onclick = "PlayerControl(Next)" %}
-        {% include "includes/mini_player_button.xml.tpl" with bid = 407 & asset = "stop" & onclick = "PlayerControl(Stop)" %}
+        {% include "includes/mini_player_button.xml.tpl" with bid = 404 & asset = "next" & flip = True & enable = "MusicPlayer.HasPrevious" & r1 = 406 & onclick = "PlayerControl(Previous)" %}
+        {% include "includes/mini_player_button.xml.tpl" with bid = 406 & asset = "pause" & alt_asset = "play" & alt_cond = "Player.Paused | Player.Forwarding | Player.Rewinding" & l1 = 404 & l1c = "MusicPlayer.HasPrevious" & r1 = 409 & r1c = "MusicPlayer.HasNext" & r2 = 407 & onclick = "PlayerControl(Play)" %}
+        {% include "includes/mini_player_button.xml.tpl" with bid = 409 & asset = "next" & enable = "MusicPlayer.HasNext" & l1 = 406 & r1 = 407 & onclick = "PlayerControl(Next)" %}
+        {% include "includes/mini_player_button.xml.tpl" with bid = 407 & asset = "stop" & l1 = 409 & l1c = "MusicPlayer.HasNext" & l2 = 406 & onclick = "PlayerControl(Stop)" %}
     </control>
 </control>
 

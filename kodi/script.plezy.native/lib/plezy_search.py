@@ -115,7 +115,12 @@ def show_chips(present):
 
 
 def resolve_section(section, present):
-    """A later query without the selected kind falls back to All (Plezy)."""
+    """
+    A later query without the selected kind falls back to All (Plezy). So does any answer with no chip strip: a chip
+    nobody can see or undo would hide the collection, playlist and genre shelves that only exist under All.
+    """
+    if not show_chips(present):
+        return 'all'
     if section in (None, '', 'all') or section in present:
         return section or 'all'
     return 'all'

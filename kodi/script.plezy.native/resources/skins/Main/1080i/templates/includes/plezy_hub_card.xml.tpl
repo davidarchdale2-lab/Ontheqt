@@ -81,7 +81,7 @@
                 <width>{{ cw }}</width>
                 <height>{{ ch|vscale }}</height>
                 <texture diffuse="{{ mask }}">$INFO[ListItem.Property(thumb.fallback)]</texture>
-                <aspectratio>scale</aspectratio>
+                <aspectratio scalediffuse="false">scale</aspectratio>
             </control>
             <control type="image">
                 <posx>0</posx>
@@ -89,7 +89,7 @@
                 <width>{{ cw }}</width>
                 <height>{{ ch|vscale }}</height>
                 <texture background="true" diffuse="{{ mask }}">$INFO[ListItem.Thumb]</texture>
-                <aspectratio>scale</aspectratio>
+                <aspectratio scalediffuse="false">scale</aspectratio>
             </control>
             <!-- MediaProgressBar: primary on a translucent track, inset at the artwork's foot -->
             <control type="group">

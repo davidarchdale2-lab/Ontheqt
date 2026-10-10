@@ -865,6 +865,12 @@ class ArtistWindow(ShowWindow):
     def _createListItem(self, mediaItem, obj):
         return SeasonsMixin._createListItem(self, mediaItem, obj)
 
+    def onFocus(self, controlID):
+        super(ArtistWindow, self).onFocus(controlID)
+        if not 399 < controlID < 500:
+            # action row / header: bring the faded + slid rows back so the focused control is visible
+            self.setProperty('hub.focus', '0')
+
     def onFirstInit(self):
         self.subItemListControl = kodigui.ManagedControlList(self, self.SUB_ITEM_LIST_ID, 5)
         self.relatedListControl = kodigui.ManagedControlList(self, self.RELATED_LIST_ID, 5)

@@ -259,6 +259,9 @@ class PersonWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
     def onFocus(self, controlID):
         if self.FILMOGRAPHY_LIST_ID <= controlID <= self.DISCOVER_LIST_BASE_ID + DISCOVER_HUB_SLOTS:
             self.setProperty('hub.focus', str(controlID - self.FILMOGRAPHY_LIST_ID))
+        else:
+            # header / filter chip: bring the faded + slid rows back so the focused control is visible
+            self.setProperty('hub.focus', '0')
 
         if controlID > self.FILMOGRAPHY_LIST_ID:
             self.setProperty('on.extras', '1')
@@ -535,7 +538,7 @@ class PersonWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
         ]
         choice = dropdown.showDropdown(
             options=options,
-            pos=self.FILTER_MENU_POS,
+            pos=(self.FILTER_MENU_POS[0], util.vscalei(self.FILTER_MENU_POS[1])),
             close_direction='none',
             set_dropdown_prop=False,
             align_items='left'
@@ -586,7 +589,8 @@ class PersonWindow(kodigui.ControlledWindow, windowutils.UtilMixin):
             parts = dateStr.split('-')
             if len(parts) == 3:
                 year, month, day = int(parts[0]), int(parts[1]), int(parts[2])
-                return datetime.date(year, month, day).strftime('%B %d, %Y')
+                d = datetime.date(year, month, day)
+                return u'{0} {1}, {2}'.format(d.strftime('%B'), d.day, d.year)
         except (ValueError, IndexError):
             pass
         return dateStr

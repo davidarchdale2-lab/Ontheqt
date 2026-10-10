@@ -93,3 +93,9 @@ def test_bottom_anchored_dropdown_y_is_bounded():
     assert ps.bottom_anchored_dropdown_y(14, 66) == 14 * 66 + 80
     # more than 14 rows scroll, so the offset (and with it the dropdown's top) stops growing
     assert ps.bottom_anchored_dropdown_y(40, 66) == 14 * 66 + 80
+
+
+def test_focus_just_changed():
+    assert ps.focus_just_changed(10.05, 10.0)
+    assert not ps.focus_just_changed(10.5, 10.0)
+    assert not ps.focus_just_changed(10.0, None)

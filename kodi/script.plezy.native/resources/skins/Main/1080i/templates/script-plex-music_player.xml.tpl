@@ -3,7 +3,7 @@
    geometry: the blurred cover over the dark background, the cover at the left (corners soften while paused) and the
    source line, title, artist, seek bar and transport in a column vertically centred next to it.
    Python (lib/windows/musicplayer.py + currentplaylist.py) relies on: 406 (play/pause, initial focus), 400 (transport
-   grouplist: 401 repeat, 402 / 422 shuffle, 404 previous, 409 next), 407 (stop), 410 (queue, onclick Close), 411 (more),
+   grouplist: 401 repeat, 402 / 422 shuffle, 404 previous, 409 next), 407 (stop), 410 (queue), 411 (more),
    500 (seek button), 200 (seek selection image), 202 / 203 (time bubble). The seek numbers live in
    includes/music_seek.xml.tpl; musicplayer.py's SEEK_*/BAR_* constants mirror them. #}
 {% block headers %}<defaultcontrol>406</defaultcontrol>{% endblock %}
@@ -60,7 +60,7 @@
     <aligny>center</aligny>
     <scroll>true</scroll>
     <textcolor>{{ core.plezy.muted }}</textcolor>
-    <label>$INFO[MusicPlayer.Album]$INFO[MusicPlayer.Year, &#8226; ]</label>
+    <label>$INFO[Window.Property(np.from)]</label>
 </control>
 <control type="group">
     <posx>1758</posx>
@@ -123,7 +123,7 @@
     <orientation>horizontal</orientation>
     <scrolltime tween="quadratic" easing="out">200</scrolltime>
     <usecontrolcoords>true</usecontrolcoords>
-    {% include "includes/music_button.xml.tpl" with bid=410 & asset="pqueue" & onclick="Close" %}
+    {% include "includes/music_button.xml.tpl" with bid=410 & asset="pqueue" %}
     {% include "includes/music_button.xml.tpl" with bid=407 & asset="stop" & onclick="PlayerControl(Stop)" %}
 </control>
 {% endblock controls %}

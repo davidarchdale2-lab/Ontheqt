@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import json
+import time
 import sys
 import datetime
 import types
@@ -1233,6 +1234,7 @@ class SettingsWindow(kodigui.BaseWindow, windowutils.UtilMixin):
         self.showSections()
         self.setFocusId(75)
         self.lastSection = None
+        self._focusTime = None
         self.lastFocusID = None
         self.checkSection()
 
@@ -1254,6 +1256,9 @@ class SettingsWindow(kodigui.BaseWindow, windowutils.UtilMixin):
                 #     self.setFocusId(self.TOP_GROUP_ID)
                 #     return
             elif action == xbmcgui.ACTION_MOVE_RIGHT:
+                if plezy_settings.focus_just_changed(time.time(), self._focusTime):
+                    # this RIGHT moved focus onto the list (e.g. from the Home chip); don't also open the section
+                    return
                 if self.lastFocusID == self.SECTION_LIST_ID:
                     self.openSection()
                     return
@@ -1279,6 +1284,7 @@ class SettingsWindow(kodigui.BaseWindow, windowutils.UtilMixin):
 
     def onFocus(self, controlID):
         self.lastFocusID = controlID
+        self._focusTime = time.time()
 
     def checkSection(self):
         mli = self.sectionList.getSelectedItem()

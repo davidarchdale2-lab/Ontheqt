@@ -137,14 +137,25 @@
     </control>
     {# chevron_right: Plezy shows it on every tile that is not the active one #}
     <control type="image">
-        <visible>String.IsEmpty(ListItem.Property(active))</visible>
+        <visible>String.IsEmpty(ListItem.Property(active)){% if focused %} + !Control.HasFocus(101){% endif %}</visible>
         <posx>1722</posx>
         <posy>{{ vscale(38) }}</posy>
         <width>36</width>
         <height>{{ vscale(36) }}</height>
-        <texture colordiffuse="{% if focused %}{{ core.plezy.text }}{% else %}{{ core.plezy.muted }}{% endif %}">script.plex/plezy/icons/chevron_right.png</texture>
+        <texture colordiffuse="{{ core.plezy.muted }}">script.plex/plezy/icons/chevron_right.png</texture>
         <aspectratio>keep</aspectratio>
     </control>
+    {% if focused %}
+    <control type="image">
+        <visible>String.IsEmpty(ListItem.Property(active)) + Control.HasFocus(101)</visible>
+        <posx>1722</posx>
+        <posy>{{ vscale(38) }}</posy>
+        <width>36</width>
+        <height>{{ vscale(36) }}</height>
+        <texture colordiffuse="{{ core.plezy.text }}">script.plex/plezy/icons/chevron_right.png</texture>
+        <aspectratio>keep</aspectratio>
+    </control>
+    {% endif %}
 </control>
 
 {# the last row: a full-width outlined stadium, Plezy's "Add profile" button, here refreshing the user list #}

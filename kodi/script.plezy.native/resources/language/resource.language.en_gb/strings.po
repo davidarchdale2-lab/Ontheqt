@@ -3536,3 +3536,7 @@ msgstr ""
 msgctxt "#35247"
 msgid "{0} titles"
 msgstr ""
+
+msgctxt "#35248"
+msgid "Playing from {0}"
+msgstr ""

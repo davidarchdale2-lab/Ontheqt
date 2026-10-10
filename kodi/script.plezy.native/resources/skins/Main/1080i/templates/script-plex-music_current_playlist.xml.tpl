@@ -4,7 +4,7 @@
    transport and seek bar, so it uses the wide two-pane layout instead: the cover at the left, the title, artist, seek
    bar and transport at the top right, and the queue as grouped track cards in a panel below them.
    Python (lib/windows/currentplaylist.py) relies on: 101 (queue list), 152 (scrollbar), 400 (transport grouplist:
-   401 repeat, 402 / 422 shuffle, 404 previous, 409 next, 406 play/pause), 407 (stop), 410 (close, onclick Close),
+   401 repeat, 402 / 422 shuffle, 404 previous, 409 next, 406 play/pause), 407 (stop), 410 (close, handled in Python),
    411 (more), 500 (seek button), 510 (seek selection image), 202 / 203 (time bubble). The seek numbers live in
    includes/music_seek.xml.tpl; currentplaylist.py's SEEK_*/BAR_* constants mirror them. #}
 {% block headers %}<defaultcontrol>101</defaultcontrol>{% endblock %}
@@ -27,7 +27,6 @@
     <texturefocus colordiffuse="{{ core.plezy.text }}">script.plex/plezy/circle.png</texturefocus>
     <texturenofocus>-</texturenofocus>
     <label> </label>
-    <onclick>Close</onclick>
 </control>
 <control type="image">
     <visible>!Control.HasFocus(410)</visible>
@@ -57,7 +56,7 @@
     <aligny>center</aligny>
     <scroll>false</scroll>
     <textcolor>{{ core.plezy.muted }}</textcolor>
-    <label>$INFO[MusicPlayer.Album]$INFO[MusicPlayer.Year, &#8226; ]</label>
+    <label>$INFO[Window.Property(np.from)]</label>
 </control>
 <control type="group">
     <posx>1758</posx>

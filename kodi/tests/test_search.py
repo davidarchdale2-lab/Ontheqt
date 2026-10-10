@@ -64,6 +64,17 @@ def test_selected_kind_falls_back_to_all_when_a_later_query_lacks_it():
     assert ps.resolve_section('movie', ['movie', 'show']) == 'movie'
     assert ps.resolve_section('artist', ['movie', 'show']) == 'all'
     assert ps.resolve_section('all', []) == 'all'
+
+
+def test_no_chip_strip_means_all_so_no_shelf_is_hidden_without_a_way_back():
+    # 'dune' -> Movies chip, then 'marvel' -> one chip kind plus a collection shelf: must not stay on Movies
+    pairs = [('movie', 5), ('collection', 2), ('playlist', 1)]
+    present = ps.present_kinds(pairs)
+    assert present == ['movie'] and not ps.show_chips(present)
+    section = ps.resolve_section('movie', present)
+    assert section == 'all'
+    assert ps.hub_ids_to_show(pairs, section, ps.HUB_DISPLAY) == [0, 1, 2]
+    assert ps.resolve_section('movie', []) == 'all'
     assert ps.resolve_section('', ['movie']) == 'all'
     assert ps.resolve_section(None, ['movie']) == 'all'
 

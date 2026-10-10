@@ -182,7 +182,7 @@ class PlaylistWindow(kodigui.ControlledWindow, windowutils.UtilMixin, signalsmix
 
         choice = dropdown.showDropdown(
             options,
-            pos=(660, 441),
+            pos=(660, util.vscalei(441)),
             close_direction='none',
             set_dropdown_prop=False,
             header=T(33021, 'Choose action'),
@@ -296,7 +296,7 @@ class PlaylistWindow(kodigui.ControlledWindow, windowutils.UtilMixin, signalsmix
         if not options:
             return
 
-        choice = dropdown.showDropdown(options, self.OPTIONS_MENU_POS, close_direction='down', close_on_playback_ended=True)
+        choice = dropdown.showDropdown(options, (self.OPTIONS_MENU_POS[0], util.vscalei(self.OPTIONS_MENU_POS[1])), close_direction='down', close_on_playback_ended=True)
         if not choice:
             return
 
@@ -312,13 +312,16 @@ class PlaylistWindow(kodigui.ControlledWindow, windowutils.UtilMixin, signalsmix
         self.setProperty('playlist.title', self.playlist.title)
         self.setProperty('playlist.duration', util.durationToText(self.playlist.duration.asInt()))
         try:
-            # Plezy's header line: 'N items • 2h 5m • Smart'
-            self.setProperty('playlist.meta', plezy_music.playlist_meta(
-                self.playlist.leafCount.asInt(), self.playlist.duration.asInt(), smart=self.playlist.smart.asBool(),
-                one=T(35242, u'{0} item'), many=T(35243, u'{0} items'), smart_label=T(35246, u'Smart')))
+            self.setMeta(self.playlist.leafCount.asInt())
             self.setProperty('playlist.type', self.playlist.playlistType or '')
         except Exception:
             util.ERROR()
+
+    def setMeta(self, count):
+        # Plezy's header line: 'N items • 2h 5m • Smart'
+        self.setProperty('playlist.meta', plezy_music.playlist_meta(
+            count, self.playlist.duration.asInt(), smart=self.playlist.smart.asBool(),
+            one=T(35242, u'{0} item'), many=T(35243, u'{0} items'), smart_label=T(35246, u'Smart')))
 
     def updateListItem(self, idx, pi, mli=None):
         mli = mli or self.playlistListControl.getListItem(idx)
@@ -392,6 +395,10 @@ class PlaylistWindow(kodigui.ControlledWindow, windowutils.UtilMixin, signalsmix
 
         if total < len(self.playlist):
             total = actualPlaylistLength
+            try:
+                self.setMeta(total)  # the header was built from the clamped leafCount
+            except Exception:
+                util.ERROR()
 
         endoffirst = min(util.addonSettings.playlistMaxSize, PLAYLIST_PAGE_SIZE, total)
         items = [self.updateListItem(i, pi, kodigui.ManagedListItem()) for i, pi in enumerate(self.playlist.extend(0, endoffirst))]

@@ -1,4 +1,4 @@
-{# Plezy filter chip (focusable_tab_chip.dart, TV colours): a 48px stadium toggle button. Idle = tonal fill with a
+{# Plezy filter chip (focusable_tab_chip.dart, TV colours): a 48px stadium toggle button (never vscaled: the pill texture cannot be shorter than its border sum). Idle = tonal fill with a
    regular label; focused = white fill with an on_primary label; selected = white fill with a bold on_primary label;
    selected and focused = the two blended (chip_selected_focus). Selection is the usealttexture condition, so the click
    handler only has to change the property it reads. Chips belong in a horizontal grouplist, which skips hidden ones.
@@ -7,7 +7,7 @@
 <control type="togglebutton" id="{{ id }}">
     {% if visible %}<visible>{{ visible }}</visible>{% endif %}
     <width>{{ width }}</width>
-    <height>{{ height|default(48)|vscale }}</height>
+    <height>{{ height|default(48) }}</height>
     <font>font12</font>
     <align>center</align>
     <aligny>center</aligny>

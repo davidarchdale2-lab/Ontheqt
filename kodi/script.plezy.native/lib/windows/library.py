@@ -21,6 +21,7 @@ from six.moves import range
 from lib import backgroundthread
 from lib import player
 from lib import plezy_music
+from lib import plezy_ui
 from lib import util
 from lib import shuffle
 from lib.util import T
@@ -1937,9 +1938,11 @@ class LibraryWindow(PlaybackBtnMixin, kodigui.MultiWindow, windowutils.UtilMixin
                                         sub_title = "{} ({})".format(res, obj.get('year'))
                         mli.setProperty('year', sub_title)
 
+                        meta_duration = u''
                         if obj.TYPE != 'collection':
                             if not obj.isDirectory() and obj.get('duration').asInt():
                                 mli.setLabel2(util.durationToText(obj.fixedDuration()))
+                                meta_duration = plezy_ui.duration_text(obj.fixedDuration())
                             mli.setProperty('art', obj.defaultArt.asTranscodedImageURL(*artDim))
                             if not obj.isWatched and obj.TYPE != "Directory":
                                 if self.section.TYPE == 'show' or obj.TYPE == 'show' or obj.TYPE == 'season':
@@ -1951,8 +1954,8 @@ class LibraryWindow(PlaybackBtnMixin, kodigui.MultiWindow, windowutils.UtilMixin
                                 mli.setBoolProperty('watched', '1')
                             mli.setProperty('initialized', '1')
 
-                        # list views: 'year • duration' (Plezy's metadata line); Label2 holds the duration by now
-                        mli.setProperty('meta', plezy_music.list_meta(sub_title, mli.getLabel2()))
+                        # list views: 'year • 2h 46m' (Plezy's metadata line, formatDurationTextual)
+                        mli.setProperty('meta', plezy_music.list_meta(sub_title, meta_duration))
                         mli.setProperty('progress', util.getProgressImage(obj))
                     else:
                         mli.clear()
