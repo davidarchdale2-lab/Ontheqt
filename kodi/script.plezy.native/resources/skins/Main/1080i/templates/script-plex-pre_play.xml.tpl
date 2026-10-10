@@ -306,6 +306,9 @@
             <usecontrolcoords>true</usecontrolcoords>
             <onup>304</onup>
             <ondown>400</ondown>
+            <!-- FocusableActionBar traps left/right at the ends; a grouplist without them wraps -->
+            <onleft>noop</onleft>
+            <onright>noop</onright>
             <!-- Play: icon-only stadium, drawn by the overlays below (pill or split shape, play or resume glyph) -->
             <control type="button" id="302">
                 <visible>String.IsEmpty(Window.Property(unavailable)) + String.IsEmpty(Window.Property(disable_playback))</visible>

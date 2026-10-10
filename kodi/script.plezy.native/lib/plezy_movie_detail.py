@@ -29,6 +29,14 @@ VERSION_W = 42
 VERSION_PULL = -8
 BUTTON_W = 56
 
+# Plezy CodecUtils.formatVideoCodec
+VIDEO_CODECS = {
+    'h264': u'H.264', 'avc1': u'H.264', 'avc': u'H.264',
+    'hevc': u'HEVC', 'h265': u'HEVC', 'hev1': u'HEVC',
+    'av1': u'AV1', 'vp8': u'VP8', 'vp9': u'VP9',
+    'mpeg2video': u'MPEG-2', 'mpeg2': u'MPEG-2', 'mpeg4': u'MPEG-4', 'vc1': u'VC-1',
+}
+
 
 def _text(obj, attr):
     value = getattr(obj, attr, None)
@@ -60,6 +68,17 @@ def hero_meta(obj, season_fmt=u'S{}', episode_fmt=u'E{}', extra=u'', budget=HERO
     return line, fits
 
 
+def video_codec(codec):
+    """Plezy CodecUtils.formatVideoCodec: 'hevc' -> 'HEVC', 'h264' -> 'H.264'."""
+    codec = (codec or u'').strip()
+    return VIDEO_CODECS.get(codec.lower(), codec.upper())
+
+
+def tracks_subtitles(title, off):
+    """The subtitle slot of the track status: the selected track's name, or Plezy's 'Off' when there is none."""
+    return off if not title else title
+
+
 def tracks_video(resolution, codec, rendering):
     """
     Plezy buildMediaVideoLabels: '4K • HEVC • DV P8' - Dolby Vision by profile only, HDR / HLG as such, and
@@ -70,7 +89,7 @@ def tracks_video(resolution, codec, rendering):
         rendering = u''
     elif rendering.upper().startswith(u'DV P'):
         rendering = u'DV P' + rendering[4:].split(u'.', 1)[0]
-    return SEPARATOR.join(p for p in ((resolution or u'').strip(), (codec or u'').strip(), rendering) if p)
+    return SEPARATOR.join(p for p in ((resolution or u'').strip(), video_codec(codec), rendering) if p)
 
 
 def more_menu_x(play=True, version=False, trailer=False, watched=False, watchlist=False, settings=False):
