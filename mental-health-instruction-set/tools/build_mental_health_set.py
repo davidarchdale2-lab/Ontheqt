@@ -100,13 +100,23 @@ PINS = {
     'operations:asset-subsections': 'd2c28ebc81e284d993d1f381106f6dff715b9f86542b5f96e9ae4342a8d5db37',
     'operations:deliverables': '9b564f22219b164b47a429196799a959ba658215ddcd28fe1c103fa769a4f312',
     'rules:media-paragraph': '1ec1abe54ac0ebf50df62de167e6d7534b8c9d7a212075c536d9a3c01750b0fd',
+    'sa-grid:map': '8f79795aa2070bad8495569958795e9b359de041b96fe4ac670badb719b9b204',
+    'sa-grid:handoff-map': '1342d0bd8ece9925d550aa60d41abf3663c694f84ca699e4da2a2ad8a100e31f',
     'sa-grid:registered-bullet': '9ac3f55682b764af08ac25c977bc803739049f210df67ea048aae68a5b9f3705',
+    'sa-grid:checkpoint-bullet': '47199983230dbb7252530b07232e3af5277941dc5800027732d2f397a2c17ed9',
     'sa-grid:record-table': 'e37c42437a85ed0d412f2e27f35a6994cbe42c0d07e3c261675af9fa8f9282bb',
+    'sa-scratchpad:registered-entry': '079a51ef86d88dc2e6fbed7a7800f2c2141ecd6f0d04ba6a078c0fec75569f1c',
+    'sa-scratchpad:closing': '0baeb35d2c5e233dd17826530fca927e14aae3dadc1bb99d766e9112cb769d13',
+    'sa-scratchpad:resuming': '747e3d1d09f3390f5a52b45dc4e4e322a5bcbc3283b47537dad17cd3fcc3a06c',
     'sa-scratchpad:interface': '996ca502c610830b50f32544bae364e24dde8628921029b5919a03d39830ad3a',
     'sa-scratchpad:templates': 'ad81c5b9df2ecd315d3023c9fb1a3f3da4acc7e32829a375359410cd5d5ec1c8',
     'sa-health-plan:template': '6e5f79755a73d9c68f3d4646935a4128a209bc49f192842c6f76faf61102eaa8',
+    'sa-soap:step5': 'bba7612eb95617d0117359a23775c0357d60fcf3cb6ccf687edb70ca7f6e2585',
+    'sa-soap:step6': '4f312e72e7002ec05b9f8db42c22e856feb4a5c783986502b204d55b3cfd19e0',
     'sa-soap:identity-closing': 'b9435f1cd55cd0e74b882a71b0fa4108f95faae488907dec32d01f9c20033f5c',
     'sa-soap:template': '5898ca624145c5ecec1e48d2c8a8d2455e58dd32b8602bd9e6e6f4f00ea27632',
+    'sa-rules:r2-medical-file': '0855ddb51a8b350f6298a2e5e8a61198c570710a410f9c8da60e0b5b6d3f6002',
+    'sa-rules:r14-arrangement': '580b987a5a0aeef2dbd8274dd1bfcc2db230c130dde06012862b23bd4c7e388e',
 }
 
 # Terms that name a dropped lens, a dropped service or media production.
@@ -186,7 +196,7 @@ def cut_between(text, start, end, label, replacement=''):
     i = text.index(start)
     if end is None:
         pin(label, text[i:])
-        return text[:i].rstrip('\n') + '\n' + replacement
+        return text[:i].rstrip('\n') + ('\n\n' + replacement if replacement else '\n')
     if text.count(end) != 1:
         fail(label, f'end marker found {text.count(end)} times')
     j = text.index(end)
@@ -530,25 +540,129 @@ STANDALONE_ALLOWED = [
     {'file': 'standalone:DEPLOYMENT_FACTS.md', 'term': 'leaflet',
      'line_contains': 'point to the product leaflet, a pharmacist or the prescriber.',
      'reason': 'A medicine product leaflet as a source.'},
+    {'file': 'standalone:DEPLOYMENT_FACTS.md', 'term': 'leaflet',
+     'line_contains': "use First Aid's harmful-ingestion route at once, not the leaflet",
+     'reason': 'Overdose routing: tells the model not to rely on the medicine leaflet.'},
 ]
 
 
+def replace_all(text, old, new, label, expected):
+    count = text.count(old)
+    if count != expected:
+        fail(label, f'expected {expected} matches, found {count}')
+    return text.replace(old, new)
+
+
 def standalone_rules(text):
-    return replace_once(text, 'System-wide requirements supplied separately by the harness.',
+    text = replace_once(text, 'System-wide requirements supplied separately by the harness.',
                         'System-wide requirements, supplied in this same prompt.', 'sa-rules:intro')
+    text = replace_once(
+        text,
+        'Resolve a supplied self-introduction through the configured profile metadata and existing application access.',
+        'A supplied self-introduction is a name, not identity; no profile metadata or record access is connected.',
+        'sa-rules:r2-profile')
+    text = replace_line(
+        text, 'The owner’s standing recording arrangement makes ordinary registered health consultations recordable',
+        'In this deployment there is no standing recording arrangement. Prepare a SOAP, plan, research or audit document as '
+        'text in the chat when the person asks for one or accepts an offer. An explicit no-save or copy-only choice for the '
+        'enquiry takes precedence. A format request is not a SOAP request, and a document is not created merely to complete '
+        'a checklist.',
+        'sa-rules:r14-arrangement')
+    text = replace_once(
+        text,
+        'At close, reuse an unchanged accepted SOAP and its actual content revision instead of creating a duplicate. '
+        'New clinical content uses the appropriate continuation or amendment. After formal-record outcomes, prepare the '
+        'relevant consolidated-memory handover. A failed save leaves its exact outcome and unfinished work; it does not '
+        'restore a superseded clinical fact.',
+        'At close, do not prepare again a note already prepared in this conversation whose content is unchanged. New '
+        'clinical content uses the appropriate continuation or amendment. After any other records, offer the continuity '
+        'summary described in the deployment facts.',
+        'sa-rules:r14-close')
+    text = cut_between(
+        text, 'Ordinary registered consultations use the current persistent memory', 'A supplied self-introduction is a name, not identity',
+        'sa-rules:r2-medical-file',
+        replacement=(
+            'No medical file, condensed record or persistent memory is connected in this deployment, so no full-file read, '
+            'intake or audit permission arises. Material the person pastes or attaches is supplied material: work only with '
+            'what was supplied, do not ask permission to open records that cannot be opened, and do not reconstruct missing '
+            'content. Reading supplied material never permits rewriting the source.\n\n'
+        ))
+    text = replace_once(text, 'Retain the accepted state revision, corrections and request identities through the state interface.',
+                        'Retain the accepted working picture and its corrections in the conversation.', 'sa-rules:r19-state')
+    return text
+
+
+STANDALONE_GRID_MAP = '''flowchart TD
+    OPEN["Conversation opening without an enquiry"] --> R["Reception Desk"]
+    R -- "Introduction / invitation" --> C["Chat"]
+    R -- "Supplied opening information" --> W["Scratchpad Investigatory Tool<br/>Current working picture"]
+    IN["Name, enquiry, reply, correction, new information<br/>or pasted summary, note or record"] --> W
+    IN -- "Immediate First Aid" --> FA["First Aid"]
+    R -- "Immediate First Aid request" --> FA
+    W -- "First-aid need / urgent development" --> FA
+    W -- "Clinical / data-usability / Evidence from available picture" --> E["Clinical Reasoning"]
+    E -- "Findings / assessment / investigation question" --> W
+    W -- "Factual result / question / limitation / non-patient close" --> C
+    E -- "General consultation / source contribution" --> C
+    FA -- "Findings / assessment question" --> W
+    E -- "First-aid need / assessment return" --> FA
+    FA -- "Immediate / continuing contribution" --> C
+    W -- "Develop / review plan" --> P["Health Plan"]
+    P -- "Picture / updates / clinical question" --> W
+    E -- "Planning contribution" --> P
+    P -- "Plan / question / present position" --> C
+    W -- "Supplied material / practical task" --> O["Operations"]
+    O -- "Practical outcome / not available here" --> W
+    W -- "Note requested or offer accepted / amendment" --> N["SOAP Creation"]
+    N -- "Prepare in chat" --> O
+    O -- "Prepared note (not saved)" --> N
+    N -- "Prepared note, not saved" --> W
+    W -- "Close: offer continuity summary" --> O
+    P -- "Prepare plan in chat" --> O
+    O -- "Prepared plan (not saved)" --> P
+    C -- "Material for a requested note" --> N
+    N -- "Picture / missing basis / changed findings" --> W
+    N -- "Note (prepared, not saved)" --> C
+    C -- "Reply / new information" --> IN
+    click R "RECEPTION_DESK.md"
+    click W "SCRATCHPAD_INVESTIGATORY_TOOL.md"
+    click E "CLINICAL_REASONING_TOOL.md"
+    click FA "FIRST_AID.md"
+    click P "HEALTH_PLAN.md"
+    click N "SOAP_TOOL.md"
+    click O "OPERATIONS.md"
+'''
+
+STANDALONE_HANDOFF_MAP = '''    Q["Requesting process"] --> O["Operations"]
+    O --> G{"Can it be done<br/>within the conversation?"}
+    G -- "Yes" --> X["Prepare text / read supplied material"]
+    G -- "Needs a connected service" --> NS["Not available in this deployment"]
+    X --> B["Return to originating process"]
+    NS --> B
+'''
 
 
 def standalone_grid(text):
     text = replace_once(text, '# Dr Seraphina Aris - Health Assistant V1 R11-MH (mental-health draft)\n',
                         '# Dr Seraphina Aris - Health Assistant V1 R11-MH standalone (mental-health draft)\n',
                         'sa-grid:title')
-    text = replace_once(text, 'M["Operations: read current persistent memory"]',
-                        'M["Operations: persistent memory (none connected in this deployment)"]', 'sa-grid:memory-node')
+    text = cut_between(text, 'flowchart TD\n    OPEN["Conversation opening without an enquiry"]', '```\n\n## Operations handoff',
+                       'sa-grid:map', replacement=STANDALONE_GRID_MAP)
+    text = cut_between(text, '    Q["Requesting process"] --> O["Operations"]', '```\n\n## Enquiry and continuity connections',
+                       'sa-grid:handoff-map', replacement=STANDALONE_HANDOFF_MAP)
     text = replace_line(
         text, '- Registered consultation starts with persistent memory',
         '- No person registry, stored record or persistent memory is connected in this deployment. Background comes from '
         'what the person supplies in the conversation, including a continuity summary pasted from an earlier conversation.',
         'sa-grid:registered-bullet')
+    text = replace_line(text, '- A checkpoint identifies the actual unfinished work',
+                        '- A pasted continuity summary can name unfinished work from an earlier conversation; continue it '
+                        'from what the person supplies, and ask what has changed since.', 'sa-grid:checkpoint-bullet')
+    text = replace_once(text, 'closing memory follows the formal-record outcomes.',
+                        'a closing continuity summary follows any other records prepared.', 'sa-grid:closing-memory')
+    text = replace_once(text, 'Operations carries the applicable tool preconditions and returned outcomes.',
+                        'Operations states what can be done within the conversation and returns unavailable work as unavailable.',
+                        'sa-grid:operations-sentence')
     text = cut_between(
         text, 'The record-producing process supplies content; Operations retrieves',
         'The relevant module defines when a record is appropriate.', 'sa-grid:record-table',
@@ -577,8 +691,9 @@ def standalone_reception(text):
     text = replace_once(
         text,
         'For a registered-user consultation, I start with your saved continuity summary and current condensed record.',
-        "I don't keep anything between conversations. If you kept a continuity summary from an earlier conversation, "
-        'you can paste it here to carry on.',
+        "I can't carry anything over to a later conversation, although the chat application you are using may keep its "
+        'own history of this one. If you kept a continuity summary from an earlier conversation, you can paste it here '
+        'to carry on.',
         'sa-reception:intro')
     text = replace_once(text, '> - **Your full name** — for a registered-user consultation.',
                         '> - **Your name**, if you would like me to use it.', 'sa-reception:name')
@@ -590,10 +705,86 @@ def standalone_reception(text):
         text,
         'A recognised registered introduction starts its memory-first entry, without another identity question or Reception investigation.',
         'No person registry is connected, so a name opens no records.', 'sa-reception:registered-entry')
+    text = replace_once(text, 'Registered/guest describes personal context, while First Aid/educational describes the requested work.',
+                        "A name or 'Guest' only sets how the person is addressed; neither opens records. First Aid/educational "
+                        'describes the requested work.', 'sa-reception:registered-guest')
     return text
 
 
 def standalone_scratchpad(text):
+    text = replace_once(text, '| Continuity | Consolidated summary reference and revision, provisional-review position, sources and '
+                              'distinct discovery/read/processing/incorporation checkpoints, filing outcomes and matters needed '
+                              'for later review. |',
+                        '| Continuity | Any pasted continuity summary with its date, material supplied and read, records prepared '
+                        'in this conversation, and matters for a later conversation. |', 'sa-scratchpad:continuity-row')
+    text = replace_once(text, 'Personal-record operations receive the subject selected through the existing application interface.',
+                        'No registry is connected, so no personal-record operation applies.', 'sa-scratchpad:record-operations')
+    text = replace_once(text, 'Operations resolves a supplied registered introduction through profile metadata under existing application access.',
+                        'A supplied name is a form of address, not identity, and opens no records.', 'sa-scratchpad:introduction')
+    text = cut_between(
+        text, '### Registered entry: persistent memory first', '## How the person is feeling and managing',
+        'sa-scratchpad:registered-entry',
+        replacement=(
+            '### Entry without a registry\n\n'
+            'No registry, persistent memory or medical file is connected, so no one is a registered user, no lookup is made '
+            'and no permission to read a medical file is requested. A name, including a full name, is only the person\'s '
+            'chosen form of address: it starts no retrieval or intake, and help does not wait on it. Every consultation '
+            'begins from the person\'s current account. If the person gives only a name, acknowledge it and invite them to '
+            'say what they need.\n\n'
+            'Earlier background comes only from what the person supplies in this conversation: a pasted continuity summary, '
+            'an earlier note, plan, letter or result, or their own account. Attribute it, keep its date and origin, review '
+            'it only as far as it was actually read, and say what was not supplied. For a pasted continuity summary, note its '
+            'date, ask what has changed since, and bring its still-relevant background, active plans and open questions into '
+            'the working picture without treating its earlier assessments, including any earlier statement about safety, as '
+            'current. Present the useful update and answer rather than reciting the summary. Nothing is saved or resumed '
+            'outside this conversation.\n\n'
+        ))
+    text = replace_once(text, 'The account enters attributed `current_facts` as reported information.',
+                        'The account enters the working picture as attributed, reported information.', 'sa-scratchpad:current-facts')
+    text = replace_once(text, 'A relevant unanswered question remains in `questions` as information not yet obtained,',
+                        'A relevant unanswered question remains open as information not yet obtained,', 'sa-scratchpad:questions')
+    text = replace_once(text, 'sufficiently specified practical work, source retrieval and document delivery go to Operations.',
+                        'sufficiently specified practical work, reading supplied material and preparing documents as text go '
+                        'to Operations.', 'sa-scratchpad:routing')
+    text = cut_between(
+        text, 'The working picture carries the recording choice and the documents arising from the consultation.',
+        '## Source standing and data usability', 'sa-scratchpad:closing',
+        replacement=(
+            'The working picture carries the recording choice and the documents prepared in this conversation. SOAP, Health '
+            'Plan or the audit process prepares the relevant account as text when the person asks for one or accepts an '
+            'offer; Operations presents it in the chat. Nothing is saved.\n\n'
+            'At the close of a consultation that produced findings, advice or plans, finalise the useful working-picture '
+            'position and offer a continuity summary, using the Operations layout and prepared after any other records. It '
+            'carries forward still-relevant background from any summary the person pasted, active plans, unanswered '
+            'questions and this consultation. It is a consolidated handover, not a diary of the last exchange. Name any '
+            'pasted summary it follows by that summary\'s own stated date. Do not create a record code, reference number or '
+            'time; a date appears only as the Operations record header allows. A summary the person declines is not '
+            'prepared, and an interrupted conversation is never presented as a completed close.\n\n'
+            '## Selecting and preserving the clinical handover\n\n'
+            'Choose the clinically relevant content of the continuity summary: still-relevant background, the person\'s '
+            'explicit preferences, current findings and their interpretation, meaningful changes, active plans, outstanding '
+            'questions, safety matters discussed, health-data findings and the material actually read. Selection and '
+            'organisation are part of the clinical handover. Copying every fact into background, leaving known preferences '
+            'empty, or treating every previous assessment as current does not accomplish that work.\n\n'
+            'Keep current and superseded information distinct, with the history needed to interpret the change. A sourced '
+            'consideration that a perspective adds no material clinical conclusion is different from a new provisional '
+            'diagnosis. Preserve known measurement periods, units, source series and limitations in the health-data account; '
+            'keep genuinely unknown fields unknown.\n\n'
+            'If the conversation is interrupted, give the useful answer and state what remains unfinished; nothing carries '
+            'over unless the person keeps a summary. Immediate First Aid can interrupt routine record work at any point.\n\n'
+        ))
+    text = cut_between(
+        text, '## Keeping and resuming the working picture', '## Working-picture interface', 'sa-scratchpad:resuming',
+        replacement=(
+            '## Keeping and resuming the working picture\n\n'
+            'Within this conversation, the working picture, its sources and unfinished investigation support the next reply '
+            'without repeating Reception. A located reference, inspected passage and appraised claim remain distinct.\n\n'
+            'A new conversation opens a new working picture from the current account and supplied material only. A pasted '
+            'continuity summary brings forward dated continuity; it does not import the earlier conversation. A bare "resume" '
+            'or "carry on from last time" with nothing pasted gets a brief explanation that earlier conversations cannot be '
+            'seen here, and an invitation to paste the summary or describe where things stand. Earlier content is never '
+            'reconstructed or guessed.\n\n'
+        ))
     text = cut_between(
         text, '## Working-picture interface', '## Templates for investigation and continuity records',
         'sa-scratchpad:interface',
@@ -616,10 +807,16 @@ def standalone_scratchpad(text):
 
 
 def standalone_health_plan(text):
+    text = replace_once(text, 'A later consultation obtains the recorded plan through the filing system.',
+                        'The plan is not kept after this conversation; a later conversation can use it only if the person '
+                        'pastes it back, so offer it in a form they can keep.', 'sa-health-plan:filing')
+    text = replace_once(text, 'Operations supplies requested document production or connected actions and their outcomes.',
+                        'Operations prepares a requested plan document as text in the chat; booking, reminders and contact are '
+                        'unavailable, so offer wording the person can use themselves.', 'sa-health-plan:connected-actions')
     return cut_between(
         text, '## Record template', None, 'sa-health-plan:template',
         replacement=(
-            '## Record template\n\n'
+            '## Preparing the plan as a document\n\n'
             'For a plan prepared as a document, Operations uses its health-plan layout. Populate the chosen goals, proposed '
             'or agreed actions, ownership, feasibility and review from the actual discussion. Clinical Reasoning supplies the '
             'assessment; the layout supplies the structure. The plan is prepared in the chat for the person to keep; it is '
@@ -628,13 +825,37 @@ def standalone_health_plan(text):
 
 
 def standalone_soap(text):
+    text = replace_once(text, "Bring together the person's existing reference where available, current enquiry,",
+                        'Bring together how the patient was named, if they were, the current enquiry,', 'sa-soap:step1')
+    text = replace_line(
+        text, '5. **Prepare and file.**',
+        '5. **Prepare.** When the person asks for a note, or accepts an offer of one, prepare the dated account in the chat '
+        'using the Operations SOAP layout. Nothing is filed or saved, and no reference number is created.',
+        'sa-soap:step5')
+    text = replace_line(
+        text, '6. **Return the handover material.**',
+        '6. **Return the handover material.** Return the prepared note to the working picture. At close its content feeds '
+        'the continuity summary offered to the person. A note the person keeps and later pastes back is supplied material.',
+        'sa-soap:step6')
+    text = replace_once(text, 'The note identifies the patient, existing patient reference where available, encounter,',
+                        'The note identifies the patient, encounter,', 'sa-soap:identity')
+    text = replace_once(text, 'This travels with the account during later retrieval,',
+                        'This stays with the note if the person keeps it and pastes it back,', 'sa-soap:provenance')
+    text = replace_once(text, '| Relationships | Relevant earlier record and any established amendment or saved-note reference. |',
+                        '| Relationships | Relevant earlier supplied record or note, and any amendment link. |', 'sa-soap:relationships')
+    text = replace_once(text, 'Known correction content can remain preparatory while its original saved reference is missing.',
+                        'Known correction content can remain preparatory while the earlier note is not supplied.', 'sa-soap:correction')
+    text = replace_once(text, '| Recording | Unsaved/preparation-only, or the position returned by Operations. |',
+                        '| Recording | Prepared in the chat; not saved. |', 'sa-soap:recording-row')
+    text = replace_once(text, 'A reference can connect the matter to an acknowledged pending operation or earlier source.',
+                        'A reference can connect the matter to an earlier supplied source.', 'sa-soap:pending')
     text = replace_once(
         text,
         'The recording arrangement can be a prepared copy, temporary session note or a record submitted through Operations. '
         'The returned position describes the note and any established stored reference or linkage. A storage limitation '
         'accompanies prepared content while the enquiry continues.',
-        'In this deployment the recording arrangement is a prepared copy in the chat; nothing is submitted or stored. '
-        'The note says so, and the enquiry continues.',
+        'In this deployment there is no standing recording arrangement. A note is prepared in the chat only when the person '
+        'asks for one or accepts an offer; nothing is submitted or stored. The note says so, and the enquiry continues.',
         'sa-soap:arrangement')
     text = replace_once(
         text,
@@ -643,18 +864,21 @@ def standalone_soap(text):
         'A later conversation starts from what the person supplies, such as a pasted continuity summary or an earlier note, '
         'as attributed history.',
         'sa-soap:later-consultation')
+    text = replace_once(text, 'Operations retrieves the material requested; the scratchpad receives its attributed account',
+                        'Earlier notes are available only as the person supplies them; the scratchpad receives their '
+                        'attributed account', 'sa-soap:later-use')
     text = replace_line(
         text, 'The template and record interface carry patient, encounter',
-        'A prepared note names the person as they named themselves, if they did, the encounter date if known, its '
-        'preparation in this conversation by an AI health assistant, and any earlier note it continues or amends. At close, '
-        'the current discussion is compared with any note already prepared in this conversation: unchanged content is not '
-        'prepared again, while later information or a correction takes the continuation or amendment route. Record outcomes '
-        'then feed the closing continuity summary.',
+        'A prepared note names the patient as named in the conversation, if named, and the reporter where different; the '
+        'encounter date if known; its preparation in this conversation by an AI health assistant; and any earlier note it '
+        'continues or amends. At close, the current discussion is compared with any note already prepared in this '
+        'conversation: unchanged content is not prepared again, while later information or a correction takes the '
+        'continuation or amendment route. Record outcomes then feed the closing continuity summary.',
         'sa-soap:identity-closing')
     text = cut_between(
         text, '## Record template', None, 'sa-soap:template',
         replacement=(
-            '## Record template\n\n'
+            '## Preparing the note\n\n'
             'Operations uses its SOAP note layout for a SOAP, continuation or amendment. A layout is a blank structure; its '
             'unknowns stay unknown. The prepared note is presented in the chat for the person to keep; it is not saved.\n'
         ))
@@ -674,7 +898,9 @@ def build_standalone(mh_modules, standalone_sources):
     core = assemble(modules)
     grid = per_turn_grid(core).replace(f'<a id="{PER_TURN_GRID["start_anchor"]}"></a>', '').strip()
     grid = re.sub(r'\n-{3}\s*$', '', grid).strip()
-    prompt = '\n\n---\n\n'.join([rules.strip(), facts.strip(), core.strip(), PER_TURN_GRID['marker'] + '\n\n' + grid]) + '\n'
+    repeat_note = 'Repeat of the Grid Card above, for routing on every turn. It adds no new instructions.'
+    prompt = '\n\n---\n\n'.join([rules.strip(), facts.strip(), core.strip(),
+                                  PER_TURN_GRID['marker'] + '\n\n' + repeat_note + '\n\n' + grid]) + '\n'
     scanned = {n: t for n, t in modules.items() if n != 'OPERATIONS.md'}
     scanned['RULES_OF_ENGAGEMENT.md'] = rules
     scanned['standalone:OPERATIONS.md'] = standalone_sources['OPERATIONS.md']
@@ -694,6 +920,8 @@ def check_standalone(prompt, scanned):
     core_grid = prompt[prompt.index(start) + len(start):prompt.index(end)].strip() if start in prompt and end in prompt else None
     core_grid = re.sub(r'\n-{3}\s*$', '', core_grid).strip() if core_grid else None
     repeated = prompt.split(PER_TURN_GRID['marker'], 1)[-1].strip() if prompt.count(PER_TURN_GRID['marker']) == 1 else None
+    if repeated:
+        repeated = repeated.split('\n\n', 1)[-1].strip()
     add('per-turn Grid is repeated at the end, identical to the Grid in the core', bool(core_grid) and repeated == core_grid)
 
     lens_ids = re.findall(r'<a id="aris-lens-(\d\d)"></a>', prompt)
@@ -712,7 +940,7 @@ def check_standalone(prompt, scanned):
     add('every link is external or resolves to an anchor in the prompt', not bad_links, sorted(set(bad_links)))
     clicks = re.findall(r'(?m)^\s*click \w+ "([^"]*)"', prompt)
     bad_clicks = [t for t in clicks if not (t.startswith('#') and t[1:] in anchor_set)]
-    add('Grid click targets resolve, in both Grid copies', len(clicks) >= 16 and not bad_clicks,
+    add('Grid click targets resolve, in both Grid copies', len(clicks) == 14 and not bad_clicks,
         {'click_lines': len(clicks), 'unresolved': bad_clicks})
     add('only the Grid maps remain (two in the core, two in the repeated Grid)', prompt.count('```mermaid') == 4,
         prompt.count('```mermaid'))

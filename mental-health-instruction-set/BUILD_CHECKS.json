@@ -87,9 +87,9 @@
       "words": 1923
     },
     "standalone/SYSTEM_PROMPT.md": {
-      "sha256": "cb953326ebafb705f8d35e49a6adb675b6cbe499a23cf18d6250d41ae87fef21",
-      "bytes": 212799,
-      "words": 29634
+      "sha256": "0b50c8ed37e22f026ae2916e390e9d5ffaa4336a47804671810036b7537c46ac",
+      "bytes": 206248,
+      "words": 29005
     }
   },
   "per_turn_grid": {
@@ -173,8 +173,8 @@
   ],
   "standalone": {
     "sources": {
-      "standalone_src/DEPLOYMENT_FACTS.md": "5f02209a5d7fab4da9625497dffa078fb2149bd2015660735ff33d50ea24a6df",
-      "standalone_src/OPERATIONS.md": "092071b755eaf0fe76911cb15e884b9ceedb036a9a3c086d8b617a9676f9c077"
+      "standalone_src/DEPLOYMENT_FACTS.md": "aecafa16656016de845c267a1dfa0e59b9b9d0a4a027d77bbef79723398433d9",
+      "standalone_src/OPERATIONS.md": "62e0297f73261e631466e392f1f0b1b898adf78ed5b381b8464338810ddff489"
     },
     "checks": [
       {
@@ -218,7 +218,7 @@
         "check": "Grid click targets resolve, in both Grid copies",
         "result": "PASS",
         "detail": {
-          "click_lines": 16,
+          "click_lines": 14,
           "unresolved": []
         }
       },
@@ -248,11 +248,12 @@
             "CLINICAL_REASONING_TOOL.md:896: crop",
             "CLINICAL_REASONING_TOOL.md:898: illustrat",
             "SOAP_TOOL.md:90: illustrat",
-            "RULES_OF_ENGAGEMENT.md:53: video",
-            "RULES_OF_ENGAGEMENT.md:53: media",
+            "RULES_OF_ENGAGEMENT.md:49: video",
+            "RULES_OF_ENGAGEMENT.md:49: media",
             "standalone:OPERATIONS.md:13: media",
             "standalone:DEPLOYMENT_FACTS.md:5: media",
-            "standalone:DEPLOYMENT_FACTS.md:17: leaflet"
+            "standalone:DEPLOYMENT_FACTS.md:24: leaflet",
+            "standalone:DEPLOYMENT_FACTS.md:26: leaflet"
           ]
         }
       }

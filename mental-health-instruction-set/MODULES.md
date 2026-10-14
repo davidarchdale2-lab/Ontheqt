@@ -108,3 +108,53 @@ These were flagged in review and kept on purpose:
 ## What the build does not establish
 
 The build cannot tell whether any clinical statement is correct, current or complete. R11 states that clinical source currency was not revalidated, and these removals do not change that.
+
+## Standalone variant (no harness)
+
+`standalone/SYSTEM_PROMPT.md` is built from the harness variant above, plus these changes. Its parts, in order:
+
+1. The Rules.
+2. `standalone_src/DEPLOYMENT_FACTS.md`.
+3. The core.
+4. The Grid again, under `[ARIS_GRID_CARD_PER_TURN v1]`, with a note that it adds no new instructions. Repeating the Grid at the end of the system prompt is what R11's own `system-prompt-tail` fallback does.
+
+| Part | Edit (label) | What changes |
+|---|---|---|
+| Rules | `sa-rules:intro` | "supplied separately by the harness" becomes "supplied in this same prompt". |
+| | `sa-rules:r2-profile`, `sa-rules:r2-medical-file` (pinned) | Profile lookup and the full-medical-file intake, audit and permission procedure replaced: no medical file is connected; work only with supplied material. |
+| | `sa-rules:r14-arrangement` (pinned), `sa-rules:r14-close` | No standing recording arrangement; documents only when asked for or accepted; at close, offer the continuity summary. |
+| | `sa-rules:r19-state` | The working picture is kept in the conversation. |
+| Deployment facts | new | What exists and what does not. App facilities only within the Rules, and never app memory for health information. One conversation; no registry; records prepared, not saved; continuity by pasted summary, with safety asked afresh. Calculations: no treatment figures. Possible overdose goes to First Aid's harmful-ingestion route. Safeguarding with UK signposts. The assistant cannot call 999 or contact anyone. First Aid citations; location outside the UK. |
+| Grid | `sa-grid:title` | Title marks the standalone variant. |
+| | `sa-grid:map` (pinned) | Grid map replaced. Every clinical routing edge is unchanged. Memory lookup, intake and review, filing and "recordable close" edges are replaced by supplied-material, prepare-in-chat and offer-a-summary edges. |
+| | `sa-grid:handoff-map` (pinned) | Operations handoff becomes "within the conversation" or "not available in this deployment". |
+| | `sa-grid:registered-bullet`, `sa-grid:checkpoint-bullet` (pinned), `sa-grid:closing-memory`, `sa-grid:operations-sentence`, `sa-grid:record-table` (pinned), `sa-grid:template-sentence` | Connection text and record table rewritten for no registry and no saving. |
+| Reception | `sa-reception:*` | Greeting no longer promises a saved summary, and is honest that the chat app may keep history. The name and Guest options open no records. |
+| Scratchpad | `sa-scratchpad:registered-entry` (pinned) | Registered entry, intake, returning review and coverage sections replaced by **Entry without a registry**. |
+| | `sa-scratchpad:closing` (pinned) | Closing and handover rewritten: offer a continuity summary; no record code or invented time. |
+| | `sa-scratchpad:resuming` (pinned), `sa-scratchpad:interface` (pinned), `sa-scratchpad:templates` (pinned) | Resuming explains that earlier conversations cannot be seen; working picture kept in the conversation; records use the Operations layouts. |
+| | `sa-scratchpad:continuity-row`, `record-operations`, `introduction`, `current-facts`, `questions`, `routing` | Leftover registry, state-field and delivery wording replaced. |
+| Health Plan | `sa-health-plan:filing`, `connected-actions`, `template` (pinned) | No later retrieval from a filing system; no booking or reminders; plan prepared in the chat. |
+| SOAP | `sa-soap:step1`, `step5` (pinned), `step6` (pinned), `identity`, `provenance`, `relationships`, `recording-row`, `pending`, `correction`, `arrangement`, `later-consultation`, `later-use`, `identity-closing` (pinned), `template` (pinned) | Note prepared only on request or accepted offer; nothing filed; no reference created; patient and reporter kept apart; earlier notes only as supplied. |
+| Operations | replaced | `standalone_src/OPERATIONS.md`: conversation-only work; app facilities only as visibly provided; no treatment figures; record header; layouts for SOAP note, health plan, health-data summary, record audit and continuity summary (with a Safety field). The SOAP Objective field records no mental-state findings from a text chat. |
+
+The lens bodies, the shared engine and First Aid are the same as in the harness variant.
+
+### Standalone build checks
+
+All must PASS or nothing is written:
+
+- the Rules and the deployment facts appear exactly once;
+- the repeated Grid is identical to the Grid in the core;
+- lens anchors are exactly the six kept lenses;
+- no duplicate anchors;
+- every link resolves;
+- all 14 Grid click targets resolve;
+- only the four Grid maps remain;
+- no harness tool name, template file name or server path remains;
+- no promise of saved records or of a harness remains;
+- no dropped lens, dropped service or media-production term remains, apart from reviewed uses.
+
+The standalone reviewed uses are the media-absence sentences in the deployment facts and Operations, and two medicine-leaflet mentions in the deployment facts.
+
+**Added content needing review.** The safeguarding signposts and telephone numbers, the overdose routing and the location guidance were written for this set and are not from R11. Check them against their publishers before use.
