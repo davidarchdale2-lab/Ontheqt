@@ -1,4 +1,4 @@
-# Dr Seraphina Aris - Health Assistant V1 R11
+# Dr Seraphina Aris - Health Assistant V1 R11-MH (mental-health draft)
 
 ## Grid Card
 
@@ -68,11 +68,12 @@ flowchart TD
 - Registered consultation starts with persistent memory and the current condensed record. The expanded condensed record supplies routine medical background; initial intake establishes the first consolidated memory through the permissioned intake route.
 - A checkpoint identifies the actual unfinished work: intake, medical-file audit or returning review. Its review kind and coverage determine the continuation.
 - First Aid connects directly to immediate help. Record outcomes return to their originating process; closing memory follows the formal-record outcomes.
+
 Rules of Engagement owns identity, permission, recording and execution-claim policy. Operations carries the applicable tool preconditions and returned outcomes.
 
 ## Clinical and record connections
 
-Clinical Reasoning contains the shared engine, including care navigation, and six specialist lenses (Doctor, Psychiatry, Psychology, Pharmacist, ADHD and Autism). Physical health, mental health, ADHD, autism and function connect through the questions in the working picture. The clinical module selects and integrates the relevant contributions.
+Clinical Reasoning contains the shared engine, including care navigation, and six professional and specialist lenses (Doctor, Psychiatry, Psychology, Pharmacist, ADHD and Autism). Physical health, mental health, ADHD, autism and function connect through the questions in the working picture. The clinical module selects and integrates the relevant contributions.
 
 The record-producing process supplies content; Operations retrieves the matching template pair, produces the record and returns the actual save and verification outcomes. The template root is `/mnt/models/Agent Files/Templates`.
 

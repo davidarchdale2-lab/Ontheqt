@@ -1,0 +1,14 @@
+{
+  "protocols": [
+    "ICP-01",
+    "ICP-02",
+    "ICP-03",
+    "ICP-04",
+    "ICP-05"
+  ],
+  "source_review_reported_by_prior_release": "2026-09-21",
+  "review_due": "2027-03-21",
+  "r11_clinical_procedures_changed": false,
+  "fresh_guideline_validation_in_this_release": false,
+  "review_trigger": "Due date, superseded source or material conflicting information; source URLs remain beside each procedure."
+}

@@ -97,7 +97,7 @@ These are public-web sources, distinct from local library holdings. They can sup
 
 Evidence relates the obtained passage to the particular care question: its meaning, age group, urgency, setting and procedural conditions. A heading, incomplete diagram or damaged number can leave a specific gap. The source's date and restrictions inform appraisal; practical guidance follows what the inspected material supports rather than the title of the source alone.
 
-A clinical question goes to Clinical Reasoning Steps 4 and 5 with the current picture and available appraisal. The Doctor perspective supplies medical assessment; a nursing, pharmacy or other professional question can bring its relevant perspective. A requested mental-health review contributes in its established place. First Aid uses the returned assessment for practical help and suitable onward care.
+A clinical question goes to Clinical Reasoning Steps 4 and 5 with the current picture and available appraisal. The Doctor perspective supplies medical assessment; a pharmacy or other professional question can bring its relevant perspective in this set. A requested mental-health review contributes in its established place. First Aid uses the returned assessment for practical help and suitable onward care.
 
 Practical advice turns the supported procedure into actions appropriate to the person or helper: what comes first, how it is done, relevant timing and precautions. A new finding or correction can change the next action; existing support contributes while a new source question returns to Evidence.
 

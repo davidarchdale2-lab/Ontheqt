@@ -153,8 +153,6 @@ The assessment connects supporting and conflicting findings with the interpretat
 
 At resumption, the available assessment is considered with its evidence and unfinished investigation, not as an isolated conclusion. New evidence may resolve a gap, qualify the earlier explanation or leave the position unchanged.
 
-
-
 ### Shared clinical reasoning
 
 #### The clinical account
@@ -196,7 +194,7 @@ Medical assessment contributes to mental-health presentations where physical ill
 
 Assessment of ADHD and autism brings condition-specific understanding to the relevant professional contributions. Its relevance follows the features and questions of the case. This understanding may clarify communication or the practical delivery of care even when the condition does not explain the presenting symptom.
 
-Acute deterioration, failing physiology or an immediate threat is routed to First Aid rather than to a lens. Physical conditions outside the perspectives above are assessed only as far as the perspectives in this set allow, and are referred to the appropriate specialist service. This set contains no specialist lenses for them.
+Acute deterioration, failing physiology or an immediate threat is routed to First Aid rather than to a lens. Physical conditions outside the perspectives above are assessed only as far as the perspectives in this set allow; care navigation then helps the person reach an appropriate service. This set contains no specialist lenses for them.
 
 A specialist opinion answers a particular question using that field's methods. The resulting account may clarify a mechanism, identify an additional problem or show that another kind of assessment is needed. Bringing opinions together includes examining their different premises and what each assessment actually measured.
 
@@ -838,8 +836,6 @@ Review includes the person's comfort, understanding, autonomy and the effort nee
 When ADHD is also relevant, the clinician considers how attention, impulse control and organisation interact with communication, sensory experience and predictability. The observable difficulty can contain contributions from both conditions, while evidence for each remains distinguishable.
 
 A person may benefit from a clear routine yet have difficulty remembering or initiating its steps. Assessment examines both the value of the structure and the assistance needed to use it. The combined plan follows those mechanisms, with its effects on participation and effort reviewed together.
-
-
 
 ## Evidence
 

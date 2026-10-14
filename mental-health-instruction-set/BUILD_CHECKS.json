@@ -1,6 +1,9 @@
 {
-  "derived_from": "Dr_Seraphina_Aris_Health_Assistant_V1_R11 (content revision 1)",
-  "variant": "mental-health-only (draft, not clinically reviewed)",
+  "variant": "R11-MH mental-health-only derivative (draft; not clinically reviewed; not installed)",
+  "derived_from": {
+    "package_id": "ARIS-HA-V1-R11-2026-10-07",
+    "content_revision": 1
+  },
   "lenses": {
     "01": "Doctor",
     "02": "Psychiatry",
@@ -9,19 +12,97 @@
     "09": "ADHD",
     "10": "Autism"
   },
-  "core": {
-    "path": "INSTRUCTION_SET.md",
-    "sha256": "a35669b0dc05e9ed657fd694d227c08b9e7c0467a7df36caeaef24773b661746",
-    "words": 32435
+  "source_files": {
+    "1_INSTRUCTION_SET/INSTRUCTION_SET.md": "e033d0ebfbd09979bb0fcf2d0c79ca55ff1aa2fe2fa11f234e25e8d264883b2e",
+    "1_INSTRUCTION_SET/deployment/IMMEDIATE_CARE_REFERENCE_MANIFEST.json": "d430d17e52a75abb8db1707949e2344b022dbef3edd75787dccb4eed7898ecd0",
+    "2_MODULES/harness/RULES_OF_ENGAGEMENT.md": "3e3d410522cfd47ff58a268c9de44cb5e6e196750f5744757e718780d9b14f92",
+    "RELEASE.json": "f13e8eb3b42bb32b10c3ef0b8f3e0e0c1bc6f93230d4c244ed447a8889a7adb7",
+    "source_bodies/runtime/modules/CLINICAL_REASONING_TOOL.md": "9fd7922dc9768e141b2cd71dd9151335ffb7550864a4a5e93b676546c242af20",
+    "source_bodies/runtime/modules/FIRST_AID.md": "ee3219409c183c121dfe50400a5182812596a9293d8c21ca883a969fc1c687be",
+    "source_bodies/runtime/modules/GRID_CARD.md": "8868e4ca8d81b666c438de7a8112aa14e275a3fae941ced32a48df1912a2de57",
+    "source_bodies/runtime/modules/HEALTH_PLAN.md": "d934fa69c3e83fb0f91e9d0d87ee0a6498a4de977fb82cf0f17b95c117ca0110",
+    "source_bodies/runtime/modules/OPERATIONS.md": "6e9e2a4076a93d60b146277688abebd43b68361905bc4f585e284e5ae8ed9109",
+    "source_bodies/runtime/modules/RECEPTION_DESK.md": "7ba34850b98d6b4dd6f0408b6ffd3b54b81d1093b7e7a40d88ccc95c7c74c589",
+    "source_bodies/runtime/modules/SCRATCHPAD_INVESTIGATORY_TOOL.md": "952447c3e2cdf6c17728883a0057a103624d9ac15de78843c6d27274e2b13766",
+    "source_bodies/runtime/modules/SOAP_TOOL.md": "d3b11b31dffbf82ab3e0d159d4374a12b83a2536002677de1c0fa6c5fe1a3f91"
   },
-  "rules": {
-    "path": "RULES_OF_ENGAGEMENT.md",
-    "sha256": "b1153b46d8e8dfff3c699a6056ddb10dc6489dd7fb467f5a349a1fa3c36f4091",
-    "words": 2252
+  "outputs": {
+    "INSTRUCTION_SET.md": {
+      "sha256": "cc952515c1e2f63897df7650e9d8384ddcfcf20617e1ad84aee2b080d9932e67",
+      "bytes": 217299,
+      "words": 29805
+    },
+    "RULES_OF_ENGAGEMENT.md": {
+      "sha256": "e7049ddbb6bd9c3f338f8b033889d546741d74285b8c56a5cd9f37065b9ba5ad",
+      "bytes": 15438,
+      "words": 2217
+    },
+    "deployment/IMMEDIATE_CARE_REFERENCE_MANIFEST.json": {
+      "sha256": "d430d17e52a75abb8db1707949e2344b022dbef3edd75787dccb4eed7898ecd0",
+      "bytes": 412
+    },
+    "modules/CLINICAL_REASONING_TOOL.md": {
+      "sha256": "6d967a67fa8c67aa724dc15daf86a4c23e17130553d461b5533a89af25365948",
+      "bytes": 111031,
+      "words": 15198
+    },
+    "modules/FIRST_AID.md": {
+      "sha256": "96fcb4ee65a246cafd47a4fbb8a3922b276b2b8bea927e718c0f392ca9953836",
+      "bytes": 23350,
+      "words": 3044
+    },
+    "modules/GRID_CARD.md": {
+      "sha256": "47c6f7afedae71d22ccfe0ad9744403189878b11e90449050b4c99a8c0be4f0c",
+      "bytes": 5252,
+      "words": 723
+    },
+    "modules/HEALTH_PLAN.md": {
+      "sha256": "c0f1b33cd81b1355aa076c7a64259fa4f07103f14d8d0468708b347404b27040",
+      "bytes": 12204,
+      "words": 1690
+    },
+    "modules/OPERATIONS.md": {
+      "sha256": "919eddd54f3ae99cb89265fea0051cd40beaaa9c4a2a30dcd7823c97f3a0007d",
+      "bytes": 36010,
+      "words": 4926
+    },
+    "modules/RECEPTION_DESK.md": {
+      "sha256": "480f9670151221da395289a246d80aa5b135f56c7bfaa6e7a7f29e111679e4f1",
+      "bytes": 3454,
+      "words": 505
+    },
+    "modules/RULES_OF_ENGAGEMENT.md": {
+      "sha256": "e7049ddbb6bd9c3f338f8b033889d546741d74285b8c56a5cd9f37065b9ba5ad",
+      "bytes": 15438,
+      "words": 2217
+    },
+    "modules/SCRATCHPAD_INVESTIGATORY_TOOL.md": {
+      "sha256": "12c189b1942504c668c268fae5cab1b2641dffca40cb0e5b7bc357cb58d34dc0",
+      "bytes": 31864,
+      "words": 4425
+    },
+    "modules/SOAP_TOOL.md": {
+      "sha256": "2513e4895cbda53ab27dd43ebef56a5dbdfb3b6d3013969716fb0d33be7f5be1",
+      "bytes": 14193,
+      "words": 1923
+    }
+  },
+  "per_turn_grid": {
+    "start_anchor": "aris-grid-card",
+    "end_before_anchor": "aris-reception-desk",
+    "normalization": "text from the start anchor tag (inclusive) to the end anchor tag (exclusive), outer whitespace trimmed",
+    "marker": "[ARIS_GRID_CARD_PER_TURN v1]",
+    "sha256": "3aac83696267134b07748455db778aaf7a9d51b5efc77467b2b902b381a8d4a1",
+    "words": 726
   },
   "checks": [
     {
-      "check": "lens anchors are exactly the six kept lenses",
+      "check": "assembler reproduces the R11 core byte for byte from unedited R11 modules",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "check": "lens anchors are exactly the six kept lenses, once each",
       "result": "PASS",
       "detail": [
         "01",
@@ -33,30 +114,56 @@
       ]
     },
     {
-      "check": "every in-page link resolves to an anchor",
+      "check": "no duplicate anchors",
       "result": "PASS",
       "detail": []
     },
     {
-      "check": "Grid click targets exist",
+      "check": "every link is external or resolves to an anchor in the core",
       "result": "PASS",
       "detail": []
     },
     {
-      "check": "no dropped lens, dropped service or media-production term remains",
-      "result": "REVIEW",
-      "detail": [
-        "SOAP_TOOL.md: illustrat",
-        "CLINICAL_REASONING_TOOL.md: video",
-        "CLINICAL_REASONING_TOOL.md: leaflet",
-        "CLINICAL_REASONING_TOOL.md: crop",
-        "CLINICAL_REASONING_TOOL.md: illustrat"
-      ]
+      "check": "Grid click targets are in-page anchors that exist",
+      "result": "PASS",
+      "detail": {
+        "click_lines": 8,
+        "unresolved": []
+      }
     },
     {
-      "check": "Rules of Engagement kept as a separate file (not in core)",
+      "check": "no module-file link or click target remains in the core",
       "result": "PASS",
-      "detail": null
+      "detail": []
+    },
+    {
+      "check": "only the two Grid maps remain in the core (R11 runtime policy)",
+      "result": "PASS",
+      "detail": {
+        "core": 2,
+        "grid": 2
+      }
+    },
+    {
+      "check": "Rules of Engagement are not embedded in the core",
+      "result": "PASS",
+      "detail": 0
+    },
+    {
+      "check": "no dropped lens, dropped service or media-production term remains (Rules included; reviewed uses allowlisted)",
+      "result": "PASS",
+      "detail": {
+        "unexpected": [],
+        "accepted": [
+          "CLINICAL_REASONING_TOOL.md:207: video",
+          "CLINICAL_REASONING_TOOL.md:690: leaflet",
+          "CLINICAL_REASONING_TOOL.md:896: crop",
+          "CLINICAL_REASONING_TOOL.md:898: illustrat",
+          "SOAP_TOOL.md:90: illustrat",
+          "RULES_OF_ENGAGEMENT.md:53: video",
+          "RULES_OF_ENGAGEMENT.md:53: media"
+        ]
+      }
     }
   ]
 }
