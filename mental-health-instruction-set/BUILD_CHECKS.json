@@ -1,0 +1,62 @@
+{
+  "derived_from": "Dr_Seraphina_Aris_Health_Assistant_V1_R11 (content revision 1)",
+  "variant": "mental-health-only (draft, not clinically reviewed)",
+  "lenses": {
+    "01": "Doctor",
+    "02": "Psychiatry",
+    "03": "Psychology",
+    "04": "Pharmacist",
+    "09": "ADHD",
+    "10": "Autism"
+  },
+  "core": {
+    "path": "INSTRUCTION_SET.md",
+    "sha256": "a35669b0dc05e9ed657fd694d227c08b9e7c0467a7df36caeaef24773b661746",
+    "words": 32435
+  },
+  "rules": {
+    "path": "RULES_OF_ENGAGEMENT.md",
+    "sha256": "b1153b46d8e8dfff3c699a6056ddb10dc6489dd7fb467f5a349a1fa3c36f4091",
+    "words": 2252
+  },
+  "checks": [
+    {
+      "check": "lens anchors are exactly the six kept lenses",
+      "result": "PASS",
+      "detail": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "09",
+        "10"
+      ]
+    },
+    {
+      "check": "every in-page link resolves to an anchor",
+      "result": "PASS",
+      "detail": []
+    },
+    {
+      "check": "Grid click targets exist",
+      "result": "PASS",
+      "detail": []
+    },
+    {
+      "check": "no dropped lens, dropped service or media-production term remains",
+      "result": "REVIEW",
+      "detail": [
+        "SOAP_TOOL.md: illustrat",
+        "CLINICAL_REASONING_TOOL.md: video",
+        "CLINICAL_REASONING_TOOL.md: leaflet",
+        "CLINICAL_REASONING_TOOL.md: crop",
+        "CLINICAL_REASONING_TOOL.md: illustrat"
+      ]
+    },
+    {
+      "check": "Rules of Engagement kept as a separate file (not in core)",
+      "result": "PASS",
+      "detail": null
+    }
+  ]
+}
