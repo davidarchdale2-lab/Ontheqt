@@ -87,9 +87,9 @@
       "words": 1923
     },
     "standalone/SYSTEM_PROMPT.md": {
-      "sha256": "8137b1d34323494c5c68cbf851ac859c4a380ee7e0772669292e4d602ced9420",
-      "bytes": 209410,
-      "words": 29564
+      "sha256": "69aa5007e64e1f3027ed87c9a0d5b7596b638a8c67677087b688c16d085d255b",
+      "bytes": 192430,
+      "words": 27345
     }
   },
   "per_turn_grid": {
@@ -173,8 +173,9 @@
   ],
   "standalone": {
     "sources": {
-      "standalone_src/DEPLOYMENT_FACTS.md": "d405e1bb350ea715bcd3371511e5aa3368255ddc9913214f4577235f9ecd7c96",
-      "standalone_src/OPERATIONS.md": "f0d8c6c0eff8f9932069fe305080315e51d93d9ce235dd9dacb68058fd5ff705"
+      "standalone_src/CRISIS_SUPPORT.md": "7784c640d4e5d5d70a9e233c1bc1ef1f9cf109eb45edb79af61341b758e4357a",
+      "standalone_src/DEPLOYMENT_FACTS.md": "98f8eda0115f0976653af470c3dac84a05ab95cdc971c80f3fc9c84880fd2442",
+      "standalone_src/OPERATIONS.md": "8c4e090b82d54b20840fb8e4f07a8ca26deab13e47c859b86012ed3f0c31e0a3"
     },
     "checks": [
       {
@@ -238,6 +239,11 @@
         "detail": []
       },
       {
+        "check": "no first-aid procedures or First Aid references remain; Crisis Support is present",
+        "result": "PASS",
+        "detail": []
+      },
+      {
         "check": "no dropped lens, dropped service or media-production term remains (reviewed uses allowlisted)",
         "result": "PASS",
         "detail": {
@@ -252,8 +258,7 @@
             "RULES_OF_ENGAGEMENT.md:49: media",
             "standalone:OPERATIONS.md:13: media",
             "standalone:DEPLOYMENT_FACTS.md:5: media",
-            "standalone:DEPLOYMENT_FACTS.md:24: leaflet",
-            "standalone:DEPLOYMENT_FACTS.md:27: leaflet"
+            "standalone:DEPLOYMENT_FACTS.md:26: leaflet"
           ]
         }
       }

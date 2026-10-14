@@ -19,7 +19,7 @@ Material the person pastes or attaches can be read only as far as the chat appli
 
 ## Sources and searches
 
-Unless the chat application visibly provides web search or browsing in this conversation (see the deployment facts), no library, web search or browser is available. First Aid uses its own source-checked immediate procedures. Any other claim that needs a current source, such as a dose, threshold, interval or guideline, states that the source could not be checked in this conversation. If search is available, use it read-only under R20, send no identifying clinical detail, and report what was actually inspected.
+Unless the chat application visibly provides web search or browsing in this conversation (see the deployment facts), no library, web search or browser is available. Crisis Support uses its own source-checked guidance. Any other claim that needs a current source, such as a dose, threshold, interval or guideline, states that the source could not be checked in this conversation. If search is available, use it read-only under R20, send no identifying clinical detail, and report what was actually inspected.
 
 ## Calculations
 

@@ -421,16 +421,16 @@ def build_clinical(raw_text):
 
 # ---------------------------------------------------------------- assembly (mirrors R11)
 
-def rewrite(text):
-    for name, anchor in ANCHORS.items():
+def rewrite(text, anchors=ANCHORS):
+    for name, anchor in anchors.items():
         text = (text.replace('(<' + name + '>)', '(#' + anchor + ')')
                     .replace('(' + name + ')', '(#' + anchor + ')')
                     .replace('"' + name + '"', '"#' + anchor + '"'))
     return text
 
 
-def runtime_text(name, text):
-    text = rewrite(text)
+def runtime_text(name, text, anchors=ANCHORS):
+    text = rewrite(text, anchors)
     if name != 'GRID_CARD.md':
         text = re.sub(r'\n#{1,6} [^\n]+\n(?:[ \t]*\n)*```mermaid\n.*?\n```\n', '\n', text, flags=re.S)
         text = re.sub(r'\n```mermaid\n.*?\n```\n', '\n', text, flags=re.S)
@@ -438,8 +438,8 @@ def runtime_text(name, text):
     return text
 
 
-def assemble(modules):
-    return '\n---\n\n'.join('<a id="' + ANCHORS[n] + '"></a>\n\n' + runtime_text(n, modules[n]) for n in ASSEMBLY_ORDER)
+def assemble(modules, anchors=ANCHORS):
+    return '\n---\n\n'.join('<a id="' + anchors[n] + '"></a>\n\n' + runtime_text(n, modules[n], anchors) for n in ASSEMBLY_ORDER)
 
 
 def per_turn_grid(core):
@@ -515,7 +515,35 @@ def check(core, rules, modules, r11_core, raw_modules):
 # ---------------------------------------------------------------- standalone variant (no harness)
 
 STANDALONE_SRC = Path(__file__).resolve().parent.parent / 'standalone_src'
-STANDALONE_FILES = ['DEPLOYMENT_FACTS.md', 'OPERATIONS.md']
+STANDALONE_FILES = ['DEPLOYMENT_FACTS.md', 'OPERATIONS.md', 'CRISIS_SUPPORT.md']
+
+# In the standalone variant, Crisis Support takes First Aid's place in the assembly.
+STANDALONE_ANCHORS = dict(ANCHORS, **{'FIRST_AID.md': 'aris-crisis-support'})
+
+# Renames First Aid references in the generated modules and Rules; applied in order.
+FIRST_AID_RENAMES = [
+    ('> - **999** — for first aid or emergency assistance.', '> - **999** — if you are in crisis or in danger now.'),
+    ('Acute deterioration, failing physiology or an immediate threat is routed to First Aid rather than to a lens.',
+     'An immediate threat to safety is routed to Crisis Support, and acute physical deterioration or failing physiology '
+     'is signposted to 999; neither goes to a lens.'),
+    ('Immediate First Aid', 'Immediate Crisis Support'),
+    ('immediate First Aid', 'immediate Crisis Support'),
+    ('First-aid need', 'Crisis need'),
+    ('first-aid need', 'crisis need'),
+    ('First Aid', 'Crisis Support'),
+    ('first-aid', 'crisis'),
+    ('first aid', 'crisis support'),
+]
+
+# Physical first-aid content that must not reach the standalone prompt.
+FIRST_AID_CONTENT = re.compile(
+    r'first[ -]aid|ICP-0|cardiac arrest|chest compressions|tourniquet|heart attack might|stroke might|abdominal thrust'
+    r'|aris-first-aid', re.IGNORECASE)
+FIRST_AID_ALLOWED_SENTENCES = [
+    'This set provides no physical first aid.',
+    'This set gives no first-aid procedures.',
+    'It gives no first-aid procedures.',
+]
 
 # Names of R11 harness tools, files and paths that must not appear in the standalone prompt.
 HARNESS_IDENTIFIERS = re.compile(
@@ -930,18 +958,28 @@ def build_standalone(mh_modules, standalone_sources):
     modules['CLINICAL_REASONING_TOOL.md'] = standalone_clinical(modules['CLINICAL_REASONING_TOOL.md'])
     modules['HEALTH_PLAN.md'] = standalone_health_plan(modules['HEALTH_PLAN.md'])
     modules['SOAP_TOOL.md'] = standalone_soap(modules['SOAP_TOOL.md'])
-    modules['OPERATIONS.md'] = standalone_sources['OPERATIONS.md']
     rules = standalone_rules(modules.pop('RULES_OF_ENGAGEMENT.md'))
+    for name in list(modules) + ['rules']:
+        text = rules if name == 'rules' else modules[name]
+        for old, new in FIRST_AID_RENAMES:
+            text = text.replace(old, new)
+        if name == 'rules':
+            rules = text
+        else:
+            modules[name] = text
+    modules['OPERATIONS.md'] = standalone_sources['OPERATIONS.md']
+    modules['FIRST_AID.md'] = standalone_sources['CRISIS_SUPPORT.md']
     facts = standalone_sources['DEPLOYMENT_FACTS.md']
-    core = assemble(modules)
+    core = assemble(modules, STANDALONE_ANCHORS)
     grid = per_turn_grid(core).replace(f'<a id="{PER_TURN_GRID["start_anchor"]}"></a>', '').strip()
     grid = re.sub(r'\n-{3}\s*$', '', grid).strip()
     repeat_note = 'Repeat of the Grid Card above, for routing on every turn. It adds no new instructions.'
     prompt = '\n\n---\n\n'.join([rules.strip(), facts.strip(), core.strip(),
                                   PER_TURN_GRID['marker'] + '\n\n' + repeat_note + '\n\n' + grid]) + '\n'
-    scanned = {n: t for n, t in modules.items() if n != 'OPERATIONS.md'}
+    scanned = {n: t for n, t in modules.items() if n not in ('OPERATIONS.md', 'FIRST_AID.md')}
     scanned['RULES_OF_ENGAGEMENT.md'] = rules
     scanned['standalone:OPERATIONS.md'] = standalone_sources['OPERATIONS.md']
+    scanned['standalone:CRISIS_SUPPORT.md'] = standalone_sources['CRISIS_SUPPORT.md']
     scanned['standalone:DEPLOYMENT_FACTS.md'] = facts
     return prompt, scanned
 
@@ -988,6 +1026,13 @@ def check_standalone(prompt, scanned):
     stale_promises = [p for p in ('saved continuity summary', 'registered-user consultation', 'supplied separately by the harness')
                       if p in prompt]
     add('no promise of saved records or a harness remains', not stale_promises, stale_promises)
+
+    visible = re.sub(r'\]\((<[^>]*>|[^)\s]+)\)', ']()', prompt)  # link targets are not model-visible prose
+    for sentence in FIRST_AID_ALLOWED_SENTENCES:
+        visible = visible.replace(sentence, '')
+    first_aid = sorted(set(m.group(0) for m in FIRST_AID_CONTENT.finditer(visible)))
+    add('no first-aid procedures or First Aid references remain; Crisis Support is present',
+        not first_aid and prompt.count('<a id="aris-crisis-support"></a>') == 1 and '# Crisis Support' in prompt, first_aid)
 
     allowed = ALLOWED + STANDALONE_ALLOWED
     unexpected, accepted = [], []
