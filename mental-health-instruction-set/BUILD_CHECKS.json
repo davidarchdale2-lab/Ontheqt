@@ -87,9 +87,9 @@
       "words": 1923
     },
     "standalone/SYSTEM_PROMPT.md": {
-      "sha256": "69aa5007e64e1f3027ed87c9a0d5b7596b638a8c67677087b688c16d085d255b",
-      "bytes": 192430,
-      "words": 27345
+      "sha256": "5b291f7b4b8bb4ae7dbf036202a14a4a49f2e2df5f8dbceb51d2840f95a280b6",
+      "bytes": 186905,
+      "words": 26667
     }
   },
   "per_turn_grid": {
@@ -173,9 +173,9 @@
   ],
   "standalone": {
     "sources": {
-      "standalone_src/CRISIS_SUPPORT.md": "7784c640d4e5d5d70a9e233c1bc1ef1f9cf109eb45edb79af61341b758e4357a",
-      "standalone_src/DEPLOYMENT_FACTS.md": "98f8eda0115f0976653af470c3dac84a05ab95cdc971c80f3fc9c84880fd2442",
-      "standalone_src/OPERATIONS.md": "8c4e090b82d54b20840fb8e4f07a8ca26deab13e47c859b86012ed3f0c31e0a3"
+      "standalone_src/CRISIS_SUPPORT.md": "59bf3dc681937dfc59a750a55feefb0c834e399c1e7612d44077a07ecce96a0b",
+      "standalone_src/DEPLOYMENT_FACTS.md": "77ca6fd940070d0c6480b9dfaa72ef8d2577336e69f0679d1abb324d220c9974",
+      "standalone_src/OPERATIONS.md": "037a84a9f750ec2ac176ae3316c83875dc556e564aec56b98d02797fbff5fd46"
     },
     "checks": [
       {
@@ -194,16 +194,20 @@
         "detail": null
       },
       {
-        "check": "lens anchors are exactly the six kept lenses, once each",
+        "check": "lens anchors are exactly the five standalone lenses, once each",
         "result": "PASS",
         "detail": [
-          "01",
           "02",
           "03",
           "04",
           "09",
           "10"
         ]
+      },
+      {
+        "check": "no Doctor lens routing, general \"health assistant\" naming or First Aid node id remains",
+        "result": "PASS",
+        "detail": []
       },
       {
         "check": "no duplicate anchors",
@@ -249,16 +253,18 @@
         "detail": {
           "unexpected": [],
           "accepted": [
-            "CLINICAL_REASONING_TOOL.md:207: video",
-            "CLINICAL_REASONING_TOOL.md:690: leaflet",
-            "CLINICAL_REASONING_TOOL.md:896: crop",
-            "CLINICAL_REASONING_TOOL.md:898: illustrat",
+            "CLINICAL_REASONING_TOOL.md:206: video",
+            "CLINICAL_REASONING_TOOL.md:628: leaflet",
+            "CLINICAL_REASONING_TOOL.md:630: leaflet",
+            "CLINICAL_REASONING_TOOL.md:835: crop",
             "SOAP_TOOL.md:90: illustrat",
             "RULES_OF_ENGAGEMENT.md:49: video",
             "RULES_OF_ENGAGEMENT.md:49: media",
             "standalone:OPERATIONS.md:13: media",
+            "standalone:CRISIS_SUPPORT.md:42: leaflet",
             "standalone:DEPLOYMENT_FACTS.md:5: media",
-            "standalone:DEPLOYMENT_FACTS.md:26: leaflet"
+            "standalone:DEPLOYMENT_FACTS.md:28: leaflet",
+            "standalone:DEPLOYMENT_FACTS.md:30: leaflet"
           ]
         }
       }

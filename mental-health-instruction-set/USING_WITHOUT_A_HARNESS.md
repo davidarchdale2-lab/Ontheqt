@@ -2,13 +2,23 @@
 
 `standalone/SYSTEM_PROMPT.md` is the whole instruction set as one system prompt, for an ordinary chat application with no harness, tools or record store.
 
+It is a mental-health assistant. It covers mental health, including ADHD and autism, through five lenses: Psychiatry, Psychology, Pharmacist, ADHD and Autism.
+
+- **Physical health.** Considered only where it may cause, mimic or complicate a mental-health difficulty, or concerns a relevant medicine. A question with no mental-health side gets a brief signpost to the GP, a pharmacist or NHS 111.
+- **Crisis Support.** It handles:
+  - suicidal crisis and self-harm;
+  - possible overdose, intentional or by mistake;
+  - missed or stopped medicines;
+  - urgent mental-health routes.
+- **No first aid.** The prompt contains no first-aid procedures. Any other emergency is signposted to 999, and the 999 call handler gives any instructions.
+
 ## How to use it
 
 1. Open the chat application's system prompt setting. It may be called "system prompt", "system message" or "custom instructions".
 2. Paste the entire contents of `standalone/SYSTEM_PROMPT.md`. Do not trim it: the Grid is repeated at the end on purpose, and the Rules come first on purpose.
 3. Start a new conversation. The assistant opens with its introduction, or answers straight away if the first message is already a question.
 
-**Size.** The prompt is about 210 KB, roughly 29,500 words. As a rough guide, the model needs a context window well above 50,000 tokens, plus room for the conversation itself. Check the setting in your application. For a local model, set its context length explicitly, because many runners default to something much smaller and silently cut long prompts.
+**Size.** The prompt is about 187 KB, roughly 26,600 words. As a rough guide, the model needs a context window well above 50,000 tokens, plus room for the conversation itself. Check the setting in your application. For a local model, set its context length explicitly, because many runners default to something much smaller and silently cut long prompts.
 
 ## What changes without a harness
 
@@ -30,27 +40,30 @@ At the end of a consultation, ask for a **continuity summary**, or accept the as
 
 ## Safety notes
 
-- **Added safety content needs checking.** The standalone deployment facts add rules that are not from R11, written for this set:
+- **Added safety content needs checking.** The standalone variant adds content that is not from R11, written for this set:
+  - the Crisis Support module, apart from its suicidal-threat and poisoning guidance, which is adapted from R11's First Aid;
   - no treatment figures and no harmful-amount information;
-  - routing for a possible overdose or a missed medicine;
+  - routing for a possible overdose, intentional or by mistake, and for a missed or stopped medicine;
+  - routing for self-harm that has happened, and for someone who cannot keep themselves safe;
   - safeguarding steps, with helplines for each UK nation;
   - an urgent mental-health route (NHS 111 and its mental-health option, NHS 24, Lifeline in Northern Ireland, Samaritans, Shout);
-  - guidance for people outside the UK.
+  - guidance for people outside the UK;
+  - the scope rule for questions with no mental-health side.
 
-  Every telephone number and service name in them must be checked against its publisher before use.
+  Every telephone number and service name in it must be checked against its publisher before use.
 
 - **Draft, not for clinical use.** The clinical content has not been clinically reviewed for this set, and R11 states its source currency was not revalidated.
 - **No safety layer except the instructions.** Without a harness there is nothing between the model and the person. Safety rests entirely on this prompt and on the model's own behaviour.
 - **Choice of model.** R11 was built for a local model named `Qwen3.8-27B-Heretic-ARA-exl3-6bpw-h16`. That name follows the naming used for open models whose refusal behaviour has been removed. Running a refusal-removed model directly, with no harness, for mental-health conversations leaves no safeguard except this prompt. Confirm what that model is before using it, and prefer a model with intact safety training.
-- **UK emergency routes.** First Aid signposts 999, 111 and Samaritans (116 123). Outside the UK these numbers are wrong, and the prompt would need changing.
-- **Immediate-care procedures are dated.** Their review is due on 2027-03-21 (`deployment/IMMEDIATE_CARE_REFERENCE_MANIFEST.json`).
+- **UK emergency routes.** Crisis Support signposts 999, NHS 111, NHS 24, Lifeline, Samaritans (116 123) and Shout. It tells the assistant to give a person outside the UK the immediate action and their local emergency number (112 across the EU). For regular use outside the UK, the numbers in the prompt would need changing.
+- **No physical first aid.** The assistant will not talk anyone through first aid. In an emergency it signposts 999, and the call handler gives instructions.
 - **Privacy.** The chat application may keep conversation history on its own servers or device. That is outside the assistant's control. Paste only what you are comfortable storing there.
 
 ## Changing the prompt
 
 Do not edit `standalone/SYSTEM_PROMPT.md` by hand; it is regenerated.
 
-- To change the wording written for standalone use, edit `standalone_src/DEPLOYMENT_FACTS.md` or `standalone_src/OPERATIONS.md`.
+- To change the wording written for standalone use, edit `standalone_src/DEPLOYMENT_FACTS.md`, `standalone_src/CRISIS_SUPPORT.md` or `standalone_src/OPERATIONS.md`.
 - To change the other standalone edits, edit the `standalone_*` functions in `tools/build_mental_health_set.py`.
 
 Then rebuild (see `README.md`).

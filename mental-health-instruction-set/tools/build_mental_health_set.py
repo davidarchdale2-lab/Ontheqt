@@ -117,6 +117,12 @@ PINS = {
     'sa-soap:template': '5898ca624145c5ecec1e48d2c8a8d2455e58dd32b8602bd9e6e6f4f00ea27632',
     'sa-rules:r2-medical-file': '0855ddb51a8b350f6298a2e5e8a61198c570710a410f9c8da60e0b5b6d3f6002',
     'sa-rules:r14-arrangement': '580b987a5a0aeef2dbd8274dd1bfcc2db230c130dde06012862b23bd4c7e388e',
+    'sa-mh:doctor-lens': '5bb0384e5d963e0a443e2b96e510a369e1ef784eda01dfe9885a674ac136075f',
+    'sa-mh:doctor-row': '6f35c7e6298c8af6363710e8d010eff038db1b687a380119722edd80c6e1be14',
+    'sa-mh:currency-metadata': 'c0c488f2f02951208b588c5e1dd455db397780347efd82a4b1c91ea38b063c05',
+    'sa-mh:library-row': '7556da307c05a494a55a91372bc48b7c4bec71450c8a36e35fc02f84858a806e',
+    'sa-mh:figure-display': '0bc1cd319c7cd76693589ec4aaac38055e0ae0a59bb67661d5361b2c8fe68e91',
+    'sa-mh:aspirin-example': '7e5b08033790da8c387d261539b1a7214708c40c792fb5ac6b58e733a12590a5',
 }
 
 # Terms that name a dropped lens, a dropped service or media production.
@@ -517,6 +523,10 @@ def check(core, rules, modules, r11_core, raw_modules):
 STANDALONE_SRC = Path(__file__).resolve().parent.parent / 'standalone_src'
 STANDALONE_FILES = ['DEPLOYMENT_FACTS.md', 'OPERATIONS.md', 'CRISIS_SUPPORT.md']
 
+# The standalone variant is mental-health only: the general-medicine Doctor lens is removed.
+STANDALONE_LENSES = {k: v for k, v in LENSES.items() if k != '01'}
+STANDALONE_LENS_SUMMARY = 'Psychiatry, Psychology, Pharmacist, ADHD and Autism'
+
 # In the standalone variant, Crisis Support takes First Aid's place in the assembly.
 STANDALONE_ANCHORS = dict(ANCHORS, **{'FIRST_AID.md': 'aris-crisis-support'})
 
@@ -569,8 +579,14 @@ STANDALONE_ALLOWED = [
      'line_contains': 'point to the product leaflet, a pharmacist or the prescriber.',
      'reason': 'A medicine product leaflet as a source.'},
     {'file': 'standalone:DEPLOYMENT_FACTS.md', 'term': 'leaflet',
-     'line_contains': "give First Aid's advice on suspected harmful ingestion at once, not the leaflet",
+     'line_contains': "give Crisis Support's advice on possible overdose at once, not the leaflet",
      'reason': 'Overdose routing: tells the model not to rely on the medicine leaflet.'},
+    {'file': 'standalone:CRISIS_SUPPORT.md', 'term': 'leaflet',
+     'line_contains': 'give this advice at once, not the leaflet, even when there are no symptoms',
+     'reason': 'Overdose routing: tells the model not to rely on the medicine leaflet.'},
+    {'file': 'CLINICAL_REASONING_TOOL.md', 'term': 'leaflet',
+     'line_contains': 'this lens does not judge from the amount or the leaflet whether it is safe',
+     'reason': 'Pharmacist lens: sends an extra dose to the overdose advice rather than the leaflet.'},
 ]
 
 
@@ -672,7 +688,7 @@ STANDALONE_HANDOFF_MAP = '''    Q["Requesting process"] --> O["Operations"]
 
 def standalone_grid(text):
     text = replace_once(text, '# Dr Seraphina Aris - Health Assistant V1 R11-MH (mental-health draft)\n',
-                        '# Dr Seraphina Aris - Health Assistant V1 R11-MH standalone (mental-health draft)\n',
+                        '# Dr Seraphina Aris - Mental Health Assistant V1 R11-MH standalone (draft)\n',
                         'sa-grid:title')
     text = cut_between(text, 'flowchart TD\n    OPEN["Conversation opening without an enquiry"]', '```\n\n## Operations handoff',
                        'sa-grid:map', replacement=STANDALONE_GRID_MAP)
@@ -950,6 +966,124 @@ def standalone_soap(text):
     return text
 
 
+def standalone_mental_health_only(modules, rules):
+    """Remove the Doctor lens and retrieval-only Evidence material; name the assistant a mental-health assistant."""
+    clinical = modules['CLINICAL_REASONING_TOOL.md']
+    # The Doctor lens's fatigue and sleep subsection bears on mental health, so it moves into Psychiatry.
+    fatigue_head = '#### Clarifying fatigue, sleepiness and reduced physical ability'
+    if clinical.count(fatigue_head) != 1:
+        fail('sa-mh:fatigue', 'fatigue subsection heading not found once')
+    fatigue = clinical[clinical.index(fatigue_head):clinical.index('<a id="aris-lens-02"></a>')].strip()
+    fatigue = replace_once(fatigue, fatigue_head, '##### Clarifying fatigue, sleepiness and low energy', 'sa-mh:fatigue-head')
+    fatigue = replace_once(fatigue, 'The doctor explores', 'The clinician explores', 'sa-mh:fatigue-clinician')
+    fatigue = replace_once(fatigue, 'The medical account also examines', 'The account also examines', 'sa-mh:fatigue-account')
+    fatigue = replace_once(
+        fatigue,
+        'Investigation follows the supported possibilities and examination findings, rather than a fixed test panel for every '
+        'description of tiredness.',
+        "A possible physical or sleep-related cause is for the person's GP to assess, rather than being set aside as part of "
+        'the mental-health picture.',
+        'sa-mh:fatigue-investigation')
+    clinical = cut_between(clinical, '<a id="aris-lens-01"></a>', '<a id="aris-lens-02"></a>', 'sa-mh:doctor-lens')
+    clinical = replace_once(clinical, '#### Medicines, substances and competing explanations',
+                            fatigue + '\n\n#### Medicines, substances and competing explanations', 'sa-mh:fatigue-move')
+    clinical = replace_once(clinical, '[01 Doctor](#aris-lens-01) | ', '', 'sa-mh:lens-index')
+    clinical = replace_once(clinical, f'the six professional and specialist lenses in this set ({LENS_SUMMARY})',
+                            f'the five professional and specialist lenses in this set ({STANDALONE_LENS_SUMMARY})', 'sa-mh:purpose')
+    clinical = drop_line(clinical, '| Underlying disease, physiological change, investigation and medical management | Doctor |',
+                         'sa-mh:doctor-row')
+    clinical = replace_once(
+        clinical,
+        'Medical assessment contributes to mental-health presentations where physical illness or treatment effects may be involved.',
+        'Physical illness, substances and treatment effects can cause, mimic or complicate a mental-health presentation; the '
+        "Psychiatry and Pharmacist perspectives consider them, and the person's GP assesses a suspected physical cause.",
+        'sa-mh:medical-assessment')
+    clinical = replace_once(
+        clinical,
+        'Physical conditions outside the perspectives above are assessed only as far as the perspectives in this set allow; '
+        'care navigation then helps the person reach an appropriate service. This set contains no specialist lenses for them.',
+        'A health question with no mental-health aspect is outside this set (see **Scope** in the deployment facts); care '
+        'navigation helps the person reach an appropriate service.',
+        'sa-mh:out-of-scope')
+    clinical = replace_once(
+        clinical,
+        'Neither a detailed description nor a clear image supplies palpation, auscultation, a complete neurological examination '
+        'or an unrecorded physiological measurement.',
+        'Neither a detailed description nor a clear image supplies an observed mental state, a physical examination or an '
+        'unrecorded measurement.',
+        'sa-mh:remote-assessment')
+    clinical = replace_once(
+        clinical,
+        'A report that a person walked across the room differs from a formal assessment of power, balance or exercise capacity.',
+        'A report that a person seemed withdrawn differs from a formal assessment of their mental state.',
+        'sa-mh:home-observation')
+    clinical = replace_once(clinical, 'Established immediate-care procedures support urgent action;',
+                            "Crisis Support's established signposts support urgent action;", 'sa-mh:evidence-crisis')
+    # Pharmacist: psychotropic examples in place of respiratory ones, and the extra-dose route to Crisis Support.
+    clinical = drop_paragraph(clinical, 'A reported aspirin-associated respiratory reaction', 'sa-mh:aspirin-example')
+    clinical = replace_once(
+        clinical,
+        "Modified-release products can differ in release profile, and an inhaler's effectiveness depends partly on technique "
+        "and the person's ability to use it.",
+        'Modified-release products, such as different methylphenidate or quetiapine preparations, can differ in release '
+        'profile, and a liquid, orodispersible or long-acting injectable form can change how usable a regimen is.',
+        'sa-mh:formulation')
+    clinical = replace_once(clinical, 'food requirements, storage and use of inhalers or other devices',
+                            'food requirements and storage', 'sa-mh:devices')
+    clinical = replace_once(clinical, 'Resistance, availability and shortages may influence choice',
+                            'Availability and shortages may influence choice', 'sa-mh:resistance')
+    clinical = replace_once(
+        clinical,
+        'An administration record, packaging or a reliable account may resolve uncertainty that memory alone leaves open.',
+        'An administration record, packaging or a reliable account may resolve uncertainty that memory alone leaves open. '
+        'A possible extra dose, or any amount above the intended dose, taken intentionally or by mistake, goes first to '
+        "Crisis Support's advice on possible overdose (R11), even without symptoms; this lens does not judge from the amount "
+        "or the leaflet whether it is safe. A missed or stopped medicine where the gap may matter also follows Crisis "
+        "Support's section on missed or stopped medicines.",
+        'sa-mh:extra-dose')
+    clinical = cut_between(
+        clinical, '### Currency and returned metadata', '### Web and deep research', 'sa-mh:currency-metadata',
+        replacement='### Currency\n\nA dated source describes practice as at its date, and a newer edition or retrieval date does '
+                    'not update every statement in it. If currentness remains unresolved, the assessment separates what the '
+                    'dated source describes from a current-practice conclusion requiring further support, and the limitation '
+                    'stays with the affected conclusion.\n\n')
+    clinical = drop_line(clinical, '| Medical reference library |', 'sa-mh:library-row')
+    clinical = drop_paragraph(clinical, 'A caption or label list can identify a figure', 'sa-mh:figure-display')
+    modules['CLINICAL_REASONING_TOOL.md'] = clinical
+    grid = replace_once(
+        modules['GRID_CARD.md'], f'six professional and specialist lenses ({LENS_SUMMARY})',
+        f'five professional and specialist lenses ({STANDALONE_LENS_SUMMARY})', 'sa-mh:grid-lenses')
+    # The routing-map node for Crisis Support keeps R11's First Aid id; rename it so no First Aid abbreviation remains.
+    if re.search(r'\bCS\b', grid) or len(re.findall(r'\bFA\b', grid)) != 7:
+        fail('sa-mh:grid-node', 'expected exactly 7 uses of node id FA and none of CS in the Grid map')
+    modules['GRID_CARD.md'] = re.sub(r'\bFA\b', 'CS', grid)
+    modules['SCRATCHPAD_INVESTIGATORY_TOOL.md'] = replace_once(
+        modules['SCRATCHPAD_INVESTIGATORY_TOOL.md'], ', with the Doctor perspective for any medical question;',
+        ", with any medical question signposted to the person's GP or NHS 111;", 'sa-mh:safeguarding-doctor')
+    for name in modules:
+        modules[name] = modules[name].replace('AI health assistant', 'AI mental-health assistant')
+    rules = replace_once(rules, '**Dr Seraphina Aris - Health Assistant V1**', '**Dr Seraphina Aris - Mental Health Assistant V1**',
+                         'sa-mh:rules-title')
+    rules = replace_once(rules, '**AI health assistant**', '**AI mental-health assistant**', 'sa-mh:r5')
+    rules = replace_once(
+        rules,
+        'A released source-checked immediate-care procedure can be used within its documented scope and review boundary, '
+        'subject to known conflicting information.',
+        "Crisis Support's signposts and safety guidance can be used within their stated scope, subject to known conflicting "
+        'information.',
+        'sa-mh:r6')
+    rules = replace_once(rules, 'Crisis Support may use its already source-checked immediate procedure without waiting',
+                         'Crisis Support may give its signposts and safety guidance without waiting', 'sa-mh:r13')
+    modules['HEALTH_PLAN.md'] = replace_once(
+        modules['HEALTH_PLAN.md'], 'A plan can concern general health, connected problems,',
+        'A plan can concern mental health and wellbeing, connected problems,', 'sa-mh:plan-scope')
+    modules['HEALTH_PLAN.md'] = replace_once(
+        modules['HEALTH_PLAN.md'], 'supplies the framework for adults with multiple long-term conditions.',
+        'supplies the framework for adults with multiple long-term conditions, where physical conditions also affect the plan.',
+        'sa-mh:plan-ng56')
+    return modules, rules
+
+
 def build_standalone(mh_modules, standalone_sources):
     modules = dict(mh_modules)
     modules['GRID_CARD.md'] = standalone_grid(modules['GRID_CARD.md'])
@@ -967,6 +1101,7 @@ def build_standalone(mh_modules, standalone_sources):
             rules = text
         else:
             modules[name] = text
+    modules, rules = standalone_mental_health_only(modules, rules)
     modules['OPERATIONS.md'] = standalone_sources['OPERATIONS.md']
     modules['FIRST_AID.md'] = standalone_sources['CRISIS_SUPPORT.md']
     facts = standalone_sources['DEPLOYMENT_FACTS.md']
@@ -1001,7 +1136,9 @@ def check_standalone(prompt, scanned):
     add('per-turn Grid is repeated at the end, identical to the Grid in the core', bool(core_grid) and repeated == core_grid)
 
     lens_ids = re.findall(r'<a id="aris-lens-(\d\d)"></a>', prompt)
-    add('lens anchors are exactly the six kept lenses, once each', lens_ids == sorted(LENSES), lens_ids)
+    add('lens anchors are exactly the five standalone lenses, once each', lens_ids == sorted(STANDALONE_LENSES), lens_ids)
+    leftovers = sorted(set(re.findall(r'Doctor (?:perspective|lens)|\| Doctor \||AI health assistant|(?<!Mental )Health Assistant V1|\bFA\b', prompt)))
+    add('no Doctor lens routing, general "health assistant" naming or First Aid node id remains', not leftovers, leftovers)
     anchors = re.findall(r'<a id="([^"]+)"></a>', prompt)
     duplicates = sorted({a for a in anchors if anchors.count(a) > 1})
     add('no duplicate anchors', not duplicates, duplicates)
