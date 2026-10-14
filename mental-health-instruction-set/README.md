@@ -78,10 +78,17 @@ Use `--profile harness` for the harness variant. The zip has one root folder, fi
   - Library-only evidence text and physical-medicine examples are removed or replaced.
   - The assistant is named a mental-health assistant.
 - **Removed:** media production, physio assets, clinical source images, and the illustration and video sections.
-- **Not changed:** the kept lens bodies, and the shared engine apart from the edits listed in `MODULES.md`.
+- **Not changed:** the shared engine, apart from the edits listed in `MODULES.md`. The kept lens bodies are unchanged in the harness variant. In the standalone variant:
+  - Psychiatry gains the Doctor lens's fatigue subsection, with a GP route;
+  - the Pharmacist lens has replaced examples and an added extra-dose and missed-medicine route (see `MODULES.md`, Mental-health-only pass).
 - **Standalone additions:** written for this set, not from R11.
-  - The deployment facts add rules for working without tools, the scope rule, overdose and missed-medicine routing, UK safeguarding signposts and guidance for people outside the UK.
-  - Crisis Support is new text, apart from its suicidal-threat and poisoning guidance, which is adapted from R11's First Aid.
+  - The deployment facts add:
+    - rules for working without tools;
+    - the scope rule and a UK services note;
+    - overdose and missed-medicine routing;
+    - UK safeguarding signposts.
+  - Crisis Support is new text, apart from its suicidal-threat and poisoning guidance, which is adapted from R11's First Aid. It includes the guidance for people outside the UK.
+  - The GP, NHS 111 and 999 routes that replace the Doctor lens are new text.
 - **Out of scope:** the R11 test battery.
 
 ## Before any use

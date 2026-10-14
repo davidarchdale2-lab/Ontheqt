@@ -14,7 +14,7 @@ Derived from `ARIS-HA-V1-R11-2026-10-07`, content revision 1. The set is generat
 | 04 Pharmacist | Kept | Psychotropic regimens, interactions, adherence, missed doses, withdrawal |
 | 05–08, 11–40 | Dropped (34 lenses) | Physical and allied-health specialties. Registered Nurse, Occupational Therapist, Physiotherapist and Dietitian are the likeliest to add back. |
 
-Lens bodies are copied verbatim. The build checks that the lens block holds anchors 01–40 once each, in order; that each lens has exactly one level-3 heading and no level-1 or level-2 heading; and that each kept lens has its expected title. The 34 dropped lenses are pinned as one span (`clinical:dropped-lenses`), so any change inside them, including text added after lens 40, stops the build.
+Lens bodies are copied verbatim into the harness variant; the standalone variant then edits the Psychiatry and Pharmacist lenses (see **Mental-health-only pass** below). The build checks that the lens block holds anchors 01–40 once each, in order; that each lens has exactly one level-3 heading and no level-1 or level-2 heading; and that each kept lens has its expected title. The 34 dropped lenses are pinned as one span (`clinical:dropped-lenses`), so any change inside them, including text added after lens 40, stops the build.
 
 ## Edits by module
 
@@ -128,40 +128,42 @@ The build cannot tell whether any clinical statement is correct, current or comp
 | Grid | `sa-grid:title` | Title marks the standalone variant. |
 | | `sa-grid:map` (pinned) | Grid map replaced. Every clinical routing edge is unchanged. Memory lookup, intake and review, filing and "recordable close" edges are replaced by supplied-material, prepare-in-chat and offer-a-summary edges. |
 | | `sa-grid:handoff-map` (pinned) | Operations handoff becomes "within the conversation" or "not available in this deployment". |
-| | `sa-grid:registered-bullet`, `sa-grid:checkpoint-bullet` (pinned), `sa-grid:closing-memory`, `sa-grid:operations-sentence`, `sa-grid:record-table` (pinned), `sa-grid:template-sentence` | Connection text and record table rewritten for no registry and no saving. |
+| | `sa-grid:registered-bullet` (pinned), `sa-grid:checkpoint-bullet` (pinned), `sa-grid:closing-memory`, `sa-grid:operations-sentence`, `sa-grid:record-table` (pinned), `sa-grid:template-sentence` | Connection text and record table rewritten for no registry and no saving. |
 | Reception | `sa-reception:*` | Greeting no longer promises a saved summary, and is honest that the chat app may keep history. The name and Guest options open no records. |
 | Scratchpad | `sa-scratchpad:registered-entry` (pinned) | Registered entry, intake, returning review and coverage sections replaced by **Entry without a registry**. |
 | | `sa-scratchpad:closing` (pinned) | Closing and handover rewritten: offer a continuity summary; no record code or invented time. |
 | | `sa-scratchpad:resuming` (pinned), `sa-scratchpad:interface` (pinned), `sa-scratchpad:templates` (pinned) | Resuming explains that earlier conversations cannot be seen; working picture kept in the conversation; records use the Operations layouts. |
-| | `sa-scratchpad:continuity-row`, `record-operations`, `introduction`, `current-facts`, `questions`, `routing` | Leftover registry, state-field and delivery wording replaced. |
+| | `sa-scratchpad:continuity-row`, `record-operations`, `introduction`, `request-records`, `note-storage`, `current-facts`, `questions`, `routing` | Leftover registry, state-field, record-request, storage and delivery wording replaced. |
+| | `sa-scratchpad:safeguarding` | A disclosure of abuse, neglect or exploitation without immediate danger follows **Safeguarding** in the deployment facts; immediate danger goes straight to Crisis Support. |
+| Clinical Reasoning | `sa-clinical:calculation`, `related-history`, `obtains-material` | No calculation facility is connected (Operations, Calculations, states what can be given); related history and other material come only from what the person supplies. |
 | Health Plan | `sa-health-plan:filing`, `connected-actions`, `template` (pinned) | No later retrieval from a filing system; no booking or reminders; plan prepared in the chat. |
-| SOAP | `sa-soap:step1`, `step5` (pinned), `step6` (pinned), `identity`, `provenance`, `relationships`, `recording-row`, `pending`, `correction`, `arrangement`, `later-consultation`, `later-use`, `identity-closing` (pinned), `template` (pinned) | Note prepared only on request or accepted offer; nothing filed; no reference created; patient and reporter kept apart; earlier notes only as supplied. |
+| SOAP | `sa-soap:step1`, `step5` (pinned), `step6` (pinned), `identity`, `provenance`, `relationships`, `recording-row`, `pending`, `correction`, `arrangement`, `later-consultation`, `later-use`, `purpose`, `step1-arrangement`, `recording-outcome`, `r14-filing`, `audit-reference`, `document-kind`, `await-storage`, `identity-closing` (pinned), `template` (pinned) | Note prepared only on request or accepted offer; nothing filed; no reference created; patient and reporter kept apart; earlier notes only as supplied. |
 | Operations | replaced | `standalone_src/OPERATIONS.md`:<br>• conversation-only work, with app facilities only as visibly provided;<br>• no treatment figures;<br>• a record header;<br>• layouts for SOAP note, health plan, health-data summary, record audit and continuity summary (with a Safety field).<br>The SOAP Objective field records no mental-state findings from a text chat. |
 | First Aid | replaced | `standalone_src/CRISIS_SUPPORT.md` (anchor `aris-crisis-support`). Covers:<br>• a threatened or imminent act (adapted from R11's suicidal-threat text);<br>• harm that has happened, or someone who cannot keep safe;<br>• possible overdose, intentional or by mistake (adapted from R11's harmful-ingestion guidance);<br>• missed or stopped medicines;<br>• urgent help without immediate danger to life;<br>• what the assistant cannot do;<br>• any other emergency (999, no procedures);<br>• outside the UK;<br>• recording and closing. |
 | All modules and Rules | rename pass (`FIRST_AID_RENAMES`) | First Aid wording becomes Crisis Support wording. Acute physical deterioration is signposted to 999, not routed to a module. |
-| Grid, Scratchpad, Clinical Reasoning, Health Plan, SOAP, Rules | `sa-mh:*` (mental-health-only pass) | See the next table. |
+| Grid, Reception, Scratchpad, Clinical Reasoning, Health Plan, SOAP, Rules | `sa-mh:*` and a naming pass (mental-health-only pass) | See the next table. |
 
 ### Mental-health-only pass (`sa-mh:*`)
 
 | Module | Edit (label) | What changes |
 |---|---|---|
 | Clinical Reasoning | `sa-mh:doctor-lens` (pinned) | Doctor lens removed. |
-| | `sa-mh:fatigue-*` | Its fatigue, sleepiness and low-energy subsection moves into Psychiatry, under physical illness and diagnostic overshadowing. A possible physical or sleep-related cause goes to the GP. |
-| | `sa-mh:lens-index`, `sa-mh:purpose`, `sa-mh:doctor-row` (pinned), `sa-mh:medical-assessment` | Lens index, count and perspective table without Doctor. Psychiatry and Pharmacist consider physical causes; the GP assesses a suspected physical cause. |
+| | `sa-mh:fatigue-*` | Its fatigue, sleepiness and low-energy subsection moves into Psychiatry, under physical illness and diagnostic overshadowing. A possible physical or sleep-related cause goes to the GP, or NHS 111 the same day if sudden or rapidly worsening. |
+| | `sa-mh:lens-index`, `sa-mh:purpose`, `sa-mh:doctor-row` (pinned), `sa-mh:medical-assessment` | Lens index, count and perspective table without Doctor. Psychiatry and Pharmacist consider physical causes. The GP assesses a suspected physical cause; sudden confusion goes to 999 or A&E, and any other sudden or rapidly worsening change to NHS 111 or an urgent GP appointment the same day. |
 | | `sa-mh:out-of-scope` | A health question with no mental-health side is outside the set (deployment facts, Scope). |
 | | `sa-mh:remote-assessment`, `sa-mh:home-observation` | Physical-examination examples replaced by mental-state ones. |
 | | `sa-mh:evidence-crisis` | "Established immediate-care procedures" becomes Crisis Support's established signposts. |
-| | `sa-mh:currency-metadata` (pinned), `sa-mh:library-row` (pinned), `sa-mh:figure-display` (pinned) | Medical-library metadata section replaced by a two-sentence Currency rule; library row and figure-display paragraph removed. |
-| | `sa-mh:aspirin-example` (pinned), `sa-mh:formulation`, `sa-mh:devices`, `sa-mh:resistance` | Pharmacist's respiratory, inhaler and antimicrobial examples removed or replaced with psychotropic ones. |
+| | `sa-mh:currency-metadata` (pinned), `sa-mh:library-row` (pinned), `sa-mh:figure-display` (pinned), `sa-mh:representation-heading`, `sa-mh:library-passage` | Medical-library metadata section replaced by a two-sentence Currency rule; library row and figure-display paragraph removed; "Representation and original figures" becomes "Representation of records and images"; "a library passage" becomes "a source passage". |
+| | `sa-mh:aspirin-example` (pinned), `sa-mh:unidentified-heading`, `sa-mh:formulation`, `sa-mh:devices`, `sa-mh:resistance` | Pharmacist's respiratory, inhaler and antimicrobial examples removed or replaced with psychotropic ones; the subsection heading loses "and reaction history". |
 | | `sa-mh:extra-dose` | Pharmacist's missed-dose section sends a possible extra dose to Crisis Support's overdose advice, not the leaflet, and a missed or stopped medicine to Crisis Support's section on it. |
 | Grid | `sa-mh:grid-lenses`, `sa-mh:grid-node` | Five lenses named. The map's Crisis Support node id `FA` becomes `CS`. |
 | Scratchpad | `sa-mh:safeguarding-doctor` | A medical question in a safeguarding disclosure goes to the GP or NHS 111, not the Doctor perspective. |
 | Health Plan | `sa-mh:plan-scope`, `sa-mh:plan-ng56` | "General health" becomes mental health and wellbeing; NICE NG56 applies where physical conditions also affect the plan. |
 | Rules | `sa-mh:rules-title`, `sa-mh:r5` | Named a mental-health assistant. |
-| | `sa-mh:r6`, `sa-mh:r13` | References to source-checked immediate-care procedures become Crisis Support's signposts and safety guidance. |
-| All | naming pass | "AI health assistant" becomes "AI mental-health assistant". |
+| | `sa-mh:r6`, `sa-mh:r13` | References to source-checked immediate-care procedures become Crisis Support's signposts and safety guidance, given without waiting for a source lookup. |
+| All modules | naming pass | "AI health assistant" becomes "AI mental-health assistant" (Reception greeting, SOAP). |
 
-The kept lens bodies and the rest of the shared engine are the same as in the harness variant.
+Apart from the edits listed in this section, the kept lens bodies and the shared engine are the same as in the harness variant.
 
 ### Standalone build checks
 
@@ -187,9 +189,10 @@ The standalone reviewed uses are:
 
 **Added content needing review.** These were written for this set and are not from R11:
 
-- Crisis Support;
-- the scope rule;
+- Crisis Support, apart from its suicidal-threat and poisoning guidance, which is adapted from R11's First Aid;
+- the scope rule, and the UK services note (NHS 24, Northern Ireland's lack of NHS 111);
 - the overdose and missed-medicine routing;
+- the GP, NHS 111 and 999 routes that replace the Doctor lens (the Clinical Reasoning perspective paragraph, the last sentence of Psychiatry's fatigue subsection, and the Scratchpad safeguarding sentence);
 - the safeguarding signposts and telephone numbers;
 - the location guidance;
 - the replacement examples in the Pharmacist lens.

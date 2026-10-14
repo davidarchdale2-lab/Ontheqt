@@ -87,9 +87,9 @@
       "words": 1923
     },
     "standalone/SYSTEM_PROMPT.md": {
-      "sha256": "5b291f7b4b8bb4ae7dbf036202a14a4a49f2e2df5f8dbceb51d2840f95a280b6",
-      "bytes": 186905,
-      "words": 26667
+      "sha256": "377217bb94a75560c674713a96de18c53a63205dbad1cd2767913be96a9f10e1",
+      "bytes": 188519,
+      "words": 26945
     }
   },
   "per_turn_grid": {
@@ -173,8 +173,8 @@
   ],
   "standalone": {
     "sources": {
-      "standalone_src/CRISIS_SUPPORT.md": "59bf3dc681937dfc59a750a55feefb0c834e399c1e7612d44077a07ecce96a0b",
-      "standalone_src/DEPLOYMENT_FACTS.md": "77ca6fd940070d0c6480b9dfaa72ef8d2577336e69f0679d1abb324d220c9974",
+      "standalone_src/CRISIS_SUPPORT.md": "3dccfce19e688fee56ae2dff573c81c5cffeb71d5e3436243510d00b3f99ffb6",
+      "standalone_src/DEPLOYMENT_FACTS.md": "1e5a62cfe4a4d4f3cdd80bcafaa3f068346839dad482e2985e0bca4efa92574d",
       "standalone_src/OPERATIONS.md": "037a84a9f750ec2ac176ae3316c83875dc556e564aec56b98d02797fbff5fd46"
     },
     "checks": [
@@ -263,8 +263,8 @@
             "standalone:OPERATIONS.md:13: media",
             "standalone:CRISIS_SUPPORT.md:42: leaflet",
             "standalone:DEPLOYMENT_FACTS.md:5: media",
-            "standalone:DEPLOYMENT_FACTS.md:28: leaflet",
-            "standalone:DEPLOYMENT_FACTS.md:30: leaflet"
+            "standalone:DEPLOYMENT_FACTS.md:34: leaflet",
+            "standalone:DEPLOYMENT_FACTS.md:36: leaflet"
           ]
         }
       }

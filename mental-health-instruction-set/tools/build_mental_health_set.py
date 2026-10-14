@@ -981,8 +981,8 @@ def standalone_mental_health_only(modules, rules):
         fatigue,
         'Investigation follows the supported possibilities and examination findings, rather than a fixed test panel for every '
         'description of tiredness.',
-        "A possible physical or sleep-related cause is for the person's GP to assess, rather than being set aside as part of "
-        'the mental-health picture.',
+        "A possible physical or sleep-related cause is for the person's GP to assess, or NHS 111 the same day if it is sudden "
+        'or rapidly worsening, rather than being set aside as part of the mental-health picture.',
         'sa-mh:fatigue-investigation')
     clinical = cut_between(clinical, '<a id="aris-lens-01"></a>', '<a id="aris-lens-02"></a>', 'sa-mh:doctor-lens')
     clinical = replace_once(clinical, '#### Medicines, substances and competing explanations',
@@ -996,7 +996,9 @@ def standalone_mental_health_only(modules, rules):
         clinical,
         'Medical assessment contributes to mental-health presentations where physical illness or treatment effects may be involved.',
         'Physical illness, substances and treatment effects can cause, mimic or complicate a mental-health presentation; the '
-        "Psychiatry and Pharmacist perspectives consider them, and the person's GP assesses a suspected physical cause.",
+        "Psychiatry and Pharmacist perspectives consider them. A suspected physical cause is for the person's GP to assess. "
+        'Sudden confusion needs 999 or A&E now ([NHS: confusion](https://www.nhs.uk/symptoms/confusion/)), and any other '
+        'sudden or rapidly worsening change needs same-day advice from NHS 111 or an urgent GP appointment.',
         'sa-mh:medical-assessment')
     clinical = replace_once(
         clinical,
@@ -1021,6 +1023,12 @@ def standalone_mental_health_only(modules, rules):
                             "Crisis Support's established signposts support urgent action;", 'sa-mh:evidence-crisis')
     # Pharmacist: psychotropic examples in place of respiratory ones, and the extra-dose route to Crisis Support.
     clinical = drop_paragraph(clinical, 'A reported aspirin-associated respiratory reaction', 'sa-mh:aspirin-example')
+    clinical = replace_once(clinical, '##### Unidentified products and reaction history', '##### Unidentified products',
+                            'sa-mh:unidentified-heading')
+    clinical = replace_once(clinical, '### Representation and original figures', '### Representation of records and images',
+                            'sa-mh:representation-heading')
+    clinical = replace_once(clinical, 'A library passage or web page can be appraised',
+                            'A source passage or web page can be appraised', 'sa-mh:library-passage')
     clinical = replace_once(
         clinical,
         "Modified-release products can differ in release profile, and an inhaler's effectiveness depends partly on technique "
@@ -1072,8 +1080,9 @@ def standalone_mental_health_only(modules, rules):
         "Crisis Support's signposts and safety guidance can be used within their stated scope, subject to known conflicting "
         'information.',
         'sa-mh:r6')
-    rules = replace_once(rules, 'Crisis Support may use its already source-checked immediate procedure without waiting',
-                         'Crisis Support may give its signposts and safety guidance without waiting', 'sa-mh:r13')
+    rules = replace_once(rules, 'Crisis Support may use its already source-checked immediate procedure without waiting for '
+                         'a repeat lookup', 'Crisis Support may give its signposts and safety guidance without waiting for a '
+                         'source lookup', 'sa-mh:r13')
     modules['HEALTH_PLAN.md'] = replace_once(
         modules['HEALTH_PLAN.md'], 'A plan can concern general health, connected problems,',
         'A plan can concern mental health and wellbeing, connected problems,', 'sa-mh:plan-scope')

@@ -49,6 +49,10 @@ PROFILES = {
         'modules/RULES_OF_ENGAGEMENT.md',
         'modules/SCRATCHPAD_INVESTIGATORY_TOOL.md',
         'modules/SOAP_TOOL.md',
+        # The build reads standalone_src/ on every run, so a rebuild from this zip needs it too.
+        'standalone_src/CRISIS_SUPPORT.md',
+        'standalone_src/DEPLOYMENT_FACTS.md',
+        'standalone_src/OPERATIONS.md',
         'tools/build_mental_health_set.py',
         'tools/package_zip.py',
     ],
