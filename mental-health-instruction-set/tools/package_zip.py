@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Package the mental-health instruction set as a reproducible zip.
 
-Usage: python3 -I -B tools/package_zip.py --src . --zip <output.zip> --root <root folder name>
+Usage: python3 -I -B tools/package_zip.py --src . --profile standalone|harness --zip <output.zip> --root <root folder name>
 
-Writes SHA256SUMS.txt (SHA-256 of every packaged file) into --src and into the
-zip, and uses fixed timestamps, permissions and entry order, so the same inputs
-give the same archive bytes.
+Adds SHA256SUMS.txt (SHA-256 of every packaged file) inside the zip, and uses
+fixed timestamps, permissions and entry order, so the same inputs give the same
+archive bytes.
 """
 import argparse
 import hashlib
@@ -13,28 +13,46 @@ import sys
 import zipfile
 from pathlib import Path
 
-INCLUDE = [
-    'START_HERE.md',
-    'README.md',
-    'VERSION',
-    'MODULES.md',
-    'HARNESS_REQUIREMENTS.md',
-    'INSTRUCTION_SET.md',
-    'RULES_OF_ENGAGEMENT.md',
-    'BUILD_CHECKS.json',
-    'deployment/IMMEDIATE_CARE_REFERENCE_MANIFEST.json',
-    'modules/CLINICAL_REASONING_TOOL.md',
-    'modules/FIRST_AID.md',
-    'modules/GRID_CARD.md',
-    'modules/HEALTH_PLAN.md',
-    'modules/OPERATIONS.md',
-    'modules/RECEPTION_DESK.md',
-    'modules/RULES_OF_ENGAGEMENT.md',
-    'modules/SCRATCHPAD_INVESTIGATORY_TOOL.md',
-    'modules/SOAP_TOOL.md',
-    'tools/build_mental_health_set.py',
-    'tools/package_zip.py',
-]
+PROFILES = {
+    # Harness-free use: the single system prompt and what is needed to understand or rebuild it.
+    'standalone': [
+        'START_HERE.md',
+        'README.md',
+        'VERSION',
+        'USING_WITHOUT_A_HARNESS.md',
+        'MODULES.md',
+        'BUILD_CHECKS.json',
+        'standalone/SYSTEM_PROMPT.md',
+        'standalone_src/DEPLOYMENT_FACTS.md',
+        'standalone_src/OPERATIONS.md',
+        'deployment/IMMEDIATE_CARE_REFERENCE_MANIFEST.json',
+        'tools/build_mental_health_set.py',
+        'tools/package_zip.py',
+    ],
+    # The R11-harness variant.
+    'harness': [
+        'START_HERE.md',
+        'README.md',
+        'VERSION',
+        'MODULES.md',
+        'HARNESS_REQUIREMENTS.md',
+        'INSTRUCTION_SET.md',
+        'RULES_OF_ENGAGEMENT.md',
+        'BUILD_CHECKS.json',
+        'deployment/IMMEDIATE_CARE_REFERENCE_MANIFEST.json',
+        'modules/CLINICAL_REASONING_TOOL.md',
+        'modules/FIRST_AID.md',
+        'modules/GRID_CARD.md',
+        'modules/HEALTH_PLAN.md',
+        'modules/OPERATIONS.md',
+        'modules/RECEPTION_DESK.md',
+        'modules/RULES_OF_ENGAGEMENT.md',
+        'modules/SCRATCHPAD_INVESTIGATORY_TOOL.md',
+        'modules/SOAP_TOOL.md',
+        'tools/build_mental_health_set.py',
+        'tools/package_zip.py',
+    ],
+}
 FIXED_TIME = (2026, 10, 14, 0, 0, 0)
 
 
@@ -43,7 +61,9 @@ def main():
     p.add_argument('--src', required=True, type=Path)
     p.add_argument('--zip', required=True, type=Path)
     p.add_argument('--root', required=True)
+    p.add_argument('--profile', required=True, choices=sorted(PROFILES))
     a = p.parse_args()
+    INCLUDE = PROFILES[a.profile]
 
     missing = [rel for rel in INCLUDE if not (a.src / rel).is_file()]
     if missing:
@@ -57,7 +77,6 @@ def main():
     for rel in sorted(INCLUDE):
         sums.append(f'{hashlib.sha256((a.src / rel).read_bytes()).hexdigest()}  {rel}')
     sums_text = '\n'.join(sums) + '\n'
-    (a.src / 'SHA256SUMS.txt').write_text(sums_text, encoding='utf-8', newline='\n')
 
     a.zip.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(a.zip, 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=9) as z:

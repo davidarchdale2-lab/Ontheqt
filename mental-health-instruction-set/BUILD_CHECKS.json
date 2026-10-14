@@ -85,6 +85,11 @@
       "sha256": "2513e4895cbda53ab27dd43ebef56a5dbdfb3b6d3013969716fb0d33be7f5be1",
       "bytes": 14193,
       "words": 1923
+    },
+    "standalone/SYSTEM_PROMPT.md": {
+      "sha256": "cb953326ebafb705f8d35e49a6adb675b6cbe499a23cf18d6250d41ae87fef21",
+      "bytes": 212799,
+      "words": 29634
     }
   },
   "per_turn_grid": {
@@ -165,5 +170,92 @@
         ]
       }
     }
-  ]
+  ],
+  "standalone": {
+    "sources": {
+      "standalone_src/DEPLOYMENT_FACTS.md": "5f02209a5d7fab4da9625497dffa078fb2149bd2015660735ff33d50ea24a6df",
+      "standalone_src/OPERATIONS.md": "092071b755eaf0fe76911cb15e884b9ceedb036a9a3c086d8b617a9676f9c077"
+    },
+    "checks": [
+      {
+        "check": "Rules appear exactly once",
+        "result": "PASS",
+        "detail": null
+      },
+      {
+        "check": "deployment facts appear exactly once",
+        "result": "PASS",
+        "detail": null
+      },
+      {
+        "check": "per-turn Grid is repeated at the end, identical to the Grid in the core",
+        "result": "PASS",
+        "detail": null
+      },
+      {
+        "check": "lens anchors are exactly the six kept lenses, once each",
+        "result": "PASS",
+        "detail": [
+          "01",
+          "02",
+          "03",
+          "04",
+          "09",
+          "10"
+        ]
+      },
+      {
+        "check": "no duplicate anchors",
+        "result": "PASS",
+        "detail": []
+      },
+      {
+        "check": "every link is external or resolves to an anchor in the prompt",
+        "result": "PASS",
+        "detail": []
+      },
+      {
+        "check": "Grid click targets resolve, in both Grid copies",
+        "result": "PASS",
+        "detail": {
+          "click_lines": 16,
+          "unresolved": []
+        }
+      },
+      {
+        "check": "only the Grid maps remain (two in the core, two in the repeated Grid)",
+        "result": "PASS",
+        "detail": 4
+      },
+      {
+        "check": "no harness tool names, file names or server paths remain",
+        "result": "PASS",
+        "detail": []
+      },
+      {
+        "check": "no promise of saved records or a harness remains",
+        "result": "PASS",
+        "detail": []
+      },
+      {
+        "check": "no dropped lens, dropped service or media-production term remains (reviewed uses allowlisted)",
+        "result": "PASS",
+        "detail": {
+          "unexpected": [],
+          "accepted": [
+            "CLINICAL_REASONING_TOOL.md:207: video",
+            "CLINICAL_REASONING_TOOL.md:690: leaflet",
+            "CLINICAL_REASONING_TOOL.md:896: crop",
+            "CLINICAL_REASONING_TOOL.md:898: illustrat",
+            "SOAP_TOOL.md:90: illustrat",
+            "RULES_OF_ENGAGEMENT.md:53: video",
+            "RULES_OF_ENGAGEMENT.md:53: media",
+            "standalone:OPERATIONS.md:13: media",
+            "standalone:DEPLOYMENT_FACTS.md:5: media",
+            "standalone:DEPLOYMENT_FACTS.md:17: leaflet"
+          ]
+        }
+      }
+    ]
+  }
 }

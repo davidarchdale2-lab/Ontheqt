@@ -100,6 +100,13 @@ PINS = {
     'operations:asset-subsections': 'd2c28ebc81e284d993d1f381106f6dff715b9f86542b5f96e9ae4342a8d5db37',
     'operations:deliverables': '9b564f22219b164b47a429196799a959ba658215ddcd28fe1c103fa769a4f312',
     'rules:media-paragraph': '1ec1abe54ac0ebf50df62de167e6d7534b8c9d7a212075c536d9a3c01750b0fd',
+    'sa-grid:registered-bullet': '9ac3f55682b764af08ac25c977bc803739049f210df67ea048aae68a5b9f3705',
+    'sa-grid:record-table': 'e37c42437a85ed0d412f2e27f35a6994cbe42c0d07e3c261675af9fa8f9282bb',
+    'sa-scratchpad:interface': '996ca502c610830b50f32544bae364e24dde8628921029b5919a03d39830ad3a',
+    'sa-scratchpad:templates': 'ad81c5b9df2ecd315d3023c9fb1a3f3da4acc7e32829a375359410cd5d5ec1c8',
+    'sa-health-plan:template': '6e5f79755a73d9c68f3d4646935a4128a209bc49f192842c6f76faf61102eaa8',
+    'sa-soap:identity-closing': 'b9435f1cd55cd0e74b882a71b0fa4108f95faae488907dec32d01f9c20033f5c',
+    'sa-soap:template': '5898ca624145c5ecec1e48d2c8a8d2455e58dd32b8602bd9e6e6f4f00ea27632',
 }
 
 # Terms that name a dropped lens, a dropped service or media production.
@@ -495,6 +502,241 @@ def check(core, rules, modules, r11_core, raw_modules):
     return results
 
 
+# ---------------------------------------------------------------- standalone variant (no harness)
+
+STANDALONE_SRC = Path(__file__).resolve().parent.parent / 'standalone_src'
+STANDALONE_FILES = ['DEPLOYMENT_FACTS.md', 'OPERATIONS.md']
+
+# Names of R11 harness tools, files and paths that must not appear in the standalone prompt.
+HARNESS_IDENTIFIERS = re.compile(
+    r'/mnt/|CASE_STATE|\.schema\.json|\b(?:get_working_picture_format|change_working_picture|read_scratchpad'
+    r'|update_scratchpad|lookup_registered_user|get_record_access|lookup_patient_memory|list_patient_files'
+    r'|read_patient_file|request_full_record_access|finish_full_record_access|get_record_template'
+    r'|save_prepared_soap|soap_save_status|save_patient_memory|patient_memory_status|save_continuity_summary'
+    r'|continuity_summary_status|save_health_plan|save_health_file_audit|record_document_status'
+    r'|clinical_reasoning|create_reminder|reminder_status|update_reminder|cancel_reminder|create_document'
+    r'|read_uploaded_document|search_medical_library|list_medical_library|read_medical_library|search_web'
+    r'|browser_action|get_current_time|create_compute_project|get_compute_result)\b'
+    r'|(?:SOAP|HEALTH_PLAN|HEALTH_DATA_SUMMARY|HEALTH_FILE_AUDIT|PERSISTENT_MEMORY)\.(?:md|json)'
+)
+
+STANDALONE_ALLOWED = [
+    {'file': 'standalone:DEPLOYMENT_FACTS.md', 'term': 'media',
+     'line_contains': 'calculator, document service or media service is available.',
+     'reason': 'States that no media service is connected.'},
+    {'file': 'standalone:OPERATIONS.md', 'term': 'media',
+     'line_contains': 'executing a calculation, sending anything or producing media.',
+     'reason': 'States that media production is unavailable.'},
+    {'file': 'standalone:DEPLOYMENT_FACTS.md', 'term': 'leaflet',
+     'line_contains': 'point to the product leaflet, a pharmacist or the prescriber.',
+     'reason': 'A medicine product leaflet as a source.'},
+]
+
+
+def standalone_rules(text):
+    return replace_once(text, 'System-wide requirements supplied separately by the harness.',
+                        'System-wide requirements, supplied in this same prompt.', 'sa-rules:intro')
+
+
+def standalone_grid(text):
+    text = replace_once(text, '# Dr Seraphina Aris - Health Assistant V1 R11-MH (mental-health draft)\n',
+                        '# Dr Seraphina Aris - Health Assistant V1 R11-MH standalone (mental-health draft)\n',
+                        'sa-grid:title')
+    text = replace_once(text, 'M["Operations: read current persistent memory"]',
+                        'M["Operations: persistent memory (none connected in this deployment)"]', 'sa-grid:memory-node')
+    text = replace_line(
+        text, '- Registered consultation starts with persistent memory',
+        '- No person registry, stored record or persistent memory is connected in this deployment. Background comes from '
+        'what the person supplies in the conversation, including a continuity summary pasted from an earlier conversation.',
+        'sa-grid:registered-bullet')
+    text = cut_between(
+        text, 'The record-producing process supplies content; Operations retrieves',
+        'The relevant module defines when a record is appropriate.', 'sa-grid:record-table',
+        replacement=(
+            'The record-producing process supplies content; Operations prepares the record as text in the conversation, '
+            'using its record layouts. Nothing is saved.\n\n'
+            '| Record | Preparing process | Operations layout |\n'
+            '|---|---|---|\n'
+            '| Consultation or amendment | SOAP Creation | SOAP note |\n'
+            '| Health-data interpretation | Scratchpad with Clinical Reasoning | Health-data summary |\n'
+            '| Agreed or proposed care plan | Health Plan | Health plan |\n'
+            '| Comparison of supplied records | Scratchpad with Clinical Reasoning | Record audit |\n'
+            '| Continuity for a later conversation | Scratchpad after the other record outcomes | Continuity summary |\n\n'
+        ))
+    text = replace_once(
+        text,
+        'Template access does not itself trigger a new record. Operations returns each outcome to its originating process; '
+        'closing memory incorporates those outcomes last.',
+        'A record layout does not itself call for a new record. Operations returns each outcome to its originating process; '
+        'a closing continuity summary incorporates those outcomes last.',
+        'sa-grid:template-sentence')
+    return text
+
+
+def standalone_reception(text):
+    text = replace_once(
+        text,
+        'For a registered-user consultation, I start with your saved continuity summary and current condensed record.',
+        "I don't keep anything between conversations. If you kept a continuity summary from an earlier conversation, "
+        'you can paste it here to carry on.',
+        'sa-reception:intro')
+    text = replace_once(text, '> - **Your full name** — for a registered-user consultation.',
+                        '> - **Your name**, if you would like me to use it.', 'sa-reception:name')
+    text = replace_once(
+        text,
+        "> - **Guest**, or simply ask your question without giving a name — to continue without loading a registered user's personal records.",
+        '> - **Guest**, or simply ask your question without giving a name.', 'sa-reception:guest')
+    text = replace_once(
+        text,
+        'A recognised registered introduction starts its memory-first entry, without another identity question or Reception investigation.',
+        'No person registry is connected, so a name opens no records.', 'sa-reception:registered-entry')
+    return text
+
+
+def standalone_scratchpad(text):
+    text = cut_between(
+        text, '## Working-picture interface', '## Templates for investigation and continuity records',
+        'sa-scratchpad:interface',
+        replacement=(
+            '## Working-picture interface\n\n'
+            'No working-picture service is connected. The working picture is kept in the conversation: attributed facts, '
+            'questions, plans and their status stay distinct there, and the current picture can be restated when it helps '
+            'the person or before a record is prepared.\n\n'
+        ))
+    text = cut_between(
+        text, '## Templates for investigation and continuity records', None, 'sa-scratchpad:templates',
+        replacement=(
+            '## Records for investigation and continuity\n\n'
+            'The working picture prepares a health-data summary, record audit or continuity summary through Operations, '
+            'using its layouts. Clinical Reasoning supplies the interpretation of supplied measurements or compared records. '
+            'Keep unresolved comparisons and coverage visible. An audit changes no record. A continuity summary is prepared '
+            'after the other record outcomes, for the person to keep.\n'
+        ))
+    return text
+
+
+def standalone_health_plan(text):
+    return cut_between(
+        text, '## Record template', None, 'sa-health-plan:template',
+        replacement=(
+            '## Record template\n\n'
+            'For a plan prepared as a document, Operations uses its health-plan layout. Populate the chosen goals, proposed '
+            'or agreed actions, ownership, feasibility and review from the actual discussion. Clinical Reasoning supplies the '
+            'assessment; the layout supplies the structure. The plan is prepared in the chat for the person to keep; it is '
+            'not saved. Relevant planning content still contributes to SOAP P.\n'
+        ))
+
+
+def standalone_soap(text):
+    text = replace_once(
+        text,
+        'The recording arrangement can be a prepared copy, temporary session note or a record submitted through Operations. '
+        'The returned position describes the note and any established stored reference or linkage. A storage limitation '
+        'accompanies prepared content while the enquiry continues.',
+        'In this deployment the recording arrangement is a prepared copy in the chat; nothing is submitted or stored. '
+        'The note says so, and the enquiry continues.',
+        'sa-soap:arrangement')
+    text = replace_once(
+        text,
+        'A later registered consultation reads its current consolidated memory first, then the condensed record and changed '
+        'or relevant original notes/amendments as attributed history.',
+        'A later conversation starts from what the person supplies, such as a pasted continuity summary or an earlier note, '
+        'as attributed history.',
+        'sa-soap:later-consultation')
+    text = replace_line(
+        text, 'The template and record interface carry patient, encounter',
+        'A prepared note names the person as they named themselves, if they did, the encounter date if known, its '
+        'preparation in this conversation by an AI health assistant, and any earlier note it continues or amends. At close, '
+        'the current discussion is compared with any note already prepared in this conversation: unchanged content is not '
+        'prepared again, while later information or a correction takes the continuation or amendment route. Record outcomes '
+        'then feed the closing continuity summary.',
+        'sa-soap:identity-closing')
+    text = cut_between(
+        text, '## Record template', None, 'sa-soap:template',
+        replacement=(
+            '## Record template\n\n'
+            'Operations uses its SOAP note layout for a SOAP, continuation or amendment. A layout is a blank structure; its '
+            'unknowns stay unknown. The prepared note is presented in the chat for the person to keep; it is not saved.\n'
+        ))
+    return text
+
+
+def build_standalone(mh_modules, standalone_sources):
+    modules = dict(mh_modules)
+    modules['GRID_CARD.md'] = standalone_grid(modules['GRID_CARD.md'])
+    modules['RECEPTION_DESK.md'] = standalone_reception(modules['RECEPTION_DESK.md'])
+    modules['SCRATCHPAD_INVESTIGATORY_TOOL.md'] = standalone_scratchpad(modules['SCRATCHPAD_INVESTIGATORY_TOOL.md'])
+    modules['HEALTH_PLAN.md'] = standalone_health_plan(modules['HEALTH_PLAN.md'])
+    modules['SOAP_TOOL.md'] = standalone_soap(modules['SOAP_TOOL.md'])
+    modules['OPERATIONS.md'] = standalone_sources['OPERATIONS.md']
+    rules = standalone_rules(modules.pop('RULES_OF_ENGAGEMENT.md'))
+    facts = standalone_sources['DEPLOYMENT_FACTS.md']
+    core = assemble(modules)
+    grid = per_turn_grid(core).replace(f'<a id="{PER_TURN_GRID["start_anchor"]}"></a>', '').strip()
+    grid = re.sub(r'\n-{3}\s*$', '', grid).strip()
+    prompt = '\n\n---\n\n'.join([rules.strip(), facts.strip(), core.strip(), PER_TURN_GRID['marker'] + '\n\n' + grid]) + '\n'
+    scanned = {n: t for n, t in modules.items() if n != 'OPERATIONS.md'}
+    scanned['RULES_OF_ENGAGEMENT.md'] = rules
+    scanned['standalone:OPERATIONS.md'] = standalone_sources['OPERATIONS.md']
+    scanned['standalone:DEPLOYMENT_FACTS.md'] = facts
+    return prompt, scanned
+
+
+def check_standalone(prompt, scanned):
+    results = []
+
+    def add(name, ok, detail=None):
+        results.append({'check': name, 'result': 'PASS' if ok else 'FAIL', 'detail': detail})
+
+    add('Rules appear exactly once', prompt.count('# Rules of Engagement') == 1 and len(re.findall(r'(?m)^## R0 · ', prompt)) == 1)
+    add('deployment facts appear exactly once', prompt.count('# Standalone deployment facts') == 1)
+    start, end = '<a id="aris-grid-card"></a>', '<a id="aris-reception-desk"></a>'
+    core_grid = prompt[prompt.index(start) + len(start):prompt.index(end)].strip() if start in prompt and end in prompt else None
+    core_grid = re.sub(r'\n-{3}\s*$', '', core_grid).strip() if core_grid else None
+    repeated = prompt.split(PER_TURN_GRID['marker'], 1)[-1].strip() if prompt.count(PER_TURN_GRID['marker']) == 1 else None
+    add('per-turn Grid is repeated at the end, identical to the Grid in the core', bool(core_grid) and repeated == core_grid)
+
+    lens_ids = re.findall(r'<a id="aris-lens-(\d\d)"></a>', prompt)
+    add('lens anchors are exactly the six kept lenses, once each', lens_ids == sorted(LENSES), lens_ids)
+    anchors = re.findall(r'<a id="([^"]+)"></a>', prompt)
+    duplicates = sorted({a for a in anchors if anchors.count(a) > 1})
+    add('no duplicate anchors', not duplicates, duplicates)
+    anchor_set = set(anchors)
+    bad_links = []
+    for target in re.findall(r'\]\((<[^>]*>|[^)\s]+)', prompt):
+        target = target.strip('<>')
+        if target.startswith(('http://', 'https://', 'mailto:')):
+            continue
+        if not (target.startswith('#') and target[1:] in anchor_set):
+            bad_links.append(target)
+    add('every link is external or resolves to an anchor in the prompt', not bad_links, sorted(set(bad_links)))
+    clicks = re.findall(r'(?m)^\s*click \w+ "([^"]*)"', prompt)
+    bad_clicks = [t for t in clicks if not (t.startswith('#') and t[1:] in anchor_set)]
+    add('Grid click targets resolve, in both Grid copies', len(clicks) >= 16 and not bad_clicks,
+        {'click_lines': len(clicks), 'unresolved': bad_clicks})
+    add('only the Grid maps remain (two in the core, two in the repeated Grid)', prompt.count('```mermaid') == 4,
+        prompt.count('```mermaid'))
+
+    harness_refs = sorted(set(m.group(0) for m in HARNESS_IDENTIFIERS.finditer(prompt)))
+    add('no harness tool names, file names or server paths remain', not harness_refs, harness_refs)
+    stale_promises = [p for p in ('saved continuity summary', 'registered-user consultation', 'supplied separately by the harness')
+                      if p in prompt]
+    add('no promise of saved records or a harness remains', not stale_promises, stale_promises)
+
+    allowed = ALLOWED + STANDALONE_ALLOWED
+    unexpected, accepted = [], []
+    for name, text in scanned.items():
+        for lineno, line in enumerate(text.split('\n'), 1):
+            for m in FORBIDDEN.finditer(line):
+                term = m.group(0).lower()
+                rule = next((a for a in allowed if a['file'] == name and term.startswith(a['term'])
+                             and a['line_contains'] in line), None)
+                (accepted if rule else unexpected).append(f'{name}:{lineno}: {m.group(0)}')
+    add('no dropped lens, dropped service or media-production term remains (reviewed uses allowlisted)',
+        not unexpected, {'unexpected': unexpected, 'accepted': accepted})
+    return results
+
+
 # ---------------------------------------------------------------- main
 
 def main():
@@ -530,6 +772,14 @@ def main():
         'RULES_OF_ENGAGEMENT.md': edit_rules(raw['RULES_OF_ENGAGEMENT.md']),
     }
 
+    standalone_sources = {}
+    for name in STANDALONE_FILES:
+        path = STANDALONE_SRC / name
+        if not path.is_file():
+            fail('standalone-source', f'missing standalone_src/{name}')
+        standalone_sources[name] = path.read_text(encoding='utf-8')
+    standalone_prompt, standalone_scanned = build_standalone(modules, standalone_sources)
+
     if PRINT_PINS:
         print(json.dumps(SEEN_PINS, indent=4))
         return 0
@@ -542,11 +792,13 @@ def main():
     r11_core = source_bytes[REFERENCE_SOURCES['r11_core']].decode('utf-8')
     raw_for_selftest = {n: raw[n] for n in ASSEMBLY_ORDER}
     checks = check(core, rules, modules, r11_core, raw_for_selftest)
+    standalone_checks = check_standalone(standalone_prompt, standalone_scanned)
 
     outputs = {'INSTRUCTION_SET.md': core, 'RULES_OF_ENGAGEMENT.md': rules}
     for name, text in modules.items():
         outputs[f'modules/{name}'] = text
     outputs['deployment/IMMEDIATE_CARE_REFERENCE_MANIFEST.json'] = source_bytes[REFERENCE_SOURCES['immediate_care_manifest']]
+    outputs['standalone/SYSTEM_PROMPT.md'] = standalone_prompt
 
     def describe(data):
         raw_bytes = data.encode('utf-8') if isinstance(data, str) else data
@@ -564,14 +816,20 @@ def main():
         'outputs': {rel: describe(data) for rel, data in sorted(outputs.items())},
         'per_turn_grid': dict(PER_TURN_GRID, sha256=sha(grid), words=len(grid.split())),
         'checks': checks,
+        'standalone': {
+            'sources': {f'standalone_src/{n}': sha(t) for n, t in sorted(standalone_sources.items())},
+            'checks': standalone_checks,
+        },
     }
     outputs['BUILD_CHECKS.json'] = json.dumps(report, indent=2, ensure_ascii=False) + '\n'
 
-    failed = [c for c in checks if c['result'] != 'PASS']
-    for c in checks:
-        print(f"{c['result']:4}  {c['check']}")
-        if c['result'] != 'PASS':
-            print('      ', c['detail'])
+    failed = [c for c in checks + standalone_checks if c['result'] != 'PASS']
+    for heading, group in (('harness variant', checks), ('standalone variant', standalone_checks)):
+        print(f'-- {heading}')
+        for c in group:
+            print(f"{c['result']:4}  {c['check']}")
+            if c['result'] != 'PASS':
+                print('      ', c['detail'])
     if failed:
         print('Build checks failed; nothing was written.', file=sys.stderr)
         return 1
@@ -579,7 +837,8 @@ def main():
     write_outputs(args.out, outputs)
     print(f"core words: {report['outputs']['INSTRUCTION_SET.md']['words']}  "
           f"rules words: {report['outputs']['RULES_OF_ENGAGEMENT.md']['words']}  "
-          f"per-turn Grid words: {report['per_turn_grid']['words']}")
+          f"per-turn Grid words: {report['per_turn_grid']['words']}  "
+          f"standalone prompt words: {report['outputs']['standalone/SYSTEM_PROMPT.md']['words']}")
     return 0
 
 
@@ -599,7 +858,7 @@ def write_outputs(out, outputs):
             target = out / rel
             target.parent.mkdir(parents=True, exist_ok=True)
             os.replace(tmp / rel, target)
-        for managed in ('modules', 'deployment'):
+        for managed in ('modules', 'deployment', 'standalone'):
             for path in (out / managed).iterdir():
                 if path.is_file() and f'{managed}/{path.name}' not in outputs:
                     path.unlink()

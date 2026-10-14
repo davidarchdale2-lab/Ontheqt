@@ -1,0 +1,47 @@
+# Using the set without a harness
+
+`standalone/SYSTEM_PROMPT.md` is the whole instruction set as one system prompt, for an ordinary chat application with no harness, tools or record store.
+
+## How to use it
+
+1. Open the chat application's system prompt setting. It may be called "system prompt", "system message" or "custom instructions".
+2. Paste the entire contents of `standalone/SYSTEM_PROMPT.md`. Do not trim it: the Grid is repeated at the end on purpose, and the Rules come first on purpose.
+3. Start a new conversation. The assistant opens with its introduction, or answers straight away if the first message is already a question.
+
+**Size.** The prompt is about 213 KB, roughly 30,000 words. As a rough guide, the model needs a context window well above 50,000 tokens, plus room for the conversation itself. Check the setting in your application. For a local model, set its context length explicitly, because many runners default to something much smaller and silently cut long prompts.
+
+## What changes without a harness
+
+| Harness feature | Without a harness |
+|---|---|
+| Registered users, record lookup, persistent memory | None. A name is only a name. To continue earlier work, paste the continuity summary from a previous conversation. |
+| Saving SOAP notes, plans, audits and summaries | Records are written out in the chat for you to copy and keep. The assistant is told never to say anything was saved. |
+| Full medical-file reading with permission | Not applicable. The assistant works only with what you paste or attach. |
+| Reminders and calendar | None. The assistant can suggest wording for a reminder you set yourself. |
+| Medical library and web search | None. Doses, thresholds and guideline details cannot be checked against a current source, and the assistant is told to say so. |
+| Calculator | None. Derived clinical figures are shown with their method and are not presented as verified. |
+| Per-turn Grid and case-state injection | The Grid is included twice in the prompt, at the start of the core and at the end, which is what R11 itself does for models without the special placement. The working picture lives in the conversation. |
+
+If your chat application can read attached files, the assistant may use that for its actual purpose. The prompt tells it to report what it read and what it could not.
+
+## Continuity between conversations
+
+At the end of a consultation, ask for a **continuity summary**, or accept the assistant's offer of one. Save it yourself. Next time, paste it at the start. The assistant treats it as material you supplied, notes its date, and asks what has changed.
+
+## Safety notes
+
+- **Draft, not for clinical use.** The clinical content has not been clinically reviewed for this set, and R11 states its source currency was not revalidated.
+- **No safety layer except the instructions.** Without a harness there is nothing between the model and the person. Safety rests entirely on this prompt and on the model's own behaviour.
+- **Choice of model.** R11 was built for a local model named `Qwen3.8-27B-Heretic-ARA-exl3-6bpw-h16`. That name follows the naming used for open models whose refusal behaviour has been removed. Running a refusal-removed model directly, with no harness, for mental-health conversations leaves no safeguard except this prompt. Confirm what that model is before using it, and prefer a model with intact safety training.
+- **UK emergency routes.** First Aid signposts 999, 111 and Samaritans (116 123). Outside the UK these numbers are wrong, and the prompt would need changing.
+- **Immediate-care procedures are dated.** Their review is due on 2027-03-21 (`deployment/IMMEDIATE_CARE_REFERENCE_MANIFEST.json`).
+- **Privacy.** The chat application may keep conversation history on its own servers or device. That is outside the assistant's control. Paste only what you are comfortable storing there.
+
+## Changing the prompt
+
+Do not edit `standalone/SYSTEM_PROMPT.md` by hand; it is regenerated.
+
+- To change the wording written for standalone use, edit `standalone_src/DEPLOYMENT_FACTS.md` or `standalone_src/OPERATIONS.md`.
+- To change the other standalone edits, edit the `standalone_*` functions in `tools/build_mental_health_set.py`.
+
+Then rebuild (see `README.md`).
