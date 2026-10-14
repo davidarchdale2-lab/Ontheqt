@@ -535,13 +535,13 @@ STANDALONE_ALLOWED = [
      'line_contains': 'calculator, document service or media service is available.',
      'reason': 'States that no media service is connected.'},
     {'file': 'standalone:OPERATIONS.md', 'term': 'media',
-     'line_contains': 'executing a calculation, sending anything or producing media.',
+     'line_contains': 'Retrieving personal records, saving, scheduling, sending anything and producing media need a connected service.',
      'reason': 'States that media production is unavailable.'},
     {'file': 'standalone:DEPLOYMENT_FACTS.md', 'term': 'leaflet',
      'line_contains': 'point to the product leaflet, a pharmacist or the prescriber.',
      'reason': 'A medicine product leaflet as a source.'},
     {'file': 'standalone:DEPLOYMENT_FACTS.md', 'term': 'leaflet',
-     'line_contains': "use First Aid's harmful-ingestion route at once, not the leaflet",
+     'line_contains': "give First Aid's advice on suspected harmful ingestion at once, not the leaflet",
      'reason': 'Overdose routing: tells the model not to rely on the medicine leaflet.'},
 ]
 
@@ -564,9 +564,9 @@ def standalone_rules(text):
     text = replace_line(
         text, 'The owner’s standing recording arrangement makes ordinary registered health consultations recordable',
         'In this deployment there is no standing recording arrangement. Prepare a SOAP, plan, research or audit document as '
-        'text in the chat when the person asks for one or accepts an offer. An explicit no-save or copy-only choice for the '
-        'enquiry takes precedence. A format request is not a SOAP request, and a document is not created merely to complete '
-        'a checklist.',
+        'text in the chat when the person asks for one or accepts an offer. A person\'s choice not to have a document '
+        'prepared takes precedence over any offer. A format request is not a SOAP request, and a document is not created '
+        'merely to complete a checklist.',
         'sa-rules:r14-arrangement')
     text = replace_once(
         text,
@@ -739,6 +739,18 @@ def standalone_scratchpad(text):
             'current. Present the useful update and answer rather than reciting the summary. Nothing is saved or resumed '
             'outside this conversation.\n\n'
         ))
+    text = replace_once(
+        text,
+        'A child disclosure or safeguarding concern without immediate danger develops through the Doctor perspective; '
+        'immediate danger goes straight to First Aid while the child\'s account remains attributed and minimally questioned.',
+        'A disclosure of abuse, neglect or exploitation without immediate danger follows **Safeguarding** in the deployment '
+        'facts, with the Doctor perspective for any medical question; immediate danger goes straight to First Aid while the '
+        'person\'s account remains attributed and minimally questioned.',
+        'sa-scratchpad:safeguarding')
+    text = replace_once(text, 'or request related records and clinical sources through Operations',
+                        'or ask the person for related records they hold', 'sa-scratchpad:request-records')
+    text = replace_once(text, 'preparation of a note and its storage are separate events supplied by SOAP and Operations',
+                        'a note is prepared by SOAP and presented in the chat; nothing is stored', 'sa-scratchpad:note-storage')
     text = replace_once(text, 'The account enters attributed `current_facts` as reported information.',
                         'The account enters the working picture as attributed, reported information.', 'sa-scratchpad:current-facts')
     text = replace_once(text, 'A relevant unanswered question remains in `questions` as information not yet obtained,',
@@ -806,6 +818,17 @@ def standalone_scratchpad(text):
     return text
 
 
+def standalone_clinical(text):
+    text = replace_once(text, 'Operations performs the numerical work from that method, inputs and units.',
+                        'No calculation facility is connected in this deployment; Operations, Calculations, states what can be given.',
+                        'sa-clinical:calculation')
+    text = replace_once(text, 'obtained through Operations', 'that the person has supplied', 'sa-clinical:related-history')
+    text = replace_once(text, 'Operations obtains material and the scratchpad records its source and coverage.',
+                        'Material comes from what the person supplies, and the scratchpad records its source and coverage.',
+                        'sa-clinical:obtains-material')
+    return text
+
+
 def standalone_health_plan(text):
     text = replace_once(text, 'A later consultation obtains the recorded plan through the filing system.',
                         'The plan is not kept after this conversation; a later conversation can use it only if the person '
@@ -845,6 +868,20 @@ def standalone_soap(text):
                         '| Relationships | Relevant earlier supplied record or note, and any amendment link. |', 'sa-soap:relationships')
     text = replace_once(text, 'Known correction content can remain preparatory while its original saved reference is missing.',
                         'Known correction content can remain preparatory while the earlier note is not supplied.', 'sa-soap:correction')
+    text = replace_once(text, 'Recording or saving has a separate outcome.', 'Nothing is saved.', 'sa-soap:recording-outcome')
+    text = replace_once(text, 'The working picture supplies the recording arrangement and purpose of the account. Its clinical '
+                              'content can be prepared before any storage result is available.',
+                        'The working picture supplies the purpose of the account and any request for a note.', 'sa-soap:purpose')
+    text = replace_once(text, 'source dates and recording arrangement.', 'and source dates.', 'sa-soap:step1-arrangement')
+    text = replace_once(text, 'Rules R14 owns the authorship and filing requirements', 'Rules R14 owns the authorship requirements',
+                        'sa-soap:r14-filing')
+    text = replace_once(text, 'accompany the note through its reference without', 'accompany the note, named in it, without',
+                        'sa-soap:audit-reference')
+    text = replace_once(text, 'correction material awaiting a reference', 'correction material naming the earlier note',
+                        'sa-soap:document-kind')
+    text = replace_once(text, 'A requested account can be prepared and unsaved. A dated amendment may await storage.',
+                        'A requested account is prepared in the chat and not saved. A dated amendment names the note it corrects.',
+                        'sa-soap:await-storage')
     text = replace_once(text, '| Recording | Unsaved/preparation-only, or the position returned by Operations. |',
                         '| Recording | Prepared in the chat; not saved. |', 'sa-soap:recording-row')
     text = replace_once(text, 'A reference can connect the matter to an acknowledged pending operation or earlier source.',
@@ -890,6 +927,7 @@ def build_standalone(mh_modules, standalone_sources):
     modules['GRID_CARD.md'] = standalone_grid(modules['GRID_CARD.md'])
     modules['RECEPTION_DESK.md'] = standalone_reception(modules['RECEPTION_DESK.md'])
     modules['SCRATCHPAD_INVESTIGATORY_TOOL.md'] = standalone_scratchpad(modules['SCRATCHPAD_INVESTIGATORY_TOOL.md'])
+    modules['CLINICAL_REASONING_TOOL.md'] = standalone_clinical(modules['CLINICAL_REASONING_TOOL.md'])
     modules['HEALTH_PLAN.md'] = standalone_health_plan(modules['HEALTH_PLAN.md'])
     modules['SOAP_TOOL.md'] = standalone_soap(modules['SOAP_TOOL.md'])
     modules['OPERATIONS.md'] = standalone_sources['OPERATIONS.md']

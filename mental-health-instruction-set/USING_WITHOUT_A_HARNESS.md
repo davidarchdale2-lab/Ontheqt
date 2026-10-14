@@ -8,7 +8,7 @@
 2. Paste the entire contents of `standalone/SYSTEM_PROMPT.md`. Do not trim it: the Grid is repeated at the end on purpose, and the Rules come first on purpose.
 3. Start a new conversation. The assistant opens with its introduction, or answers straight away if the first message is already a question.
 
-**Size.** The prompt is about 213 KB, roughly 30,000 words. As a rough guide, the model needs a context window well above 50,000 tokens, plus room for the conversation itself. Check the setting in your application. For a local model, set its context length explicitly, because many runners default to something much smaller and silently cut long prompts.
+**Size.** The prompt is about 210 KB, roughly 29,500 words. As a rough guide, the model needs a context window well above 50,000 tokens, plus room for the conversation itself. Check the setting in your application. For a local model, set its context length explicitly, because many runners default to something much smaller and silently cut long prompts.
 
 ## What changes without a harness
 
@@ -29,6 +29,15 @@ If your chat application can read attached files, the assistant may use that for
 At the end of a consultation, ask for a **continuity summary**, or accept the assistant's offer of one. Save it yourself. Next time, paste it at the start. The assistant treats it as material you supplied, notes its date, and asks what has changed.
 
 ## Safety notes
+
+- **Added safety content needs checking.** The standalone deployment facts add rules that are not from R11, written for this set:
+  - no treatment figures and no harmful-amount information;
+  - routing for a possible overdose or a missed medicine;
+  - safeguarding steps, with helplines for each UK nation;
+  - an urgent mental-health route (NHS 111 and its mental-health option, NHS 24, Lifeline in Northern Ireland, Samaritans, Shout);
+  - guidance for people outside the UK.
+
+  Every telephone number and service name in them must be checked against its publisher before use.
 
 - **Draft, not for clinical use.** The clinical content has not been clinically reviewed for this set, and R11 states its source currency was not revalidated.
 - **No safety layer except the instructions.** Without a harness there is nothing between the model and the person. Safety rests entirely on this prompt and on the model's own behaviour.
