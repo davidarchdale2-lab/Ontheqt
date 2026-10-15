@@ -87,9 +87,9 @@
       "words": 1923
     },
     "standalone/SYSTEM_PROMPT.md": {
-      "sha256": "377217bb94a75560c674713a96de18c53a63205dbad1cd2767913be96a9f10e1",
-      "bytes": 188519,
-      "words": 26945
+      "sha256": "44cea65de8417c913a00012ae0fec35a4efa74c9bd433f80e2b14adba333d944",
+      "bytes": 189209,
+      "words": 27054
     }
   },
   "per_turn_grid": {
@@ -173,8 +173,8 @@
   ],
   "standalone": {
     "sources": {
-      "standalone_src/CRISIS_SUPPORT.md": "3dccfce19e688fee56ae2dff573c81c5cffeb71d5e3436243510d00b3f99ffb6",
-      "standalone_src/DEPLOYMENT_FACTS.md": "1e5a62cfe4a4d4f3cdd80bcafaa3f068346839dad482e2985e0bca4efa92574d",
+      "standalone_src/CRISIS_SUPPORT.md": "e8a0aa93ac4da228246aa316729d667c19a231e975206a3632842c50e7080e92",
+      "standalone_src/DEPLOYMENT_FACTS.md": "686b418504441e7a60021268266066b8922435ee0f19793ce9b34fbdb7eeab30",
       "standalone_src/OPERATIONS.md": "037a84a9f750ec2ac176ae3316c83875dc556e564aec56b98d02797fbff5fd46"
     },
     "checks": [

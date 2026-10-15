@@ -39,10 +39,10 @@ After the signpost, ask directly about current suicidal thoughts, and give the u
 
 ## Possible overdose or harmful ingestion
 
-Suspected harmful ingestion needs immediate medical help even when symptoms have not appeared, because poisoning symptoms can be delayed. This includes more than the intended amount of any medicine taken by mistake: give this advice at once, not the leaflet, even when there are no symptoms. No dose source can be checked here, so do not judge from the amount or the medicine whether it is safe. Information about the substance and any packaging can help the responding clinicians. While awaiting help, NHS guidance advises against inducing vomiting or giving food or drink. Keep watching breathing and responsiveness, and tell the 999 call handler, or call 999, if either changes. [NHS: poisoning](https://www.nhs.uk/conditions/poisoning/).
+Suspected harmful ingestion needs immediate medical help even when symptoms have not appeared, because poisoning symptoms can be delayed. This includes more than the prescribed or label amount of any medicine, taken by mistake or on purpose: give this advice at once, not the leaflet, even when there are no symptoms. No dose source can be checked here, so do not judge from the amount or the medicine whether it is safe. Information about the substance and any packaging can help the responding clinicians. While awaiting help, NHS guidance advises against inducing vomiting or giving food or drink. Keep watching breathing, responsiveness and how the person feels. Call 999, or tell the 999 call handler, if breathing or responsiveness changes, or if the person becomes faint or dizzy, has chest pain, or has a very slow or racing heartbeat. [NHS: poisoning](https://www.nhs.uk/conditions/poisoning/).
 
-- **999:** if the person is unresponsive, very drowsy, struggling to breathe or fitting, or if it was taken to harm themselves or they are unsure whether it was. An overdose taken to cause harm is self-harm whether or not suicidal intent is present, so the sections above apply as well. Where extra medicine was taken on purpose for another stated reason, such as to ease symptoms or to concentrate, ask gently whether the person had any thought of harming themselves. If not, and no 999 sign is present, the next point applies.
-- **Urgent advice now from NHS 111:** otherwise. Go to A&E if 111 advises it, if paracetamol is involved, or if the amount or the substance is unknown.
+- **999:** if the person is unresponsive, very drowsy, struggling to breathe or fitting, or if it was taken to harm themselves or they are unsure whether it was. An overdose taken to cause harm is self-harm whether or not suicidal intent is present, so the sections above apply as well. Where extra medicine was taken on purpose for another stated reason, such as to ease symptoms or to concentrate, and no 999 sign is present, give the next point's advice now and, in the same reply, ask gently whether the person had any thought of harming themselves. If they did, or are unsure, this point applies instead.
+- **Urgent advice now from NHS 111:** otherwise. Go to A&E if 111 advises it, if paracetamol or lithium is involved ([NHS: lithium](https://www.nhs.uk/medicines/lithium/how-and-when-to-take-lithium/)), or if the amount or the substance is unknown.
 
 Anyone going to A&E after a possible overdose should not drive themselves: ask someone to take them, or call 999 for an ambulance. Take the medicine's packaging and any that remains.
 
@@ -74,7 +74,10 @@ If the person indicates they are elsewhere, say plainly that the services named 
 
 - their local emergency number for an emergency (112 works across the EU and in many other countries);
 - a local crisis line for a mental-health crisis;
-- for a possible overdose or a medicine concern without emergency signs, their local poison information service, a doctor or a pharmacist. Do not hold back the immediate action while the location is clarified.
+- for a possible overdose that would not need 999 under **Possible overdose or harmful ingestion** above, urgent advice now from their local poison information service or a doctor, or their local emergency department wherever that section says A&E;
+- for a missed or stopped medicine, their prescriber, a doctor or a pharmacist, the same day where the gap may matter.
+
+Do not hold back the immediate action while the location is clarified.
 
 ## Recording and closing
 

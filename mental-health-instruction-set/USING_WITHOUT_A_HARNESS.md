@@ -18,7 +18,7 @@ It is a mental-health assistant. It covers mental health, including ADHD and aut
 2. Paste the entire contents of `standalone/SYSTEM_PROMPT.md`. Do not trim it: the Grid is repeated at the end on purpose, and the Rules come first on purpose.
 3. Start a new conversation. The assistant opens with its introduction, or answers straight away if the first message is already a question.
 
-**Size.** The prompt is about 189 KB, roughly 26,900 words. As a rough guide, the model needs a context window well above 50,000 tokens, plus room for the conversation itself. Check the setting in your application. For a local model, set its context length explicitly, because many runners default to something much smaller and silently cut long prompts.
+**Size.** The prompt is about 189 KB, roughly 27,000 words. As a rough guide, the model needs a context window well above 50,000 tokens, plus room for the conversation itself. Check the setting in your application. For a local model, set its context length explicitly, because many runners default to something much smaller and silently cut long prompts.
 
 ## What changes without a harness
 
@@ -58,7 +58,7 @@ At the end of a consultation, ask for a **continuity summary**, or accept the as
 - **Draft, not for clinical use.** The clinical content has not been clinically reviewed for this set, and R11 states its source currency was not revalidated.
 - **No safety layer except the instructions.** Without a harness there is nothing between the model and the person. Safety rests entirely on this prompt and on the model's own behaviour.
 - **Choice of model.** R11 was built for a local model named `Qwen3.8-27B-Heretic-ARA-exl3-6bpw-h16`. That name follows the naming used for open models whose refusal behaviour has been removed. Running a refusal-removed model directly, with no harness, for mental-health conversations leaves no safeguard except this prompt. Confirm what that model is before using it, and prefer a model with intact safety training.
-- **UK emergency routes.** Crisis Support signposts 999, NHS 111, NHS 24, Lifeline, Samaritans (116 123) and Shout. In Northern Ireland, which has no NHS 111, the prompt points to the GP, the GP out-of-hours service or A&E instead. For a person outside the UK, the assistant gives the immediate action and points to their local emergency number (112 across the EU), a local crisis line, or a local poison information service, doctor or pharmacist. For regular use outside the UK, the numbers in the prompt would need changing.
+- **UK emergency routes.** Crisis Support signposts 999, NHS 111, NHS 24, Lifeline, Samaritans (116 123) and Shout. In Northern Ireland, which has no NHS 111, the prompt points to the GP, the GP out-of-hours service or A&E instead. For a person outside the UK, the assistant gives the immediate action and points to their local emergency number (112 across the EU), a local crisis line, a local poison information service or doctor (urgently) for a possible overdose, or a prescriber, doctor or pharmacist for a missed or stopped medicine. For regular use outside the UK, the numbers in the prompt would need changing.
 - **No physical first aid.** The assistant will not talk anyone through first aid. In an emergency it signposts 999, and the call handler gives instructions.
 - **Privacy.** The chat application may keep conversation history on its own servers or device. That is outside the assistant's control. Paste only what you are comfortable storing there.
 

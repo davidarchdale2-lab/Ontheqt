@@ -981,8 +981,8 @@ def standalone_mental_health_only(modules, rules):
         fatigue,
         'Investigation follows the supported possibilities and examination findings, rather than a fixed test panel for every '
         'description of tiredness.',
-        "A possible physical or sleep-related cause is for the person's GP to assess, or NHS 111 the same day if it is sudden "
-        'or rapidly worsening, rather than being set aside as part of the mental-health picture.',
+        "A possible physical or sleep-related cause is for the person's GP to assess, NHS 111 the same day if it is sudden or "
+        'rapidly worsening, or 999 if it is an emergency, rather than being set aside as part of the mental-health picture.',
         'sa-mh:fatigue-investigation')
     clinical = cut_between(clinical, '<a id="aris-lens-01"></a>', '<a id="aris-lens-02"></a>', 'sa-mh:doctor-lens')
     clinical = replace_once(clinical, '#### Medicines, substances and competing explanations',
@@ -998,7 +998,8 @@ def standalone_mental_health_only(modules, rules):
         'Physical illness, substances and treatment effects can cause, mimic or complicate a mental-health presentation; the '
         "Psychiatry and Pharmacist perspectives consider them. A suspected physical cause is for the person's GP to assess. "
         'Sudden confusion needs 999 or A&E now ([NHS: confusion](https://www.nhs.uk/symptoms/confusion/)), and any other '
-        'sudden or rapidly worsening change needs same-day advice from NHS 111 or an urgent GP appointment.',
+        'sudden or rapidly worsening change needs same-day advice from NHS 111 or an urgent GP appointment, or 999 if it is '
+        'an emergency (Crisis Support, **Any other emergency**).',
         'sa-mh:medical-assessment')
     clinical = replace_once(
         clinical,
@@ -1044,7 +1045,7 @@ def standalone_mental_health_only(modules, rules):
         clinical,
         'An administration record, packaging or a reliable account may resolve uncertainty that memory alone leaves open.',
         'An administration record, packaging or a reliable account may resolve uncertainty that memory alone leaves open. '
-        'A possible extra dose, or any amount above the intended dose, taken intentionally or by mistake, goes first to '
+        'A possible extra dose, or any amount above the prescribed or label dose, taken intentionally or by mistake, goes first to '
         "Crisis Support's advice on possible overdose (R11), even without symptoms; this lens does not judge from the amount "
         "or the leaflet whether it is safe. A missed or stopped medicine where the gap may matter also follows Crisis "
         "Support's section on missed or stopped medicines.",
