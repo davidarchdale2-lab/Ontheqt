@@ -2,7 +2,7 @@
 
 `standalone/SYSTEM_PROMPT.md` is the whole instruction set as one system prompt, for an ordinary chat application with no harness, tools or record store.
 
-It is a mental-health assistant. It covers mental health, including ADHD and autism, through five lenses: Psychiatry, Psychology, Pharmacist, ADHD and Autism.
+It is a mental-health assistant called Dr Kate Aris. It covers mental health, including ADHD and autism, through five lenses: Psychiatry, Psychology, Pharmacist, ADHD and Autism.
 
 - **Physical health.** Considered only where it may cause, mimic or complicate a mental-health difficulty, or concerns a relevant medicine. A question with no mental-health side gets a brief signpost to the GP, a pharmacist or NHS 111.
 - **Crisis Support.** It handles:

@@ -5,10 +5,10 @@ A mental-health-only derivative of the Dr Seraphina Aris Health Assistant V1 R11
 The build produces two variants:
 
 - **Standalone (no harness).** `standalone/SYSTEM_PROMPT.md` is one system prompt for an ordinary chat application. Use this one if you are not running R11's harness. See `USING_WITHOUT_A_HARNESS.md`.
-  - It is a mental-health assistant with five lenses.
+  - It is a mental-health assistant called Dr Kate Aris, with five lenses.
   - **Crisis Support** replaces First Aid.
 - **Harness.** `INSTRUCTION_SET.md` and `RULES_OF_ENGAGEMENT.md` are for R11's own harness, with records, memory and tools. See `HARNESS_REQUIREMENTS.md`.
-  - It keeps six lenses and R11's First Aid.
+  - It keeps R11's name (Dr Seraphina Aris), six lenses and R11's First Aid.
 
 **Status: draft.** Built and structurally checked. Not clinically reviewed and not tested with a model. Not for clinical use.
 
@@ -52,7 +52,7 @@ The build also proves that its assembler matches R11's: run on the unedited R11 
 
 ```
 python3 -I -B tools/package_zip.py --src . --profile standalone \
-  --zip <output.zip> --root Dr_Seraphina_Aris_Mental_Health_Standalone_V1_R11-MH_draft2
+  --zip <output.zip> --root Dr_Kate_Aris_Mental_Health_Standalone_V1_R11-MH_draft3
 ```
 
 Use `--profile harness` for the harness variant. The zip has one root folder, fixed timestamps and permissions, and no caches or git files, and the same inputs give the same zip bytes. After extracting, run `sha256sum -c SHA256SUMS.txt` inside the root folder.
@@ -76,7 +76,7 @@ Use `--profile harness` for the harness variant. The zip has one root folder, fi
   - Other health questions are signposted to the GP, a pharmacist or NHS 111.
   - The Doctor lens's fatigue and sleep subsection moves into Psychiatry.
   - Library-only evidence text and physical-medicine examples are removed or replaced.
-  - The assistant is named a mental-health assistant.
+  - The assistant is named Dr Kate Aris, an AI mental-health assistant.
 - **Removed:** media production, physio assets, clinical source images, and the illustration and video sections.
 - **Not changed:** the shared engine, apart from the edits listed in `MODULES.md`. The kept lens bodies are unchanged in the harness variant. In the standalone variant:
   - Psychiatry gains the Doctor lens's fatigue subsection, with a GP route;

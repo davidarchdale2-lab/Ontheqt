@@ -526,6 +526,9 @@ STANDALONE_FILES = ['DEPLOYMENT_FACTS.md', 'OPERATIONS.md', 'CRISIS_SUPPORT.md']
 # The standalone variant is mental-health only: the general-medicine Doctor lens is removed.
 STANDALONE_LENSES = {k: v for k, v in LENSES.items() if k != '01'}
 STANDALONE_LENS_SUMMARY = 'Psychiatry, Psychology, Pharmacist, ADHD and Autism'
+# The standalone assistant's own name; R11 and the harness variant keep R11's name.
+R11_PERSONA = 'Dr Seraphina Aris'
+STANDALONE_PERSONA = 'Dr Kate Aris'
 
 # In the standalone variant, Crisis Support takes First Aid's place in the assembly.
 STANDALONE_ANCHORS = dict(ANCHORS, **{'FIRST_AID.md': 'aris-crisis-support'})
@@ -1091,6 +1094,11 @@ def standalone_mental_health_only(modules, rules):
         modules['HEALTH_PLAN.md'], 'supplies the framework for adults with multiple long-term conditions.',
         'supplies the framework for adults with multiple long-term conditions, where physical conditions also affect the plan.',
         'sa-mh:plan-ng56')
+    found = sum(t.count(R11_PERSONA) for t in list(modules.values()) + [rules])
+    if found != 4:
+        fail('sa-mh:persona', f'expected the R11 name 4 times (Rules title, R5, Grid title, greeting), found {found}')
+    modules = {name: text.replace(R11_PERSONA, STANDALONE_PERSONA) for name, text in modules.items()}
+    rules = rules.replace(R11_PERSONA, STANDALONE_PERSONA)
     return modules, rules
 
 
@@ -1149,6 +1157,10 @@ def check_standalone(prompt, scanned):
     add('lens anchors are exactly the five standalone lenses, once each', lens_ids == sorted(STANDALONE_LENSES), lens_ids)
     leftovers = sorted(set(re.findall(r'Doctor (?:perspective|lens)|\| Doctor \||AI health assistant|(?<!Mental )Health Assistant V1|\bFA\b', prompt)))
     add('no Doctor lens routing, general "health assistant" naming or First Aid node id remains', not leftovers, leftovers)
+    add(f'the assistant is named {STANDALONE_PERSONA} throughout, and the R11 name does not remain',
+        'Seraphina' not in prompt and f"Hello, I'm {STANDALONE_PERSONA}," in prompt
+        and f'\n**{STANDALONE_PERSONA} - Mental Health Assistant V1**\n' in prompt[:300],
+        sorted(set(re.findall(r'Dr \w+ Aris', prompt))))
     anchors = re.findall(r'<a id="([^"]+)"></a>', prompt)
     duplicates = sorted({a for a in anchors if anchors.count(a) > 1})
     add('no duplicate anchors', not duplicates, duplicates)

@@ -1,14 +1,14 @@
-# Start here: Dr Seraphina Aris R11-MH (mental-health draft)
+# Start here: Dr Kate Aris R11-MH (mental-health draft)
 
 **What it is.** A mental-health-only instruction set derived from Dr Seraphina Aris Health Assistant V1 R11 (`ARIS-HA-V1-R11-2026-10-07`, content revision 1). It comes in two variants.
 
 - **Standalone** (`standalone/SYSTEM_PROMPT.md`), for an ordinary chat application.
-  - Presents itself as an AI mental-health assistant.
+  - Presents itself as **Dr Kate Aris**, an AI mental-health assistant.
   - Has five lenses: Psychiatry, Psychology, Pharmacist, ADHD and Autism.
   - First Aid is replaced by **Crisis Support**. It covers suicidal crisis, self-harm, possible overdose and urgent medicine-safety concerns, and gives no first-aid procedures. Any other emergency is signposted to 999.
   - A health question with no mental-health side is signposted elsewhere.
 - **Harness** (`INSTRUCTION_SET.md`, `RULES_OF_ENGAGEMENT.md`), for R11's own harness.
-  - Keeps six lenses (the five above plus Doctor) and R11's First Aid.
+  - Keeps R11's name (Dr Seraphina Aris), six lenses (the five above plus Doctor) and R11's First Aid.
 
 In both variants, media production and the physical and allied-health lenses are removed, and the shared clinical engine is kept.
 

@@ -1,5 +1,6 @@
-R11-MH draft 2
+R11-MH draft 3
 Derived from ARIS-HA-V1-R11-2026-10-07, content revision 1
 Variants: standalone (standalone/SYSTEM_PROMPT.md) and harness (INSTRUCTION_SET.md + RULES_OF_ENGAGEMENT.md)
-Draft 2 changes the standalone variant only: Crisis Support replaces First Aid, the Doctor lens and library-only evidence text are removed, and the assistant is named a mental-health assistant. The harness variant is unchanged from draft 1.
+Draft 2 changed the standalone variant only: Crisis Support replaces First Aid, the Doctor lens and library-only evidence text are removed, and the assistant is named a mental-health assistant.
+Draft 3 renames the standalone assistant Dr Kate Aris. The harness variant keeps R11's name, Dr Seraphina Aris, and is unchanged from draft 1.
 Status: draft; structurally checked; not clinically reviewed; not tested with a model

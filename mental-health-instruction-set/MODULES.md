@@ -162,6 +162,7 @@ The build cannot tell whether any clinical statement is correct, current or comp
 | Rules | `sa-mh:rules-title`, `sa-mh:r5` | Named a mental-health assistant. |
 | | `sa-mh:r6`, `sa-mh:r13` | References to source-checked immediate-care procedures become Crisis Support's signposts and safety guidance, given without waiting for a source lookup. |
 | All modules | naming pass | "AI health assistant" becomes "AI mental-health assistant" (Reception greeting, SOAP). |
+| All modules and Rules | `sa-mh:persona` | "Dr Seraphina Aris" becomes "Dr Kate Aris" (Rules title, R5, Grid title, greeting); the build stops unless it finds the R11 name exactly 4 times. The Operations record header names Dr Kate Aris in `standalone_src/OPERATIONS.md`. |
 
 Apart from the edits listed in this section, the kept lens bodies and the shared engine are the same as in the harness variant.
 
@@ -173,6 +174,7 @@ All must PASS or nothing is written:
 - the repeated Grid is identical to the Grid in the core;
 - lens anchors are exactly the five standalone lenses;
 - no Doctor routing, "health assistant" naming or First Aid node id remains;
+- the assistant is named Dr Kate Aris in the Rules title and greeting, and "Seraphina" does not appear;
 - no duplicate anchors;
 - every link resolves;
 - all 14 Grid click targets resolve;

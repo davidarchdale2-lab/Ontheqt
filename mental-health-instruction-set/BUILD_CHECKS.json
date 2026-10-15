@@ -87,8 +87,8 @@
       "words": 1923
     },
     "standalone/SYSTEM_PROMPT.md": {
-      "sha256": "44cea65de8417c913a00012ae0fec35a4efa74c9bd433f80e2b14adba333d944",
-      "bytes": 189209,
+      "sha256": "8b3d1228d04e4b0d2e8a0ef644fd7c0ff6742a30eb126d1a881564f1ddcd86cb",
+      "bytes": 189179,
       "words": 27054
     }
   },
@@ -175,7 +175,7 @@
     "sources": {
       "standalone_src/CRISIS_SUPPORT.md": "e8a0aa93ac4da228246aa316729d667c19a231e975206a3632842c50e7080e92",
       "standalone_src/DEPLOYMENT_FACTS.md": "686b418504441e7a60021268266066b8922435ee0f19793ce9b34fbdb7eeab30",
-      "standalone_src/OPERATIONS.md": "037a84a9f750ec2ac176ae3316c83875dc556e564aec56b98d02797fbff5fd46"
+      "standalone_src/OPERATIONS.md": "ae42a051c7babd0708391e4d813092d8257adcf1458afc8c2d13147365033926"
     },
     "checks": [
       {
@@ -208,6 +208,13 @@
         "check": "no Doctor lens routing, general \"health assistant\" naming or First Aid node id remains",
         "result": "PASS",
         "detail": []
+      },
+      {
+        "check": "the assistant is named Dr Kate Aris throughout, and the R11 name does not remain",
+        "result": "PASS",
+        "detail": [
+          "Dr Kate Aris"
+        ]
       },
       {
         "check": "no duplicate anchors",
